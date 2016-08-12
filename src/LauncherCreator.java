@@ -24,7 +24,7 @@ public class LauncherCreator {
 	/** les nom des bibliothèques situées dans BIN */
 	public static final String[] libraries = new String[] {
 		//Le jeu
-		"TM0_1.jar",
+		"terramagnetica-0.4.2.jar",
 		
 		//lwjgl
 		"lwjgl.jar",
