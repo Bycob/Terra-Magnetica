@@ -1,0 +1,100 @@
+***** VERSION 0.1 ******
+//Création du jeu.
+
+
+**** VERSION 0.1.1 *****
+//Pour correction de bugs.
+Editeur de niveaux :
+	- ajout d'un zoom réglable.
+	
+Terra Magnetica :
+	#Bug corrigés#
+	*Les aimants se "collaient" parfois entre eux.
+	*Un bout de décor en bordure n'était pas dessiné.
+
+
+***** VERSION 0.2 ******
+Editeur de niveaux :
+	- ajout d'une option "Tester".
+	- possibilité d'ajouter des pièces au niveau, ou d'en supprimer.
+	- Lorsqu'on crée un portail, on peut choisir s'il emmène dans une autre salle, ou s'il marque la fin du
+		niveau.
+	
+	#Bugs corrigés#
+	*Baisser le zoom faisait parfois planter l'application.
+	
+Terra Magnetica :
+	- ajout d'une description avant certains niveaux. La description est personnalisable via fichiers ".txt".
+	- On peut maintenant faire défiler les barres de défilement avec la molette de la souris.
+	- ajout du menu "Jeu libre" permettant de rejouer les niveaux du mode "Histoire" déjà terminés.
+	- ajout d'un moyen de charger directement un niveau depuis le jeu. Il faut pour cela placer les niveaux
+		dans un dossier spécifique, puis aller dans le menu "Jeu libre" et "Niveaux libres" pour en avoir la
+		liste.
+	- Nouveaux niveaux en mode histoire.
+	
+	#Bugs corrigés#
+	*Le nom du portail le plus proche continuait d'apparaître ou de disparaître en pause.
+	*Les aimants ne s'organisaient pas toujours correctement autour des lampes : parfois ils se plaçaient en
+		direction des murs ou en direction d'autres lampes...
+
+
+***** VERSION 0.4 ******
+//Après deux ans, peut-être qu'il faut incrémenter le numéro de version...
+
+Editeur de niveaux :
+	- ajout d'un outil "Optimiser la place", qui supprime les zones inutiles.
+	- ajout d'un outil "Agrandir la salle", qui permet de rajouter du décor en haut, en bas, à gauche et à droite
+		de la salle courante.
+	- ajout des nom de salles et de l'outil "Définir comme salle principale".
+	- ajout d'une option "Dessiner les cases" qui permet de voir les cases du terrain.
+	- ajout d'un outil "Importer des salles" qui permet de copier une salle depuis un autre fichier .mlv
+	- ajout d'un splash screen
+	- ajout de propriétés pour les différentes entités, accessibles via le menu clic droit > Propriété de l'entité
+	- amélioration du temps de chargement de façon... significative.
+	- gestion des contenus additionnels : pour chaque niveau du jeu, du contenu supplémentaire peut être chargé dans l'éditeur.
+
+Terra Magnetica :
+	- NIVEAU 2 AJOUTÉ !
+	- ajout de MUSIQUES !
+	- quelques ajouts d'entités :
+			'perturbateurs de champs
+			'générateur de champs
+			'lampe magnétique à champ
+			'générateur à ondes magnétiques
+	- refonte graphique de certaines entités.
+	- ajout des checkpoints et des déclencheurs
+	- ajout d'une mini-map pour se repérer
+	- ajout du moteur audio, de sons
+	- ajout d'un icone au jeu (l'ancien n'était pas de moi)
+	- screenshots en appuyant sur F1
+	
+	#Bugs Corrigés#
+	*Amélioration des collisions, devenues désormais plus réalistes. Il y a encore du travail à faire et
+		de nombreux bugs à corriger sur ce point : à venir !
+	*Les lampes n'attiraient plus les aimants après le relancement du niveau ("Recommencer").
+	*On pouvait "enlever" les aimants aux lampes, en les poussant avec le personnage.
+	*Amelioration du menu jeu libre : les bouttons ne disparaissent plus sur les côtés de la fenêtre, ils
+		s'adaptent.
+	*Sur certains ordinateurs certaines textures ne se chargeaient pas.
+	*Sur certains ordinateurs le texte depassait des sections à défilement
+
+***** VERSION 0.4.1 ******
+
+Terra Magnetica :
+	- Animation fin de niveau deux
+	- ajout d'options pour les lampes
+	
+Général :
+	- Corrections de bugs
+
+***** VERSION 0.4.2 ******
+
+Terra Magnetica
+	- Mise à jour du décor Grotte
+	
+Editeur de niveaux
+	- Fix du contenu additionnel. Pour activer le contenu additionnel d'un niveau, renommer le fichier en "niveau[n° du niveau].mlv"
+	
+Général :
+	- Corrections de bugs
+
