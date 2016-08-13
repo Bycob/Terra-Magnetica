@@ -401,12 +401,17 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	
 	@Override
 	public Hitbox clone() {
+		Hitbox clone = null;
+		
 		try {
-			return (Hitbox) super.clone();
+			clone = (Hitbox) super.clone();
 		}
 		catch (CloneNotSupportedException e) {
 			e.printStackTrace();
-			return null;
 		}
+		
+		clone.force = this.force.clone();
+		
+		return clone;
 	}
 }

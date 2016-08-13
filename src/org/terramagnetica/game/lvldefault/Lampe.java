@@ -186,10 +186,6 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 			//Le point vers lequel va converger l'entité.
 			Vec2f mp = Util.findNearestPoint(c, magnetPoints.toArray(new Vec2f[0])).asFloat();
 			
-			for (EntityMoving e : this.placed) {
-				e.permitCollision(false, EntityMoving.ENTITY_COLLISION);
-			}
-			
 			if (d < RAYON * 1.1) {//L'aimant doit maintenant se mettre gentiment à sa place.
 				if (this.placed.contains(ent)) {
 					return;
@@ -208,13 +204,8 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 					this.placed.add(ent);
 					this.situation[cpBut.ordinal()] = false;
 				}
-				
-				ent.permitCollision(false, EntityMoving.ENTITY_COLLISION);
 			}
 			else {//L'aimant est attiré normalement.
-				if (!this.hasMagnetPointEmpty()) {//L'aimant rebondira s'il n'y a plus de place dispo.
-					ent.permitCollision(true, EntityMoving.ENTITY_COLLISION);
-				}
 				
 				double mpdX = mp.x - c.x;//vecteur x de l'attirance
 				double mpdY = mp.y - c.y;//vecteur y de l'attirance

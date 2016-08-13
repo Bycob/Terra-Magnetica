@@ -466,12 +466,12 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 			this.render.interruptGame(new InterruptionChangeRoom(this, this.currentRoom, true));
 		}
 		
+		//Mise à jour du moteur physique
+		this.physics.update(this, delta);
+		
 		//Mise à jour des mouvements d'entités
 		for (Entity entity : this.entities) {
-			if (entity instanceof EntityMoving) {
-				EntityMoving entMov = (EntityMoving) entity;
-				entMov.updatePhysic(delta, this);
-			}
+			entity.updatePhysic(delta, this);
 		}
 		//Mise à jour des entités
 		for (Entity entity : this.entities) {

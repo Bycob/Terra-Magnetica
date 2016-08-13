@@ -133,7 +133,7 @@ public class Aimant extends EntityMoving {
 		}
 		
 		if (this.influence != null) {
-			this.enableCollision(this.influence.hasPermissionForCollision(this));
+			this.hitbox.setSolid(this.influence.hasPermissionForCollision(this));
 			this.influence.controls(game, dT, this);
 		}
 		
@@ -150,9 +150,6 @@ public class Aimant extends EntityMoving {
 		if (entity != this.influence && entity != this) {
 			if (entity instanceof PlayerDefault) {
 				if (getVelocity() > PlayerDefault.CRYSTAL_KILL) game.getPlayer().attack(1, game);
-			}
-			else {
-				this.bounceEntity(game, entity, dT);
 			}
 		}
 	}

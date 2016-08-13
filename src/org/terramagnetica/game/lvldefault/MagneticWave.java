@@ -53,10 +53,11 @@ public class MagneticWave extends EntityMoving {
 	 * @deprecated Utilisé dynamiquement dans la lecture de fichier.
 	 */
 	public MagneticWave() {
-		
+		this.hitbox.setSolid(false);
 	}
 	
 	protected MagneticWave(float speed, float distance, float direction) {
+		this();
 		this.setVelocity(speed);
 		this.setDirection(direction);
 		this.distance = distance;
@@ -79,31 +80,27 @@ public class MagneticWave extends EntityMoving {
 		return new DimensionsInt(CASE, CASE);
 	}
 	
-	@Override
-	public boolean isSolid() {
-		return true;
-	}
-	
 	public boolean isAlive() {
 		return this.isAlive;
 	}
 	
 	@Override
+	public void updatePhysic(long dT, GamePlayingDefault game) {
+		doCollision(dT, game);
+	}
+	
+	@Override
 	public void updateLogic(long dT, GamePlayingDefault game) {
-		//Coordonnées d'origine
-		Vec2f co = this.getCoordonnéesf();
+		super.updateLogic(dT, game);
 		
-		this.move(dT);
-		
-		//Coordonnées d'arrivée
+		Vec2f co = this.lastHitbox.getPosition();
 		Vec2f ca = this.getCoordonnéesf();
+		
 		this.coveredDist += MathUtil.getDistance(co, ca);
 		
 		if (this.coveredDist >= this.distance) {
 			this.isAlive = false;
 		}
-		
-		doCollision(dT, game);
 	}
 	
 	@Override

@@ -48,6 +48,7 @@ public class ZoneStateTriggerer extends CaseEntity {
 	public ZoneStateTriggerer() {
 		super();
 		this.setZone(new RectangleZone());
+		this.hitbox.setSolid(false);
 	}
 	
 	
@@ -59,11 +60,6 @@ public class ZoneStateTriggerer extends CaseEntity {
 	@Override
 	public RenderEntity createRender() {
 		return new RenderEntityNothing();
-	}
-	
-	@Override
-	public boolean isSolid() {
-		return false;
 	}
 	
 	@Override

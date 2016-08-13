@@ -148,6 +148,8 @@ public class MagneticWavesGenerator extends CaseEntity implements IDirectionnalE
 	
 	@Override
 	public void updateLogic(long dT, GamePlayingDefault game) {
+		super.updateLogic(dT, game);
+		
 		long date = game.getTime();
 		long period = (long) (1000 / this.freq);
 		long timeElapsed = this.lastWaveDate == -1 ? period : date - this.lastWaveDate; 

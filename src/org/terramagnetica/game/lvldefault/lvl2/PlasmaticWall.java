@@ -72,6 +72,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 		
 		if (oldState != this.state) {
 			this.recreateRender();
+			this.hitbox.setSolid(this.state);
 		}
 	}
 	
@@ -139,11 +140,6 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 	@Override
 	public boolean isMapVisible() {
 		return false;
-	}
-	
-	@Override
-	public boolean isSolid() {
-		return this.state;
 	}
 	
 	@Override

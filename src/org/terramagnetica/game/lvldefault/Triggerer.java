@@ -42,11 +42,13 @@ public class Triggerer extends Entity {
 	private boolean triggered = false;
 
 	public Triggerer() {
-		this.evt = null;
+		this(null);
 	}
 	
 	public Triggerer(GameEvent evt) {
 		this.evt = evt;
+		
+		this.hitbox.setSolid(false);
 	}
 	
 	@Override
@@ -76,11 +78,6 @@ public class Triggerer extends Entity {
 	@Override
 	public DimensionsInt getImgDimensions() {
 		return new DimensionsInt(CASE / 2, CASE / 2);
-	}
-	
-	@Override
-	public boolean isSolid() {
-		return false;
 	}
 	
 	@Override

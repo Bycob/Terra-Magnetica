@@ -74,11 +74,6 @@ public class TheCreature extends EntityMoving {
 		return true;
 	}
 	
-	@Override
-	public boolean isSolid() {
-		return this.myAI instanceof FreeCreatureAI;
-	}
-	
 	public AIMovable<TheCreature> getCreatureAI() {
 		return this.myAI;
 	}
@@ -87,6 +82,8 @@ public class TheCreature extends EntityMoving {
 	 * le joueur à la fin du niveau. */
 	public void changeAI() {
 		this.myAI = new CapturedCreatureAI(this);
+
+		this.hitbox.setSolid(false);
 	}
 	
 	public void setZoneBounds(RectangleInt bounds) {

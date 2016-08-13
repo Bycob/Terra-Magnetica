@@ -96,7 +96,9 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	
 	protected Entity(int x, int y) {
 		this.setCoordonnéesf(x, y);
+		
 		this.recreateHitbox();
+		this.hitbox.setStatic(true);
 	}
 	
 	protected Entity(int x, int y, int priority) {
@@ -322,19 +324,26 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	}
 	
 	public void recreateHitbox() {
+		this.setHitbox(createHitbox());
+	}
+	
+	public void setHitbox(Hitbox hb) {
+		if (hb == null) throw new NullPointerException("hb == null");
+		
 		Hitbox oldHitbox = this.hitbox;
-		this.hitbox = createHitbox();
+		this.hitbox = hb;
 		
 		if (oldHitbox != null) {
-			this.applyHitbox(oldHitbox);
+			this.hitbox.setSamePhysic(oldHitbox);
 		}
 		
 		if (this.lastHitbox == null) {
 			updateLastHitbox();
 		}
-		
-		this.hitbox.setStatic(true);
-		this.lastHitbox.setStatic(true);
+	}
+	
+	public final Hitbox getHitBoxf() {
+		return this.hitbox;
 	}
 	
 	public Hitbox getLastHitbox() {
@@ -351,15 +360,6 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		clone.hitbox = this.lastHitbox.clone();
 		
 		return clone;
-	}
-	
-	public final Hitbox getHitBoxf() {
-		return this.hitbox;
-	}
-	
-	public void applyHitbox(Hitbox hb) {
-		this.hitbox.setPosition(hb.getPositionX(), hb.getPositionY());
-		this.hitbox.setRotation(hb.getRotation());
 	}
 	
 	public void updateLastHitbox() {
@@ -430,7 +430,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * hitbox.
 	 */
 	public boolean isSolid() {
-		return true;
+		return this.hitbox.isSolid();
 	}
 	
 	/** Permet de savoir si l'entité est visible sur la minimap.
@@ -475,6 +475,16 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * @param game - Le jeu dans lequelle est situé l'entité.
 	 */
 	public void updateLogic(long dT, GamePlayingDefault game) {
+		for (Entity collided : this.collidedEntities) {
+			this.onEntityCollision(dT, game, collided);
+		}
+		
+		if (this.wallCollisionCount > 0) {
+			this.onLandscapeCollision(dT, game);
+		}
+		
+		clearCollisions();
+		
 		this.updated = true;
 	}
 	
@@ -503,17 +513,17 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	
 	/**
 	 * Effectue les conséquences d'une collision avec une autre entité.
-	 * @param delta - le temps écoulé depuis la dernière mise à jour
-	 * @param game - le moteur de jeu qui contient toutes les entités et
+	 * @param delta le temps écoulé depuis la dernière mise à jour
+	 * @param game le moteur de jeu qui contient toutes les entités et
 	 * le décor.
-	 * @param collided - l'autre entité impliquées dans la collision.
+	 * @param collided l'autre entité impliquées dans la collision.
 	 */
 	public void onEntityCollision(long delta, GamePlayingDefault game, Entity collided) {}
-	protected void onLandscapeCollision(long delta, GamePlayingDefault game) {}
+	public void onLandscapeCollision(long delta, GamePlayingDefault game) {}
 	
 	/** 
 	 * Vérifie s'il y a collision avec l'entité passée en paramètres.
-	 * @param other - L'entité susceptible de percuter celle-ci.
+	 * @param other L'entité susceptible de percuter celle-ci.
 	 * @return <code>true</code> si une collision est en cours
 	 * avec cette entité, <code>false</code> sinon
 	 */
@@ -538,25 +548,6 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 
 		//Si aucun des cas particuliers ne s'est présenté, teste la collision des hitbox.
 		return getHitBoxf().intersects(other.getHitBoxf());
-	}
-	
-	/**
-	 * Pour savoir si une collision est en cours, d'une part avec le décor,
-	 * d'autre part avec toutes les entités passées en paramètre.
-	 * @param game - le jeu dans lequel se trouve l'entité.
-	 * @param entities - les entités avec lesquelles il faut tester la collision.
-	 * @return {@code true} si il y a collision, {@code false} sinon.
-	 */
-	protected boolean hasLandscapeCollision(GamePlayingDefault game) {
-		Vec2i caseLocation = this.getCoordonnéesCase();
-		
-		if (!(game.getLandscapeAt(caseLocation.x, caseLocation.y).isEnabled())) {
-			return true;
-		}
-		if (game.getCaseEntityAt(caseLocation.x, caseLocation.y) instanceof VirtualWall && !this.canPassVirtualWall()) {
-			return true;
-		}
-		return false;
 	}
 	
 	@Override
