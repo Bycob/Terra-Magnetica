@@ -65,16 +65,17 @@ public class PhysicEngine {
 		}
 		
 		//Application des collision, puis on revérifie derrière jusqu'à ce qu'il n'y ait plus de collision.
-		boolean isThereCollision = false;
+		boolean isThereCollision = true;
 		ArrayList<Hitbox> collidedHitboxes = new ArrayList<Hitbox>(hitboxes.size());
 		
 		while (isThereCollision) {
 			isThereCollision = false;
+			collidedHitboxes.clear();
 			
 			//Recherche des premières collisions à effectuer
 			float lowerTime = time;
 			for (Hitbox hb : hitboxes) {
-				if (!hb.hasNextCollisionPoint()) return;
+				if (!hb.hasNextCollisionPoint()) continue;
 				float thisTime = hb.getNextCollisionPoint().getTime();
 				
 				if (thisTime < lowerTime) {
@@ -149,8 +150,8 @@ public class PhysicEngine {
 		for (int x = caseX - 1 ; x <= caseX + 1 ; x++) {
 			for (int y = caseY - 1 ; y <= caseY + 1 ; y++) {
 				LandscapeTile tile;
-				if ((x != caseX || y != caseY) && (tile = game.getLandscapeAt(caseX, caseY)).isEnabled()) {
-					result.add(tile.getHitBoxf());
+				if ((x != caseX || y != caseY) && !(tile = game.getLandscapeAt(caseX, caseY)).isEnabled()) {
+					result.add(tile.getHitboxf());
 				}
 			}
 		}

@@ -31,8 +31,8 @@ public abstract class OrientableLandscapeTile extends LandscapeTile {
 	private static final long serialVersionUID = 1L;
 	
 	public static final int NB_IMAGE = 12;
-	public static final float DEFAULT_MARGIN = 0.25f;
-	public static final float SIDE_OVERFLOW = 0.25f;
+	public static final float DEFAULT_MARGIN = 0.2f;
+	public static final float SIDE_OVERFLOW = 0.3f;
 	
 	/** Le décor n'est pas orienté, car il est entouré de
 	 * décor semblable à lui. */
@@ -108,8 +108,9 @@ public abstract class OrientableLandscapeTile extends LandscapeTile {
 		this.orientation = md;
 	}
 	
+	@Override
 	public Hitbox getHitboxf() {
-		Hitbox result = null;
+		Hitbox result = new HitboxPolygon(new RectangleDouble(0, 0, 1, 1));
 		
 		switch (this.orientation) {
 		case COIN_DROIT_BAS :
@@ -146,6 +147,7 @@ public abstract class OrientableLandscapeTile extends LandscapeTile {
 		
 		Vec2i cCase = this.getCoordonnéesCase();
 		result.setPosition(cCase.x, cCase.y);
+		result.setStatic(true);
 		
 		return result;
 	}

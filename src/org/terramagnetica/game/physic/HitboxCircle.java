@@ -89,7 +89,10 @@ public class HitboxCircle extends Hitbox {
 		Hitbox other = this.nextCollisionPoint.getOtherHitbox(this);
 		
 		if (other instanceof HitboxCircle) {
-			if (this.isStatic) other.doNextCollision();
+			if (this.isStatic) {
+				other.doNextCollision();
+				return;
+			}
 			//-> Je ne suis pas statique
 			
 			HitboxCircle otherCircle = (HitboxCircle) other;

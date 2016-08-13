@@ -191,7 +191,10 @@ public class HitboxPolygon extends Hitbox {
 		Hitbox other = this.nextCollisionPoint.getOtherHitbox(this);
 
 		if (other instanceof HitboxPolygon) {
-			if (this.isStatic) other.doNextCollision();
+			if (this.isStatic) {
+				other.doNextCollision();
+				return;
+			}
 			//-> Je ne suis pas statique
 			
 			HitboxPolygon otherPoly = (HitboxPolygon) other;

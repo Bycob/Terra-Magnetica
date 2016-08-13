@@ -26,6 +26,7 @@ public class CollisionPoint {
 	private Hitbox hitbox1, hitbox2;
 	
 	public CollisionPoint(float time, Hitbox hb1, Hitbox hb2) {
+		this.setHitboxes(hb1, hb2);
 		this.setTime(time);
 	}
 	

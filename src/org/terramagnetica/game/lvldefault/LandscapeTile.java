@@ -229,7 +229,7 @@ public abstract class LandscapeTile implements Serializable, Cloneable {
 		return this.skin;
 	}
 	
-	public Hitbox getHitBoxf() {
+	public Hitbox getHitboxf() {
 		Hitbox result = new HitboxPolygon(getBoundsf());
 		result.setPosition(place.x, place.y);
 		result.setStatic(true);
