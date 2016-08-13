@@ -48,6 +48,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	
 	protected float mass = 1;
 	protected boolean isStatic = false;
+	protected boolean isSolid = true;
 	
 	/** Coefficient de friction de l'objet. Indique la perte de vitesse
 	 * naturelle de l'objet pendant son déplacement. */
@@ -69,6 +70,14 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	
 	public boolean isStatic() {
 		return this.isStatic;
+	}
+	
+	public void setSolid(boolean solid) {
+		this.isSolid = solid;
+	}
+	
+	public boolean isSolid() {
+		return this.isSolid;
 	}
 	
 	public void setRotation(float rotation) {
@@ -300,6 +309,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * mouvement, une fois toutes les collisions calculées.*/
 	protected boolean testCollision(Hitbox other, float time) {
 		if (this.isStatic && other.isStatic) return false;
+		if (!this.isSolid || !other.isSolid) return false;
 		
 		Hitbox[] both = new Hitbox[] {this, other};
 		
