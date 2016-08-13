@@ -21,7 +21,7 @@ package org.terramagnetica.game.physic;
 
 import net.bynaryscode.util.maths.geometric.Vec2f;
 
-public class Force {
+public class Force implements Cloneable {
 	private float forceX, forceY;
 	
 	public Force(float forceX, float forceY) {
@@ -51,5 +51,19 @@ public class Force {
 	
 	public float getForceY() {
 		return this.forceY;
+	}
+	
+	@Override
+	public Force clone() {
+		Force result = null;
+		
+		try {
+			result = (Force) super.clone();
+		}
+		catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }

@@ -64,16 +64,18 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected float timeOffset;
 	protected CollisionPoint nextCollisionPoint;
 	
-	public void setStatic(boolean isStatic) {
+	public Hitbox setStatic(boolean isStatic) {
 		this.isStatic = isStatic;
+		return this;
 	}
 	
 	public boolean isStatic() {
 		return this.isStatic;
 	}
 	
-	public void setSolid(boolean solid) {
+	public Hitbox setSolid(boolean solid) {
 		this.isSolid = solid;
+		return this;
 	}
 	
 	public boolean isSolid() {
@@ -190,9 +192,10 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * quantifie l'importance du rebond (rebond normal), <tt>bounceT</tt> quantifie
 	 * inversement l'adhérence de la hitbox à la surface de rebond (rebond
 	 * tangentiel)  */
-	public void setBounceWeighting(float bounceN, float bounceT) {
+	public Hitbox setBounceWeighting(float bounceN, float bounceT) {
 		this.bounceN = bounceN;
 		this.bounceT = bounceT;
+		return this;
 	}
 	
 	public float getBounceN() {
@@ -220,6 +223,25 @@ public abstract class Hitbox implements Serializable, Cloneable {
 				this.speedX == other.speedX &&
 				this.speedY == other.speedY && 
 				this.speedRotation == other.speedRotation;
+	}
+	
+	public void setSamePhysic(Hitbox other) {
+		this.isStatic = other.isStatic;
+		this.isSolid = other.isSolid;
+		
+		this.x = other.x;
+		this.y = other.y;
+		this.rotation = other.rotation;
+		this.speedX = other.speedX;
+		this.speedY = other.speedY;
+		this.speedRotation = other.speedRotation;
+		
+		this.friction = other.friction;
+		this.bounce = other.bounce;
+		this.bounceT = other.bounceT;
+		this.bounceN = other.bounceN;
+		
+		this.force = other.force.clone();
 	}
 	
 	public abstract boolean contains(Vec2 point);
