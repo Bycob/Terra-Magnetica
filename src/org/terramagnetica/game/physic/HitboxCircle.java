@@ -135,7 +135,7 @@ public class HitboxCircle extends Hitbox {
 			}
 			
 			for (HitboxCircle hb : both) {
-				hb.nextCollisionPoint = null;
+				hb.afterCollision();
 			}
 		}
 		else {

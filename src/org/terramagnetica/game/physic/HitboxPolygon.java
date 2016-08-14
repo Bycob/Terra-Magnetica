@@ -287,8 +287,8 @@ public class HitboxPolygon extends Hitbox {
 				this.speedY = (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
 			}
 			
-			this.nextCollisionPoint = null;
-			other.nextCollisionPoint = null;
+			this.afterCollision();
+			other.afterCollision();
 		}
 		else if (other instanceof HitboxCircle) {
 			this.nextCollisionPoint.goToPoint();
@@ -343,7 +343,6 @@ public class HitboxPolygon extends Hitbox {
 				en = Vec3d.unitVector(otherCircle.x - closerPoint.x, otherCircle.y - closerPoint.y);
 			}
 			
-			
 			//Initialisation des variables
 			Vec3d v1 = new Vec3d(this.speedX, this.speedY);
 			double v1n = v1.dotProduct(en);
@@ -378,9 +377,9 @@ public class HitboxPolygon extends Hitbox {
 				other.speedX = (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
 				other.speedY = (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
 			}
-			
-			this.nextCollisionPoint = null;
-			other.nextCollisionPoint = null;
+
+			this.afterCollision();
+			other.afterCollision();
 		}
 		else {
 			other.doNextCollision();

@@ -63,6 +63,10 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * de l'origine des calculs */
 	protected float timeOffset;
 	protected CollisionPoint nextCollisionPoint;
+	protected float lastCollision = 0;
+	protected float lastCollisionX;
+	protected float lastCollisionY;
+	
 	
 	public Hitbox setStatic(boolean isStatic) {
 		this.isStatic = isStatic;
@@ -293,7 +297,9 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		if (this.timeOffset != completeMsTime) {
 			this.applyVelocity(completeMsTime - this.timeOffset);
 		}
+		this.nextCollisionPoint = null;
 		this.timeOffset = 0;
+		updateLastCollisionData();
 	}
 	
 	public boolean hasNextCollisionPoint() {
@@ -310,10 +316,16 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		}
 		
 		CollisionPoint cp = getCurrentCollisionPoint(other, time);
+		//empêcher les détections infinies
+		if (cp.getTime() <= this.lastCollision) {
+			return;
+		}
+		
 		Hitbox[] both = new Hitbox[] {this, other};
 		
 		for (Hitbox hb : both) {
-			hb.nextCollisionPoint = cp; //testCollision ne détecte que les collisions prioritaires.
+			//testCollision ne détecte que les collisions prioritaires.
+			hb.nextCollisionPoint = cp; 
 		}
 	}
 	
@@ -373,7 +385,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected final CollisionPoint findCollisionPointDefault(Hitbox other, float time) {
 		Hitbox both[] = new Hitbox[] {this, other};
 		
-		float lower = 0;
+		float lower = this.lastCollision;
 		float higher = time;
 		
 		while (higher - lower > 0.0001) {
@@ -398,6 +410,28 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * Place les deux hitbox concernées par cette collision, à l'instant de leur
 	 * collision, puis calcule leur nouvelles vitesses suite au rebond. */
 	public abstract void doNextCollision();
+	
+	protected void beforeCollision() {}
+	protected void afterCollision() {
+		updateLastCollisionData();
+		this.nextCollisionPoint = null;
+	}
+	
+	/** Enregistre l'état de la hitbox lors de la dernière collision, afin
+	 * de servir d'origine pour les calculs suivants.
+	 * <p>Cette méthode permet aussi de réinitialiser les variables concernant
+	 * la dernière collision, entre chaque tour. */
+	protected void updateLastCollisionData() {
+		if (this.nextCollisionPoint != null) {
+			this.lastCollision = this.nextCollisionPoint.getTime();
+		}
+		else {
+			this.lastCollision = 0;
+		}
+		
+		this.lastCollisionX = this.x;
+		this.lastCollisionY = this.y;
+	}
 	
 	@Override
 	public Hitbox clone() {
