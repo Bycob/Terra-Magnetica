@@ -60,4 +60,13 @@ public class CollisionPoint {
 		this.hitbox1.applyVelocity(this.time - this.hitbox1.timeOffset);
 		this.hitbox2.applyVelocity(this.time - this.hitbox2.timeOffset);
 	}
+	
+	void delete() {
+		Hitbox[] hitboxes = getHitboxes();
+		for (Hitbox hb : hitboxes) {
+			if (hb.nextCollisionPoint == this) {
+				hb.nextCollisionPoint = null;
+			}
+		}
+	}
 }

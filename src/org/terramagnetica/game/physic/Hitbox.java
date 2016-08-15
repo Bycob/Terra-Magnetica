@@ -20,6 +20,7 @@ along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
 package org.terramagnetica.game.physic;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import net.bynaryscode.util.maths.MathUtil;
 import net.bynaryscode.util.maths.geometric.Vec2;
@@ -63,6 +64,10 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * de l'origine des calculs */
 	protected float timeOffset;
 	protected CollisionPoint nextCollisionPoint;
+	
+	/** Cette liste enregistre les hitboxes collisionnées au temps "lastCollision".
+	 * Ainsi, on peut éviter les détections de collision infinies. */
+	protected ArrayList<Hitbox> lastHitboxes = new ArrayList<Hitbox>();
 	protected float lastCollision = 0;
 	protected float lastCollisionX;
 	protected float lastCollisionY;
@@ -278,16 +283,20 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * méthode {@link #completeMove(float)} à la fin d'un tick pour le complèter.
 	 * @param ms La durée du mouvement, en ms */
 	public void applyVelocity(float ms) {
-		float time = ms / 1000;
+		setTimeOffset(ms + this.timeOffset);
+	}
+	
+	protected void setTimeOffset(float ms) {
+		float time = (ms - this.lastCollision) / 1000;
 		
 		if (!this.isStatic) {
-			this.x = this.x + this.speedX * time;
-			this.y = this.y + this.speedY * time;
+			this.x = this.lastCollisionX + this.speedX * time;
+			this.y = this.lastCollisionY + this.speedY * time;
 			
 			positionChanges();
 		}
 		
-		this.timeOffset += ms;
+		this.timeOffset = ms;
 	}
 	
 	/** Complète le mouvement pour qu'il aie duré le temps <tt>completeTime</tt>,
@@ -316,15 +325,15 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		}
 		
 		CollisionPoint cp = getCurrentCollisionPoint(other, time);
-		//empêcher les détections infinies
-		if (cp.getTime() <= this.lastCollision) {
+		//détection des collisions infinies
+		if (this.lastCollision >= cp.getTime() && this.lastHitboxes.contains(other)) {
 			return;
 		}
 		
 		Hitbox[] both = new Hitbox[] {this, other};
 		
 		for (Hitbox hb : both) {
-			//testCollision ne détecte que les collisions prioritaires.
+			if (hb.nextCollisionPoint != null) hb.nextCollisionPoint.delete();
 			hb.nextCollisionPoint = cp; 
 		}
 	}
@@ -390,8 +399,9 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		
 		while (higher - lower > 0.0001) {
 			float bound = (higher + lower) / 2;
+			
 			for (Hitbox hb : both) {
-				applyVelocity(bound - hb.timeOffset);
+				hb.applyVelocity(bound - hb.timeOffset);
 			}
 			
 			if (this.intersects(other)) {
@@ -423,10 +433,16 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * la dernière collision, entre chaque tour. */
 	protected void updateLastCollisionData() {
 		if (this.nextCollisionPoint != null) {
+			if (this.lastCollision != this.nextCollisionPoint.getTime()) {
+				this.lastHitboxes.clear();
+			}
+			
 			this.lastCollision = this.nextCollisionPoint.getTime();
+			this.lastHitboxes.add(this.nextCollisionPoint.getOtherHitbox(this));
 		}
 		else {
 			this.lastCollision = 0;
+			this.lastHitboxes.clear();
 		}
 		
 		this.lastCollisionX = this.x;

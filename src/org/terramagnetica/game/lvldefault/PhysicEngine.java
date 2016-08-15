@@ -109,6 +109,7 @@ public class PhysicEngine {
 				ArrayList<Hitbox> envHbs = getEnvironmentHitbox(game, hb);
 				for (Hitbox hbe : envHbs) {
 					hb.calculateNextCollisionPoint(hbe, time);
+					if (hb.hasNextCollisionPoint()) isThereCollision = true;
 				}
 			}
 		}
@@ -150,7 +151,7 @@ public class PhysicEngine {
 		for (int x = caseX - 1 ; x <= caseX + 1 ; x++) {
 			for (int y = caseY - 1 ; y <= caseY + 1 ; y++) {
 				LandscapeTile tile;
-				if ((x != caseX || y != caseY) && !(tile = game.getLandscapeAt(caseX, caseY)).isEnabled()) {
+				if ((x != caseX || y != caseY) && !(tile = game.getLandscapeAt(x, y)).isEnabled()) {
 					result.add(tile.getHitboxf());
 				}
 			}
