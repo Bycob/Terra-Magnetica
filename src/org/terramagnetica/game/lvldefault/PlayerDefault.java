@@ -29,6 +29,8 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.CameraTrackPoint3D;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.game.physic.Hitbox;
+import org.terramagnetica.game.physic.HitboxCircle;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.SoundManager;
@@ -133,6 +135,11 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	@Override
 	public DimensionsInt getDimensions() {
 		return new DimensionsInt(WIDTH, HEIGHT);
+	}
+	
+	@Override
+	public Hitbox createHitbox() {
+		return new HitboxCircle(0.25f);
 	}
 	
 	@Override
