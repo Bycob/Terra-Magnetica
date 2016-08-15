@@ -167,4 +167,30 @@ public class HitboxCircle extends Hitbox {
 		
 		return clone;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Float.floatToIntBits(rayon);
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof HitboxCircle)) {
+			return false;
+		}
+		HitboxCircle other = (HitboxCircle) obj;
+		if (Float.floatToIntBits(rayon) != Float.floatToIntBits(other.rayon)) {
+			return false;
+		}
+		return true;
+	}
 }

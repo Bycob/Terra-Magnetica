@@ -39,6 +39,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	//Variables
 	protected Force force = new Force(0, 0);
 	
 	protected float x, y;
@@ -47,6 +48,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected float speedX, speedY;
 	protected float speedRotation;
 	
+	//Propriétés
 	protected float mass = 1;
 	protected boolean isStatic = false;
 	protected boolean isSolid = true;
@@ -60,6 +62,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected float bounceN = 1;
 	protected float bounceT = 1;
 	
+	//Collisions
 	/** Le nombre de secondes écoulées pour cette hitbox, à partir
 	 * de l'origine des calculs */
 	protected float timeOffset;
@@ -225,19 +228,19 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	/** Retourne {@code true} si les variables physique (position, angle,
 	 * vitesse) de cette hitbox sont les mêmes que les variables physiques
 	 * de la hitbox passée en paramètres. */
-	public boolean hasSamePhysic(Hitbox other) {
+	public boolean hasSamePhysicVariables(Hitbox other) {
 		return this.x == other.x &&
 				this.y == other.y &&
 				this.rotation == other.rotation &&
 				this.speedX == other.speedX &&
 				this.speedY == other.speedY && 
-				this.speedRotation == other.speedRotation;
+				this.speedRotation == other.speedRotation &&
+				this.force.equals(other.force);
 	}
 	
-	public void setSamePhysic(Hitbox other) {
-		this.isStatic = other.isStatic;
-		this.isSolid = other.isSolid;
-		
+	/** Copie toutes les données physiques de cette hitbox. */
+	public void setSamePhysicPropertiesAndVariables(Hitbox other) {
+		//Variables
 		this.x = other.x;
 		this.y = other.y;
 		this.rotation = other.rotation;
@@ -245,12 +248,16 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		this.speedY = other.speedY;
 		this.speedRotation = other.speedRotation;
 		
+		this.force = other.force.clone();
+		
+		//Propriétés
+		this.isStatic = other.isStatic;
+		this.isSolid = other.isSolid;
+		
 		this.friction = other.friction;
 		this.bounce = other.bounce;
 		this.bounceT = other.bounceT;
 		this.bounceN = other.bounceN;
-		
-		this.force = other.force.clone();
 	}
 	
 	public abstract boolean contains(Vec2 point);
@@ -447,6 +454,38 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		
 		this.lastCollisionX = this.x;
 		this.lastCollisionY = this.y;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((force == null) ? 0 : force.hashCode());
+		result = prime * result + Float.floatToIntBits(rotation);
+		result = prime * result + Float.floatToIntBits(speedRotation);
+		result = prime * result + Float.floatToIntBits(speedX);
+		result = prime * result + Float.floatToIntBits(speedY);
+		result = prime * result + Float.floatToIntBits(x);
+		result = prime * result + Float.floatToIntBits(y);
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Hitbox)) {
+			return false;
+		}
+		Hitbox other = (Hitbox) obj;
+		if (!hasSamePhysicVariables(other)) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Override

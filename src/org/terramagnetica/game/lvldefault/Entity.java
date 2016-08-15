@@ -145,7 +145,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 			if (other.hitbox != null) {
 				return false;
 			}
-		} else if (!this.hitbox.hasSamePhysic(other.hitbox)) {
+		} else if (!this.hitbox.hasSamePhysicVariables(other.hitbox)) {
 			return false;
 		}
 		
@@ -334,7 +334,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		this.hitbox = hb;
 		
 		if (oldHitbox != null) {
-			this.hitbox.setSamePhysic(oldHitbox);
+			this.hitbox.setSamePhysicPropertiesAndVariables(oldHitbox);
 		}
 		
 		if (this.lastHitbox == null) {

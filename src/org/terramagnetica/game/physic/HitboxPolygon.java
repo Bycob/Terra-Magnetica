@@ -401,4 +401,34 @@ public class HitboxPolygon extends Hitbox {
 		
 		return clone;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((points == null) ? 0 : points.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof HitboxPolygon)) {
+			return false;
+		}
+		HitboxPolygon other = (HitboxPolygon) obj;
+		if (points == null) {
+			if (other.points != null) {
+				return false;
+			}
+		} else if (!points.equals(other.points)) {
+			return false;
+		}
+		return true;
+	}
 }

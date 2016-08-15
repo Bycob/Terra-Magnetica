@@ -66,4 +66,34 @@ public class Force implements Cloneable {
 		
 		return result;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(forceX);
+		result = prime * result + Float.floatToIntBits(forceY);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Force)) {
+			return false;
+		}
+		Force other = (Force) obj;
+		if (Float.floatToIntBits(forceX) != Float.floatToIntBits(other.forceX)) {
+			return false;
+		}
+		if (Float.floatToIntBits(forceY) != Float.floatToIntBits(other.forceY)) {
+			return false;
+		}
+		return true;
+	}
 }
