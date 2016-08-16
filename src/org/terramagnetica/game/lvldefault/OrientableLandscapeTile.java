@@ -31,7 +31,7 @@ public abstract class OrientableLandscapeTile extends LandscapeTile {
 	private static final long serialVersionUID = 1L;
 	
 	public static final int NB_IMAGE = 12;
-	public static final float DEFAULT_MARGIN = 0.2f;
+	public static final float DEFAULT_MARGIN = 0.1f;
 	public static final float SIDE_OVERFLOW = 0.3f;
 	
 	/** Le décor n'est pas orienté, car il est entouré de

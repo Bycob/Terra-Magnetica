@@ -355,8 +355,8 @@ public class HitboxPolygon extends Hitbox {
 			Vec3d v2tVect = v2.substract(v2nVect);
 			
 			if (this.isStatic) {
-				other.speedX = (float) (v2tVect.x * other.bounceT - v2n * en.x);
-				other.speedY = (float) (v2tVect.y - v2n * en.y);
+				other.speedX = (float) (v2tVect.x * other.bounceT - v2n * en.x * other.bounceN) * other.bounce;
+				other.speedY = (float) (v2tVect.y * other.bounceT - v2n * en.y * other.bounceN) * other.bounce;
 			}
 			else if (other.isStatic) {
 				//Rebondissement de base.

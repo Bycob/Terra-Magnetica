@@ -148,11 +148,26 @@ public class PhysicEngine {
 		int caseX = (int) hb.getPositionX();
 		int caseY = (int) hb.getPositionY();
 		
+		LandscapeTile thisCase = game.getLandscapeAt(caseX, caseY);
+		if (!thisCase.isEnabled()) {
+			result.add(thisCase.getHitboxf());
+			return result;
+		}
+		
 		for (int x = caseX - 1 ; x <= caseX + 1 ; x++) {
 			for (int y = caseY - 1 ; y <= caseY + 1 ; y++) {
-				LandscapeTile tile;
-				if ((x != caseX || y != caseY) && !(tile = game.getLandscapeAt(x, y)).isEnabled()) {
-					result.add(tile.getHitboxf());
+				LandscapeTile tile = game.getLandscapeAt(x, y);
+				if ((x != caseX || y != caseY) && !tile.isEnabled()) {
+					if (x == caseX || y == caseY) {
+						result.add(tile.getHitboxf());
+					}
+					else {
+						LandscapeTile tile1 = game.getLandscapeAt(x, caseX);
+						LandscapeTile tile2 = game.getLandscapeAt(caseY, y);
+						if (tile1.isEnabled() && tile2.isEnabled()) {
+							result.add(tile.getHitboxf());
+						}
+					}
 				}
 			}
 		}
