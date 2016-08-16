@@ -80,7 +80,12 @@ public class PhysicEngine {
 				
 				if (thisTime < lowerTime) {
 					lowerTime = thisTime;
-					collidedHitboxes.clear();
+					
+					if (collidedHitboxes.size() != 0) {
+						//On a skip des collisions, qu'il faudra tester dans un tour de boucle ultérieur
+						isThereCollision = true;
+						collidedHitboxes.clear();
+					}
 				}
 				if (thisTime == lowerTime) {
 					collidedHitboxes.add(hb);
@@ -95,7 +100,7 @@ public class PhysicEngine {
 				}
 			}
 			
-			//Revérification des collisions.
+			//Redétection des collisions.
 			for (Hitbox hb : collidedHitboxes) {
 				//entités
 				for (Hitbox hb2 : hitboxes) {
