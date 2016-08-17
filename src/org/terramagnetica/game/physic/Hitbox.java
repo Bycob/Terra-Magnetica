@@ -68,6 +68,12 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected float timeOffset;
 	protected CollisionPoint nextCollisionPoint;
 	
+	/** Compte le nombre de collisions ayant eu lieu exactement au même instant. */
+	protected int collisionCount;
+	protected float newSpeedX;
+	protected float newSpeedY;
+	protected boolean multiColliding = false;
+	
 	/** Cette liste enregistre les hitboxes collisionnées au temps "lastCollision".
 	 * Ainsi, on peut éviter les détections de collision infinies. */
 	protected ArrayList<Hitbox> lastHitboxes = new ArrayList<Hitbox>();
@@ -326,12 +332,22 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		return this.nextCollisionPoint;
 	}
 	
+	public float getLastCollisionTime() {
+		return this.lastCollision;
+	}
+	
 	public void calculateNextCollisionPoint(Hitbox other, float time) {
 		if (!testCollision(other, time)) {
 			return;
 		}
 		
 		CollisionPoint cp = getCurrentCollisionPoint(other, time);
+		
+		//Détection des collisions multiples
+		if (this.nextCollisionPoint != null && this.nextCollisionPoint.getTime() == cp.getTime()) {
+			this.multiColliding = true;
+		}
+		
 		//détection des collisions infinies
 		if (this.lastCollision >= cp.getTime() && this.lastHitboxes.contains(other)) {
 			return;
@@ -369,6 +385,14 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		}
 		if (MathUtil.getSquaredDistance(this.x, this.y, other.x, other.y) > 4*4) {
 			//TODO Changer ce critère pourri
+			return false;
+		}
+		
+		//Un objet en interpénétration n'est pas considéré comme en collision.
+		for (Hitbox hb : both) {
+			hb.setTimeOffset(0);
+		}
+		if (this.intersects(other)) {
 			return false;
 		}
 		
@@ -426,10 +450,30 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * par la méthode {@link #calculateNextCollisionPoint(Hitbox, float)}.<p>
 	 * Place les deux hitbox concernées par cette collision, à l'instant de leur
 	 * collision, puis calcule leur nouvelles vitesses suite au rebond. */
-	public abstract void doNextCollision();
+	public abstract void calculateNextCollisionReaction();
+	
+	public void applyCollisionReaction() {
+		if (this.collisionCount != 0) {
+			this.speedX = this.newSpeedX / this.collisionCount;
+			this.speedY = this.newSpeedY / this.collisionCount;
+		}
+		
+		this.newSpeedX = 0;
+		this.newSpeedY = 0;
+		this.collisionCount = 0;
+		
+		this.multiColliding = false;
+	}
 	
 	protected void beforeCollision() {}
+	
 	protected void afterCollision() {
+		this.collisionCount ++;
+
+		if (!this.multiColliding) {
+			this.applyCollisionReaction();
+		}
+		
 		updateLastCollisionData();
 		this.nextCollisionPoint = null;
 	}

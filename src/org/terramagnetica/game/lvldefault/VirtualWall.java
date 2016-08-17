@@ -50,11 +50,12 @@ public class VirtualWall extends CaseEntity {
 	private static final long serialVersionUID = 1L;
 	
 	public VirtualWall() {
-		super();
+		this(0, 0);
 	}
 	
 	public VirtualWall(int x, int y) {
 		super(x, y);
+		this.hitbox.setSolid(false);
 	}
 	
 	@Override

@@ -48,6 +48,10 @@ public abstract class GameEngine implements Runnable, Codable, Cloneable, Serial
 	protected long lastUpdateTime;
 	
 	public static final int TIME_TO_SLEEP = 20;
+	public static final int TICK_TIME = 20;
+	/** Le nombre maximum de ticks qui peuvent s'écouler en une seule
+	 * mise à jour. */
+	public static final int MAX_TICKS = 3;
 	
 	/** 
 	 * Indique si les mises à jour doivent se faire manuellement
@@ -171,11 +175,15 @@ public abstract class GameEngine implements Runnable, Codable, Cloneable, Serial
 		
 		long time = System.currentTimeMillis();
 		long dT = time - this.lastUpdateTime;
-		final int tickTime = 20;
+		int tickCount = 0;
+		final int tickTime = TICK_TIME;
 		
 		while (dT > tickTime) {
-			this.update(tickTime);
+			if (tickCount < MAX_TICKS) {
+				this.update(tickTime);
+			}
 			dT -= tickTime;
+			tickCount++;
 		}
 		
 		this.lastUpdateTime = time - dT;

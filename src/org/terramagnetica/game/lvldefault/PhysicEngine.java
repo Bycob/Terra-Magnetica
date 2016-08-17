@@ -96,7 +96,7 @@ public class PhysicEngine {
 			for (Hitbox hb : collidedHitboxes) {
 				if (hb.hasNextCollisionPoint()) {
 					onCollision(game, hb, hb.getNextCollisionPoint().getOtherHitbox(hb));
-					hb.doNextCollision();
+					hb.calculateNextCollisionReaction();
 				}
 			}
 			

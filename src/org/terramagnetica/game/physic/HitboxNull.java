@@ -35,7 +35,7 @@ public class HitboxNull extends Hitbox {
 	}
 
 	@Override
-	public void doNextCollision() {
+	public void calculateNextCollisionReaction() {
 		
 	}
 

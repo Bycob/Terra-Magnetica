@@ -183,16 +183,17 @@ public class HitboxPolygon extends Hitbox {
 	}
 	
 	@Override
-	public void doNextCollision() {
+	public void calculateNextCollisionReaction() {
 		if (this.nextCollisionPoint == null) {
 			throw new IllegalStateException("Il n'y a aucune collision à effectuer.");
 		}
 		
 		Hitbox other = this.nextCollisionPoint.getOtherHitbox(this);
+		Hitbox[] both = new Hitbox[] {this, other};
 
 		if (other instanceof HitboxPolygon) {
 			if (this.isStatic) {
-				other.doNextCollision();
+				other.calculateNextCollisionReaction();
 				return;
 			}
 			//-> Je ne suis pas statique
@@ -275,20 +276,21 @@ public class HitboxPolygon extends Hitbox {
 				double v2nNew = (v2n * other.mass + v1n * this.mass - (v2n - v1n) * this.mass) / massSum;
 				
 				//Application sur les données physiques des deux hitbox
-				this.speedX = (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
-				this.speedY = (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
+				this.newSpeedX += (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
+				this.newSpeedY += (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
 				
-				other.speedX = (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
-				other.speedY = (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
+				other.newSpeedX += (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
+				other.newSpeedY += (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
 			}
 			else {
 				//Rebondissement de base.
-				this.speedX = (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
-				this.speedY = (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
+				this.newSpeedX += (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
+				this.newSpeedY += (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
 			}
 			
-			this.afterCollision();
-			other.afterCollision();
+			for (Hitbox hb : both) {
+				hb.afterCollision();
+			}
 		}
 		else if (other instanceof HitboxCircle) {
 			this.nextCollisionPoint.goToPoint();
@@ -355,13 +357,13 @@ public class HitboxPolygon extends Hitbox {
 			Vec3d v2tVect = v2.substract(v2nVect);
 			
 			if (this.isStatic) {
-				other.speedX = (float) (v2tVect.x * other.bounceT - v2n * en.x * other.bounceN) * other.bounce;
-				other.speedY = (float) (v2tVect.y * other.bounceT - v2n * en.y * other.bounceN) * other.bounce;
+				other.newSpeedX += (float) (v2tVect.x * other.bounceT - v2n * en.x * other.bounceN) * other.bounce;
+				other.newSpeedY += (float) (v2tVect.y * other.bounceT - v2n * en.y * other.bounceN) * other.bounce;
 			}
 			else if (other.isStatic) {
 				//Rebondissement de base.
-				this.speedX = (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
-				this.speedY = (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
+				this.newSpeedX += (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
+				this.newSpeedY += (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
 			}
 			else {
 				double massSum = this.mass + other.mass;
@@ -371,18 +373,19 @@ public class HitboxPolygon extends Hitbox {
 				double v2nNew = (v2n * other.mass + v1n * this.mass - (v2n - v1n) * this.mass) / massSum;
 				
 				//Application sur les données physiques des deux hitbox
-				this.speedX = (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
-				this.speedY = (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
+				this.newSpeedX += (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
+				this.newSpeedY += (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
 				
-				other.speedX = (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
-				other.speedY = (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
+				other.newSpeedX += (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
+				other.newSpeedY += (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
 			}
 
-			this.afterCollision();
-			other.afterCollision();
+			for (Hitbox hb : both) {
+				hb.afterCollision();
+			}
 		}
 		else {
-			other.doNextCollision();
+			other.calculateNextCollisionReaction();
 		}
 	}
 	
