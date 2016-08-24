@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
  </LICENSE> */
 
-package org.terramagnetica.game.physic;
+package org.terramagnetica.physics;
 
 import java.util.ArrayList;
 
@@ -274,18 +274,18 @@ public class HitboxPolygon extends Hitbox {
 				//Calcul des nouvelles vitesses
 				double v1nNew = (v1n * this.mass + v2n * other.mass - (v1n - v2n) * other.mass) / massSum;
 				double v2nNew = (v2n * other.mass + v1n * this.mass - (v2n - v1n) * this.mass) / massSum;
-				
+
 				//Application sur les données physiques des deux hitbox
-				this.newSpeedX += (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
-				this.newSpeedY += (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
+				this.speedX = (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
+				this.speedY = (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
 				
-				other.newSpeedX += (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
-				other.newSpeedY += (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
+				other.speedX = (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
+				other.speedY = (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
 			}
 			else {
 				//Rebondissement de base.
-				this.newSpeedX += (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
-				this.newSpeedY += (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
+				this.speedX = (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
+				this.speedY = (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
 			}
 			
 			for (Hitbox hb : both) {
@@ -299,6 +299,7 @@ public class HitboxPolygon extends Hitbox {
 			HitboxCircle otherCircle = (HitboxCircle) other;
 			float radius2 = otherCircle.getRadius() * otherCircle.getRadius();
 			
+			boolean edgeCollision = false;
 			Vec2f closerPoint = null;
 			Line2D closerEdge = null;
 			double distance = Double.MAX_VALUE;
@@ -308,19 +309,20 @@ public class HitboxPolygon extends Hitbox {
 				Vec2f point2 = this.realPositions.get((i + 1) % this.realPositions.size());
 				Line2D line = this.edgeList.get(i);
 				
-				//distance à la ligne
-				double lineDistance = Math.abs(line.squaredDistance(otherCircle.x, otherCircle.y) - radius2);
 				//collision de bord ?
 				Vec3d segment1 = new Vec3d(point1.x - point2.x, point1.y - point2.y);
 				Vec3d vec1 = new Vec3d(otherCircle.x - point2.x, otherCircle.y - point2.y);
 				double dotProd = segment1.dotProduct(vec1);
-				boolean edgeCollision = dotProd >= 0 && dotProd <= segment1.dotProduct(segment1);
+				edgeCollision = edgeCollision || (dotProd >= 0 && dotProd <= segment1.dotProduct(segment1));
+				
+				//distance à la ligne
+				double lineDistance = Math.abs(line.squaredDistance(otherCircle.x, otherCircle.y) - radius2);
 				
 				//distance au point
 				double pointDistance = Math.abs(MathUtil.getSquaredDistance(point1.x, point1.y, otherCircle.x, otherCircle.y) - radius2);
 				
-				if (lineDistance < pointDistance && edgeCollision) {
-					if (lineDistance < distance) {
+				if (edgeCollision) {
+					if (lineDistance < distance || closerEdge == null) {
 						distance = lineDistance;
 						closerEdge = line;
 						closerPoint = null;
@@ -357,13 +359,13 @@ public class HitboxPolygon extends Hitbox {
 			Vec3d v2tVect = v2.substract(v2nVect);
 			
 			if (this.isStatic) {
-				other.newSpeedX += (float) (v2tVect.x * other.bounceT - v2n * en.x * other.bounceN) * other.bounce;
-				other.newSpeedY += (float) (v2tVect.y * other.bounceT - v2n * en.y * other.bounceN) * other.bounce;
+				other.speedX = (float) (v2tVect.x * other.bounceT - v2n * en.x * other.bounceN) * other.bounce;
+				other.speedY = (float) (v2tVect.y * other.bounceT - v2n * en.y * other.bounceN) * other.bounce;
 			}
 			else if (other.isStatic) {
 				//Rebondissement de base.
-				this.newSpeedX += (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
-				this.newSpeedY += (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
+				this.speedX = (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
+				this.speedY = (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
 			}
 			else {
 				double massSum = this.mass + other.mass;
@@ -371,13 +373,13 @@ public class HitboxPolygon extends Hitbox {
 				//Calcul des nouvelles vitesses
 				double v1nNew = (v1n * this.mass + v2n * other.mass - (v1n - v2n) * other.mass) / massSum;
 				double v2nNew = (v2n * other.mass + v1n * this.mass - (v2n - v1n) * this.mass) / massSum;
-				
+
 				//Application sur les données physiques des deux hitbox
-				this.newSpeedX += (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
-				this.newSpeedY += (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
+				this.speedX = (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
+				this.speedY = (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
 				
-				other.newSpeedX += (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
-				other.newSpeedY += (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
+				other.speedX = (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
+				other.speedY = (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
 			}
 
 			for (Hitbox hb : both) {

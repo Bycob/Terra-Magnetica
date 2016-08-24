@@ -28,9 +28,9 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
-import org.terramagnetica.game.physic.Hitbox;
-import org.terramagnetica.game.physic.HitboxCircle;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.TexturesLoader;
 
@@ -156,7 +156,7 @@ public class Aimant extends EntityMoving {
 		
 		if (entity != this.influence && entity != this) {
 			if (entity instanceof PlayerDefault) {
-				if (getVelocity() > PlayerDefault.CRYSTAL_KILL) game.getPlayer().attack(1, game);
+				if (this.lastHitbox.getSpeedLength() > PlayerDefault.CRYSTAL_KILL) game.getPlayer().attack(1, game);
 			}
 		}
 	}

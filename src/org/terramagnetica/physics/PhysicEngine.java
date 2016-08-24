@@ -17,33 +17,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
  </LICENSE> */
 
-package org.terramagnetica.game.lvldefault;
+package org.terramagnetica.physics;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import org.terramagnetica.game.physic.Hitbox;
-
-public class PhysicEngine {
-	
-	private HashMap<Hitbox, Entity> entityMap = new HashMap<Hitbox, Entity>();
+public abstract class PhysicEngine {
 	
 	public PhysicEngine() {
 		
 	}
 	
-	/** Calcul l'état du monde après un tick. */
-	public void update(GamePlayingDefault game, float time) {
-		
-		List<Entity> entities = game.getEntities();
-		ArrayList<Hitbox> hitboxes = new ArrayList<Hitbox>(entities.size());
-		
-		for (Entity ent : entities) {
-			hitboxes.add(ent.getHitBoxf());
-			this.entityMap.put(ent.getHitBoxf(), ent);
-		}
-		
+	public void step(List<Hitbox> hitboxes, float time) {
 		//Application des forces
 		for (Hitbox hb : hitboxes) {
 			hb.applyForces(time);
@@ -58,7 +43,7 @@ public class PhysicEngine {
 			}
 			
 			//environnement
-			ArrayList<Hitbox> envHbs = getEnvironmentHitbox(game, hbi);
+			ArrayList<Hitbox> envHbs = getEnvironmentHitbox(hbi);
 			for (Hitbox hbj : envHbs) {
 				hbi.calculateNextCollisionPoint(hbj, time);
 			}
@@ -90,12 +75,16 @@ public class PhysicEngine {
 				if (thisTime == lowerTime) {
 					collidedHitboxes.add(hb);
 				}
+				else {
+					//On vient juste de skip une collision
+					isThereCollision = true;
+				}
 			}
 			
 			//Calcul de la collision
 			for (Hitbox hb : collidedHitboxes) {
 				if (hb.hasNextCollisionPoint()) {
-					onCollision(game, hb, hb.getNextCollisionPoint().getOtherHitbox(hb));
+					onCollision(hb, hb.getNextCollisionPoint().getOtherHitbox(hb));
 					hb.calculateNextCollisionReaction();
 				}
 			}
@@ -111,7 +100,7 @@ public class PhysicEngine {
 				}
 				
 				//environnement
-				ArrayList<Hitbox> envHbs = getEnvironmentHitbox(game, hb);
+				ArrayList<Hitbox> envHbs = getEnvironmentHitbox(hb);
 				for (Hitbox hbe : envHbs) {
 					hb.calculateNextCollisionPoint(hbe, time);
 					if (hb.hasNextCollisionPoint()) isThereCollision = true;
@@ -125,58 +114,9 @@ public class PhysicEngine {
 		}
 	}
 	
-	public void onCollision(GamePlayingDefault game, Hitbox hb1, Hitbox hb2) {
-		Entity ent1 = this.entityMap.get(hb1);
-		Entity ent2 = this.entityMap.get(hb2);
-		
-		if (ent1 == null) {
-			if (ent2 != null) {
-				ent2.addWallCollision();
-			}
-		}
-		else if (ent2 == null) {
-			if (ent1 != null) {
-				ent1.addWallCollision();
-			}
-		}
-		else {
-			ent1.addEntityCollision(ent2);
-			ent2.addEntityCollision(ent1);
-		}
-	}
+	public abstract ArrayList<Hitbox> getEnvironmentHitbox(Hitbox hb);
 	
-	/** Donne la liste des hitbox susceptibles d'entrer en collision avec celle passée
-	 * en paramètres. */
-	public ArrayList<Hitbox> getEnvironmentHitbox(GamePlayingDefault game, Hitbox hb) {
-		ArrayList<Hitbox> result = new ArrayList<Hitbox>(8);
+	public void onCollision(Hitbox hb1, Hitbox hb2) {
 		
-		int caseX = (int) hb.getPositionX();
-		int caseY = (int) hb.getPositionY();
-		
-		LandscapeTile thisCase = game.getLandscapeAt(caseX, caseY);
-		if (!thisCase.isEnabled()) {
-			result.add(thisCase.getHitboxf());
-			return result;
-		}
-		
-		for (int x = caseX - 1 ; x <= caseX + 1 ; x++) {
-			for (int y = caseY - 1 ; y <= caseY + 1 ; y++) {
-				LandscapeTile tile = game.getLandscapeAt(x, y);
-				if ((x != caseX || y != caseY) && !tile.isEnabled()) {
-					if (x == caseX || y == caseY) {
-						result.add(tile.getHitboxf());
-					}
-					else {
-						LandscapeTile tile1 = game.getLandscapeAt(x, caseX);
-						LandscapeTile tile2 = game.getLandscapeAt(caseY, y);
-						if (tile1.isEnabled() && tile2.isEnabled()) {
-							result.add(tile.getHitboxf());
-						}
-					}
-				}
-			}
-		}
-		
-		return result;
 	}
 }

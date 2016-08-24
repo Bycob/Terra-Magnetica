@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
  </LICENSE> */
 
-package org.terramagnetica.game.physic;
+package org.terramagnetica.physics;
 
 import net.bynaryscode.util.maths.MathUtil;
 import net.bynaryscode.util.maths.geometric.Circle;
@@ -122,16 +122,16 @@ public class HitboxCircle extends Hitbox {
 				double v2nNew = (v2n * other.mass + v1n * this.mass - (v2n - v1n) * this.mass) / massSum;
 				
 				//Application sur les données physiques des deux hitbox
-				this.newSpeedX += (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
-				this.newSpeedY += (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
+				this.speedX = (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
+				this.speedY = (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
 				
-				other.newSpeedX += (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
-				other.newSpeedY += (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
+				other.speedX = (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
+				other.speedY = (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
 			}
 			else {
 				//Rebondissement de base.
-				this.newSpeedX += (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
-				this.newSpeedY += (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
+				this.speedX += (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
+				this.speedY += (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
 			}
 			
 			for (HitboxCircle hb : both) {

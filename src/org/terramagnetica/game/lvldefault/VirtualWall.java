@@ -55,7 +55,7 @@ public class VirtualWall extends CaseEntity {
 	
 	public VirtualWall(int x, int y) {
 		super(x, y);
-		this.hitbox.setSolid(false);
+		this.hitbox.setFamily(VIRTUAL_WALL_FAMILY);
 	}
 	
 	@Override

@@ -25,9 +25,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
-import org.terramagnetica.game.physic.Hitbox;
-import org.terramagnetica.game.physic.HitboxCircle;
-import org.terramagnetica.game.physic.HitboxPolygon;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxCircle;
+import org.terramagnetica.physics.HitboxFamily;
+import org.terramagnetica.physics.HitboxPolygon;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.Codable;
@@ -46,6 +47,14 @@ import net.bynaryscode.util.maths.geometric.Vec2i;
 public abstract class Entity implements Serializable, Cloneable, Codable {
 	
 	private static final long serialVersionUID = 4199408739382933790L;
+
+	/** Famille de toutes les hitboxes pouvant traverser les murs virtuels. */
+	public static final HitboxFamily PASS_VIRTUAL_WALL_FAMILY = new HitboxFamily("passvirtualwall");
+	public static final HitboxFamily VIRTUAL_WALL_FAMILY = new HitboxFamily("virtualwall");
+	
+	static {
+		PASS_VIRTUAL_WALL_FAMILY.setCollisionPermission(VIRTUAL_WALL_FAMILY, false);
+	}
 	
 	//PHYSIQUE
 	
@@ -98,7 +107,9 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		this.setCoordonnéesf(x, y);
 		
 		this.recreateHitbox();
+		
 		this.hitbox.setStatic(true);
+		if (this.canPassVirtualWall()) this.hitbox.setFamily(PASS_VIRTUAL_WALL_FAMILY);
 	}
 	
 	protected Entity(int x, int y, int priority) {

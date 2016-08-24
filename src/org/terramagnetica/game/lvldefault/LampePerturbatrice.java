@@ -24,8 +24,9 @@ import java.awt.Image;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
-import org.terramagnetica.game.physic.Hitbox;
-import org.terramagnetica.game.physic.HitboxCircle;
+import org.terramagnetica.physics.Force;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
 
 import net.bynaryscode.util.Color4f;
@@ -127,10 +128,7 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 			float vX = (float) Math.cos(dir);//vecteur x déviant
 			float vY = (float) Math.sin(dir);//vecteur y déviant
 			
-			float newMoveX = controlled.getMovementX() + (FORCE * vX) / (d * d) * (delta / 1000f);
-			float newMoveY = controlled.getMovementY() + (FORCE * vY) / (d * d) * (delta / 1000f);
-			
-			controlled.setMovement(newMoveX, newMoveY);
+			controlled.getHitBoxf().addForce(new Force((FORCE * vX) / (d * d), (FORCE * vY) / (d * d)));
 		}
 		else {
 			

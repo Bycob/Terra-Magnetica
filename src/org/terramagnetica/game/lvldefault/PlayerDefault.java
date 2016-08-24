@@ -29,9 +29,9 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.CameraTrackPoint3D;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
-import org.terramagnetica.game.physic.Hitbox;
-import org.terramagnetica.game.physic.HitboxCircle;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.SoundManager;
 import org.terramagnetica.ressources.TexturesLoader;
@@ -228,6 +228,11 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 		if (ent instanceof EntityMoving) {
 			((EntityMoving) ent).push((float) this.getVelocity() * 1.1f, this.getDirection(), game, this);
 		}
+	}
+	
+	@Override
+	public void onLandscapeCollision(long dT, GamePlayingDefault game) {
+		
 	}
 	
 	

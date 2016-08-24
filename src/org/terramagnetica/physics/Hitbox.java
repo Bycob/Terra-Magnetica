@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
  </LICENSE> */
 
-package org.terramagnetica.game.physic;
+package org.terramagnetica.physics;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,6 +39,9 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	/** Ce champs permet d'ajouter des informations externes à la hitbox. */
+	public HitboxInfo infos;
+	
 	//Variables
 	protected Force force = new Force(0, 0);
 	
@@ -52,6 +55,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected float mass = 1;
 	protected boolean isStatic = false;
 	protected boolean isSolid = true;
+	protected float maxSpeed = -1;
 	
 	/** Coefficient de friction de l'objet. Indique la perte de vitesse
 	 * naturelle de l'objet pendant son déplacement. */
@@ -62,17 +66,13 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected float bounceN = 1;
 	protected float bounceT = 1;
 	
+	protected HitboxFamily family = null;
+	
 	//Collisions
 	/** Le nombre de secondes écoulées pour cette hitbox, à partir
 	 * de l'origine des calculs */
 	protected float timeOffset;
 	protected CollisionPoint nextCollisionPoint;
-	
-	/** Compte le nombre de collisions ayant eu lieu exactement au même instant. */
-	protected int collisionCount;
-	protected float newSpeedX;
-	protected float newSpeedY;
-	protected boolean multiColliding = false;
 	
 	/** Cette liste enregistre les hitboxes collisionnées au temps "lastCollision".
 	 * Ainsi, on peut éviter les détections de collision infinies. */
@@ -98,6 +98,14 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	
 	public boolean isSolid() {
 		return this.isSolid;
+	}
+	
+	public void setFamily(HitboxFamily family) {
+		this.family = family;
+	}
+	
+	public HitboxFamily getFamily() {
+		return this.family;
 	}
 	
 	public void setRotation(float rotation) {
@@ -149,12 +157,37 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		return new Vec2f(this.speedX, this.speedY);
 	}
 	
+	public float getSquaredSpeedLength() {
+		return this.speedX * this.speedX + this.speedY * this.speedY;
+	}
+	
+	public float getSpeedLength() {
+		return (float) Math.sqrt(this.getSquaredSpeedLength());
+	}
+	
 	public float getSpeedX() {
 		return this.speedX;
 	}
 	
 	public float getSpeedY() {
 		return this.speedY;
+	}
+	
+	public void setMaxSpeed(float maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+	
+	public float getMaxSpeed() {
+		return this.maxSpeed;
+	}
+	
+	/** Si elle est trop grande, réduit la vitesse de cette hitbox pour
+	 * qu'elle ne soit pas plus grande que {@link #getMaxSpeed()}. */
+	protected void capSpeed() {
+		float scale = this.maxSpeed / this.getSpeedLength();
+		if (scale < 1) {
+			this.scaleLinearSpeed(scale, scale);
+		}
 	}
 	
 	public void setRotationSpeed(float speed) {
@@ -246,6 +279,8 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	
 	/** Copie toutes les données physiques de cette hitbox. */
 	public void setSamePhysicPropertiesAndVariables(Hitbox other) {
+		this.infos = other.infos;
+		
 		//Variables
 		this.x = other.x;
 		this.y = other.y;
@@ -257,8 +292,11 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		this.force = other.force.clone();
 		
 		//Propriétés
+		this.family = other.family;
+		this.mass = other.mass;
 		this.isStatic = other.isStatic;
 		this.isSolid = other.isSolid;
+		this.maxSpeed = other.maxSpeed;
 		
 		this.friction = other.friction;
 		this.bounce = other.bounce;
@@ -288,6 +326,8 @@ public abstract class Hitbox implements Serializable, Cloneable {
 			this.speedX = (this.force.getForceX() * time + this.speedX) * frictionRatio;
 			this.speedY = (this.force.getForceY() * time + this.speedY) * frictionRatio;
 		}
+		
+		capSpeed();
 	}
 	
 	/** Fait varier la position de l'objet en fonction de sa vitesse.
@@ -343,11 +383,6 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		
 		CollisionPoint cp = getCurrentCollisionPoint(other, time);
 		
-		//Détection des collisions multiples
-		if (this.nextCollisionPoint != null && this.nextCollisionPoint.getTime() == cp.getTime()) {
-			this.multiColliding = true;
-		}
-		
 		//détection des collisions infinies
 		if (this.lastCollision >= cp.getTime() && this.lastHitboxes.contains(other)) {
 			return;
@@ -359,6 +394,20 @@ public abstract class Hitbox implements Serializable, Cloneable {
 			if (hb.nextCollisionPoint != null) hb.nextCollisionPoint.delete();
 			hb.nextCollisionPoint = cp; 
 		}
+	}
+	
+	public boolean canCollide(Hitbox other) {
+		if (this.isStatic && other.isStatic) return false;
+		if (!this.isSolid || !other.isSolid) return false;
+		
+		if (this.family != null) {
+			if (!this.family.canCollide(other.family)) return false;
+		}
+		else if (other.family != null) {
+			if (!other.family.canCollide(this.family)) return false;
+		}
+		
+		return true;
 	}
 	
 	/** Cette méthode teste si une collision va avoir lieu entre les deux hitbox
@@ -374,8 +423,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * Un appel à la méthode {@link #completeMove(float)} permettra de clore le
 	 * mouvement, une fois toutes les collisions calculées.*/
 	protected boolean testCollision(Hitbox other, float time) {
-		if (this.isStatic && other.isStatic) return false;
-		if (!this.isSolid || !other.isSolid) return false;
+		if (!canCollide(other)) return false;
 		
 		Hitbox[] both = new Hitbox[] {this, other};
 		
@@ -388,14 +436,6 @@ public abstract class Hitbox implements Serializable, Cloneable {
 			return false;
 		}
 		
-		//Un objet en interpénétration n'est pas considéré comme en collision.
-		for (Hitbox hb : both) {
-			hb.setTimeOffset(0);
-		}
-		if (this.intersects(other)) {
-			return false;
-		}
-		
 		//Procédure de détection de collision
 		float maxTime = time;
 		for (Hitbox hb : both) {
@@ -405,7 +445,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		}
 		
 		for (Hitbox hb : both) {
-			hb.applyVelocity(maxTime - hb.timeOffset);
+			hb.setTimeOffset(maxTime);
 		}
 		
 		return this.intersects(other);
@@ -425,7 +465,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected final CollisionPoint findCollisionPointDefault(Hitbox other, float time) {
 		Hitbox both[] = new Hitbox[] {this, other};
 		
-		float lower = this.lastCollision;
+		float lower = Math.max(this.lastCollision, other.lastCollision);
 		float higher = time;
 		
 		while (higher - lower > 0.0001) {
@@ -452,30 +492,13 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * collision, puis calcule leur nouvelles vitesses suite au rebond. */
 	public abstract void calculateNextCollisionReaction();
 	
-	public void applyCollisionReaction() {
-		if (this.collisionCount != 0) {
-			this.speedX = this.newSpeedX / this.collisionCount;
-			this.speedY = this.newSpeedY / this.collisionCount;
-		}
-		
-		this.newSpeedX = 0;
-		this.newSpeedY = 0;
-		this.collisionCount = 0;
-		
-		this.multiColliding = false;
-	}
-	
 	protected void beforeCollision() {}
 	
 	protected void afterCollision() {
-		this.collisionCount ++;
-
-		if (!this.multiColliding) {
-			this.applyCollisionReaction();
-		}
-		
 		updateLastCollisionData();
 		this.nextCollisionPoint = null;
+		
+		this.capSpeed();
 	}
 	
 	/** Enregistre l'état de la hitbox lors de la dernière collision, afin

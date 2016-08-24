@@ -66,7 +66,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	
 	public final transient GameBufferDefault buffer = new GameBufferDefault();
 	public final transient GameRenderingDefault render = new GameRenderingDefault(this);
-	private final PhysicEngine physics = new PhysicEngine();
+	private final LevelDefaultPhysicEngine physics = new LevelDefaultPhysicEngine();
 	
 	private transient long time;
 	/** Indique que le moteur de jeu n'a pas encore été mis à jour. */
