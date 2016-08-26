@@ -39,7 +39,6 @@ import net.bynaryscode.util.maths.geometric.Vec3d;
 /**
  * Dessine le décor en entier.
  * @author Louis JEAN
- *
  */
 public class RenderFullLandscape extends RenderGameDefaultElement {
 	

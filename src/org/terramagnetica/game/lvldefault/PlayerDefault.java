@@ -79,6 +79,7 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	
 	private void init() {
 		this.hitbox.setBounceWeighting(0, 1);
+		this.hitbox.setBounce(1f);
 		this.updateTrackPoint();
 	}
 	

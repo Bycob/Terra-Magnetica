@@ -44,6 +44,7 @@ public abstract class EntityMoving extends Entity implements Serializable {
 	private void init()  {
 		this.hitbox.setStatic(false);
 		this.hitbox.setMaxSpeed(15f);
+		this.hitbox.setBounce(0.95f);
 	}
 	
 	public float getMovementX() {

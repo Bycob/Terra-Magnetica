@@ -130,8 +130,8 @@ public class HitboxCircle extends Hitbox {
 			}
 			else {
 				//Rebondissement de base.
-				this.speedX += (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
-				this.speedY += (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
+				this.speedX = (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
+				this.speedY = (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
 			}
 			
 			for (HitboxCircle hb : both) {
