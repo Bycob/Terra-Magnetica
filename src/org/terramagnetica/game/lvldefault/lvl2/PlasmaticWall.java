@@ -79,6 +79,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 	public void setSize(int size) {
 		if (size < 1) throw new NullPointerException("Le mur fait au moins 1 de large");
 		this.size = size;
+		recreateHitbox();
 	}
 	
 	public void setColor(Color4f color) {
@@ -154,7 +155,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 	public PlasmaticWall decode(BufferedObjectInputStream in) throws GameIOException {
 		super.decode(in);
 		
-		this.size = in.readIntField(200);
+		this.setSize(in.readIntField(200));
 		this.color = BarrierHandle.readBarrierColor(in, 201);
 		
 		return this;
