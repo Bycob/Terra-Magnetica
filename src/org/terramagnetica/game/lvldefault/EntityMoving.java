@@ -138,7 +138,7 @@ public abstract class EntityMoving extends Entity implements Serializable {
 		if (this.getMovementX() != 0 || this.getMovementY() != 0) {
 			double vitesse = getVelocity();
 			
-			this.setMovement((float) (Math.cos(direction) * vitesse),(float) (- Math.sin(direction) * vitesse));
+			this.setMovement((float) (Math.cos(direction) * vitesse), (float) (- Math.sin(direction) * vitesse));
 		}
 	}
 	

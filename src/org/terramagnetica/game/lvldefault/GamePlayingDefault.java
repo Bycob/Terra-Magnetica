@@ -466,6 +466,12 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 			this.render.interruptGame(new InterruptionChangeRoom(this, this.currentRoom, true));
 		}
 		
+		//Préparation des entités pour le tour de mise à jour
+		for (Entity entity : this.entities) {
+			entity.updateLastHitbox();
+			entity.updated = false;
+		}
+		
 		//Mise à jour du moteur physique
 		this.physics.update(this, delta);
 		
@@ -476,12 +482,6 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		//Mise à jour des entités
 		for (Entity entity : this.entities) {
 			entity.updateLogic(delta, this);
-		}
-		
-		//Préparation des entités pour le tour prochain
-		for (Entity entity : this.entities) {
-			entity.updateLastHitbox();
-			entity.updated = false;
 		}
 		
 		//Mise à jour des différents modules

@@ -154,6 +154,7 @@ public class MagneticWavesGenerator extends CaseEntity implements IDirectionnalE
 		long period = (long) (1000 / this.freq);
 		long timeElapsed = this.lastWaveDate == -1 ? period : date - this.lastWaveDate; 
 		
+		//Création de vagues
 		if (timeElapsed >= period) {
 			long aliveTime = timeElapsed - period;//Indique la durée depuis laquelle l'onde existe déjà.
 			MagneticWave createdWave = new MagneticWave(this.speed, this.distance, this.direction.getDirection());
@@ -167,9 +168,11 @@ public class MagneticWavesGenerator extends CaseEntity implements IDirectionnalE
 			this.lastWaveDate = date - aliveTime;
 		}
 		
+		//Suppression de vagues
 		ArrayList<MagneticWave> deleted = new ArrayList<MagneticWave>();
 		for (MagneticWave wave : this.waves) {
 			wave.updateLogic(dT, game);
+			
 			if (!wave.isAlive()) {
 				deleted.add(wave);
 			}
@@ -215,9 +218,15 @@ public class MagneticWavesGenerator extends CaseEntity implements IDirectionnalE
 		MagneticWavesGenerator clone = (MagneticWavesGenerator) super.clone();
 		
 		clone.direction = new PropertyDirectionnalEntity(this.direction.getDirection());
-		clone.waves = new ArrayList<MagneticWave>();//Le clone ne conserve pas les vagues d'ondes
 		
+		clone.waves = new ArrayList<MagneticWave>();
+		for (MagneticWave wave : this.waves) {
+			clone.waves.add((MagneticWave) wave.clone());
+		}
 		clone.waveRender = new RenderCompound();
+		for (MagneticWave wave : clone.waves) {
+			clone.waveRender.addEntityToRender(wave);
+		}
 		
 		return clone;
 	}

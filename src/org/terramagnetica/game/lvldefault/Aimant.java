@@ -88,7 +88,7 @@ public class Aimant extends EntityMoving {
 			RenderCompound render = (RenderCompound) this.render;
 			if (this.renderAnimation != null) {
 				
-				if (this.getVelocity() > PlayerDefault.CRYSTAL_KILL) {
+				if (this.lastHitbox.getSpeedLength() > PlayerDefault.CRYSTAL_KILL) {
 					
 					render.addRender(this.renderAnimation);
 					this.renderAnimation.getAnimationManager().start();

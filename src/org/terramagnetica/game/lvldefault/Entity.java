@@ -373,6 +373,9 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		return clone;
 	}
 	
+	/** Cette méthode doit être appellée avant le début de chaque tour, pour 
+	 * que le champ {@link #lastHitbox} contiennent bien la hitbox de cette
+	 * entité avant la mise à jour de la physique.*/
 	public void updateLastHitbox() {
 		this.lastHitbox = this.hitbox.clone();
 	}
@@ -545,16 +548,12 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 			return false;
 		}
 		
-		if (!this.isSolid() || !other.isSolid()) return false;//pas de collision si l'un des deux est non-solide.
+		//pas de collision si l'un des deux est non-solide.
+		if (!this.isSolid() || !other.isSolid()) return false;
 		
-		if (other instanceof VirtualWall) {
-			if (this.canPassVirtualWall()) return false;//pas de collision si non sensible aux murs virtuels.
-			else {//Test : le mur virtuel est considéré comme un décor.
-				Vec2i c = other.getCoordonnéesCase();
-				if (c.x == this.getCoordonnéesCase().x && c.y == this.getCoordonnéesCase().y) {
-					return true;
-				} else return false;
-			}
+		//pas de collision si non sensible aux murs virtuels.
+		if (other instanceof VirtualWall && this.canPassVirtualWall()) {
+			return false;
 		}
 
 		//Si aucun des cas particuliers ne s'est présenté, teste la collision des hitbox.
