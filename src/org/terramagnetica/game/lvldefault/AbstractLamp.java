@@ -27,7 +27,7 @@ public abstract class AbstractLamp extends CaseEntity {
 	
 	private static final long serialVersionUID = 1L;
 	
-	/** <tt>true</tt> : activé, <tt>false</tt> : désactivé */
+	/** <tt>true</tt> : activé (rouge), <tt>false</tt> : désactivé (jaune) */
 	protected boolean state = false;
 	protected boolean didStateChanged = false;
 	protected boolean inverted = false;
