@@ -198,13 +198,10 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	}
 	
 	@Override
-	public void updatePhysic(long delta, GamePlayingDefault game) {
-		this.input(game.input);
-	}
-	
-	@Override
 	public void updateLogic(long delta, GamePlayingDefault game) {
 		super.updateLogic(delta, game);
+
+		this.input(game.input);
 		
 		this.updateTrackPoint();
 		
@@ -259,11 +256,6 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 		}
 		setMovement(moveX, moveY);
 		if (getVelocity() > DEFAULT_VELOCITY) setVelocity(DEFAULT_VELOCITY);
-	}
-	
-	@Override
-	public void push(float force, float direction, GamePlayingDefault game, Entity pusher) {
-		
 	}
 	
 	@Override

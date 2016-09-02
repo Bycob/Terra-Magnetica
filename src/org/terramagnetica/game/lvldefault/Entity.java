@@ -353,7 +353,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		}
 	}
 	
-	public final Hitbox getHitBoxf() {
+	public final Hitbox getHitbox() {
 		return this.hitbox;
 	}
 	
@@ -548,16 +548,10 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 			return false;
 		}
 		
-		//pas de collision si l'un des deux est non-solide.
-		if (!this.isSolid() || !other.isSolid()) return false;
-		
-		//pas de collision si non sensible aux murs virtuels.
-		if (other instanceof VirtualWall && this.canPassVirtualWall()) {
-			return false;
-		}
+		if (!getHitbox().canCollide(other.getHitbox())) return false;
 
 		//Si aucun des cas particuliers ne s'est présenté, teste la collision des hitbox.
-		return getHitBoxf().intersects(other.getHitBoxf());
+		return getHitbox().intersects(other.getHitbox());
 	}
 	
 	@Override

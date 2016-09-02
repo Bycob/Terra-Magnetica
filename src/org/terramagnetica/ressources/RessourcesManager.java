@@ -33,10 +33,10 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.Level;
 import org.terramagnetica.game.NullDescriptionException;
+import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.opengl.gui.GuiTextPainter;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.GameIOException;
@@ -153,10 +153,6 @@ public class RessourcesManager {
 	 * @return Le niveau du jeu qui correspond au numéro.
 	 */
 	public static Level getLevel(int id) {
-		if (id == NB_LEVEL) {
-			return null;
-		}
-		
 		Level result = null;
 		
 		try {

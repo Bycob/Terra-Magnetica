@@ -128,7 +128,7 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 			float vX = (float) Math.cos(dir);//vecteur x déviant
 			float vY = (float) Math.sin(dir);//vecteur y déviant
 			
-			controlled.getHitBoxf().addForce(new Force((FORCE * vX) / (d * d), (FORCE * vY) / (d * d)));
+			controlled.getHitbox().addForce(new Force((FORCE * vX) / (d * d), (FORCE * vY) / (d * d)));
 		}
 		else {
 			

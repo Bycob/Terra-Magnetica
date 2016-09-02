@@ -37,10 +37,10 @@ import org.terramagnetica.ressources.io.Codable;
 import org.terramagnetica.ressources.io.GameIOException;
 
 import net.bynaryscode.util.Util;
-import net.bynaryscode.util.maths.geometric.Vec2f;
-import net.bynaryscode.util.maths.geometric.Vec2i;
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
 import net.bynaryscode.util.maths.geometric.RectangleInt;
+import net.bynaryscode.util.maths.geometric.Vec2f;
+import net.bynaryscode.util.maths.geometric.Vec2i;
 
 /**
  * Une {@link Room} représente un étage d'un niveau de type {@link
@@ -344,7 +344,7 @@ public class Room implements Serializable, Cloneable, Codable {
 		}
 		
 		result.entities = new ArrayList<Entity>();
-		for (Entity entity : this.entities){
+		for (Entity entity : this.entities) {
 			result.addEntityByPriority(entity.clone());
 		}
 		

@@ -31,6 +31,8 @@ public abstract class EntityMoving extends Entity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	private float impulseX, impulseY;
+	
 	protected EntityMoving(){
 		super();
 		init();
@@ -144,7 +146,7 @@ public abstract class EntityMoving extends Entity implements Serializable {
 	
 	/**
 	 * Pousse cette entité avec la force indiquée, dans la
-	 * direction indiquée.&
+	 * direction indiquée.
 	 * <p>Cette méthode peut n'avoir aucun effet, cela dépend de
 	 * l'entité.
 	 * @param force - La force de poussée, en cases/s
@@ -152,7 +154,10 @@ public abstract class EntityMoving extends Entity implements Serializable {
 	 * @param game - Le moteur de jeu qui gère l'entité
 	 * @param pusher - L'entité qui pousse celle-ci.
 	 */
-	public void push(float force, float direction, GamePlayingDefault game, Entity pusher) {}
+	public void push(float force, float direction, GamePlayingDefault game, Entity pusher) {
+		this.impulseX += force * Math.cos(direction);
+		this.impulseY += force * - Math.sin(direction);
+	}
 	
 	/**
 	 * Donne la vitesse maximum de l'entité, en cases par secondes.
@@ -173,6 +178,16 @@ public abstract class EntityMoving extends Entity implements Serializable {
 		EntityMoving result = (EntityMoving) super.clone();
 		
 		return result;
+	}
+	
+	@Override
+	public void updatePhysic(long dT, GamePlayingDefault game) {
+		if (this.impulseX != 0 || this.impulseY != 0) {
+			this.hitbox.impulse(this.impulseX, this.impulseY);
+		}
+		
+		this.impulseX = 0;
+		this.impulseY = 0;
 	}
 	
 	/**

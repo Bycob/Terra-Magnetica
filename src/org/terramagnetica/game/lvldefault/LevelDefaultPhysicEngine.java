@@ -45,8 +45,8 @@ public class LevelDefaultPhysicEngine extends PhysicEngine {
 		ArrayList<Hitbox> hitboxes = new ArrayList<Hitbox>(entities.size());
 		
 		for (Entity ent : entities) {
-			hitboxes.add(ent.getHitBoxf());
-			ent.getHitBoxf().infos = new LevelDefaultHitboxInfo(ent);
+			hitboxes.add(ent.getHitbox());
+			ent.getHitbox().infos = new LevelDefaultHitboxInfo(ent);
 		}
 		
 		step(hitboxes, time);

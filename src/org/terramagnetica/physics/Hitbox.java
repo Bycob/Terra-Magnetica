@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import net.bynaryscode.util.maths.MathUtil;
 import net.bynaryscode.util.maths.geometric.Vec2;
 import net.bynaryscode.util.maths.geometric.Vec2f;
+import net.bynaryscode.util.maths.geometric.Vec3d;
 
 /**
  * La class Hitbox est au coeur du moteur physique de Terra Magnetica,
@@ -117,9 +118,12 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		return this.rotation;
 	}
 	
+	/** Change directement la position de la hitbox. Cette méthode est à 
+	 * utiliser en dehors de la mise à jour du moteur physique. */
 	public void setPosition(float x, float y) {
 		this.x = x;
 		this.y = y;
+		updateLastCollisionData();
 		this.positionChanges();
 	}
 	
@@ -260,6 +264,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	/** Cette méthode est appelée à chaque fois que la position de la hitbox
 	 * est modifiée */
 	protected void positionChanges() {}
+	
 	/** Cette méthode est appelée à chaque fois que la rotation de la hitbox
 	 * est modifiée */
 	protected void rotationChanges() {}
@@ -328,6 +333,19 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		}
 		
 		capSpeed();
+	}
+
+	public void impulse(float impulseX, float impulseY) {
+		//Obtention des variables dans le repère de Frenet.
+		Vec3d en = Vec3d.unitVector(impulseX, impulseY);
+		Vec3d v = new Vec3d(this.speedX, this.speedY);
+		double vn = v.dotProduct(en);
+		Vec3d vnVect = en.multiply(vn);
+		Vec3d vtVect = v.substract(vnVect);
+
+		double impulseLength = Math.sqrt(impulseX * impulseX + impulseY * impulseY);
+		this.speedX = (float) (vtVect.x + en.x * impulseLength);
+		this.speedY = (float) (vtVect.y + en.y * impulseLength);
 	}
 	
 	/** Fait varier la position de l'objet en fonction de sa vitesse.
@@ -505,7 +523,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * de servir d'origine pour les calculs suivants.
 	 * <p>Cette méthode permet aussi de réinitialiser les variables concernant
 	 * la dernière collision, entre chaque tour. */
-	protected void updateLastCollisionData() {
+	public void updateLastCollisionData() {
 		if (this.nextCollisionPoint != null) {
 			if (this.lastCollision != this.nextCollisionPoint.getTime()) {
 				this.lastHitboxes.clear();

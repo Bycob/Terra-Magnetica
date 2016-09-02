@@ -163,9 +163,13 @@ public class Sauvegarde_Histoire implements Serializable, Codable {
 		this.ended = in.readBoolField(1);
 		
 		if (this.levelID >= 0 && this.levelID < RessourcesManager.NB_LEVEL) {
-			readLevelAndCreateGamePlaying();
-			in.readCodableField(this.game, 2);
-			this.game.getLevel().levelID = this.levelID + 1;
+			try {
+				this.game = in.readCodableInstanceField(GameEngine.class, 2);
+				this.level = this.game.getLevel();
+				this.level.levelID = this.levelID + 1;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return this;

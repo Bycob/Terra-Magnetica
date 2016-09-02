@@ -27,6 +27,7 @@ import java.util.Set;
 import org.terramagnetica.game.GameEngine;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.Room.RoomTag;
+import org.terramagnetica.game.lvldefault.lvl2.ControlPaneSystemManager;
 import org.terramagnetica.game.lvldefault.rendering.GameRenderingDefault;
 import org.terramagnetica.game.lvldefault.rendering.RenderLandscape;
 import org.terramagnetica.opengl.miscellaneous.Timer;
@@ -58,8 +59,8 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	private LevelDefault level;
 	private int currentRoom = -1;
 	private DecorType decorType;
-	private List<Entity> entities;
-	private LandscapeTile[][] landscape;
+	private ArrayList<Entity> entities = new ArrayList<Entity>();
+	private LandscapeTile[][] landscape = new LandscapeTile[0][0];
 	private PlayerDefault player;
 	
 	private boolean limitedVision = false;
@@ -77,16 +78,17 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	private ArrayList<GameEvent> eventOnChangingRoom = new ArrayList<GameEvent>();
 	private CheckPoint checkPoint = null;
 	
-	public GamePlayingDefault(){
-		this(new LevelDefault());
+	@Deprecated
+	public GamePlayingDefault() {
+		initModules();
 	}
 	
 	/**
 	 * Construit un jeu de la pièce principale d'un niveau.
 	 * @param lvl - le niveau qui sert à construire le jeu.
 	 */
-	public GamePlayingDefault(LevelDefault lvl){
-		this.setNiveau(lvl);
+	public GamePlayingDefault(LevelDefault lvl) {
+		this.setLevel(lvl);
 	}
 	
 	//accesseurs
@@ -95,16 +97,18 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	 * le réinitialise.
 	 * @param lvl - Le nouveau niveau.
 	 */
-	public void setNiveau(LevelDefault lvl) {
+	public void setLevel(LevelDefault lvl) {
 		if (lvl == null) throw new NullPointerException("lvl == null");
+		if (!lvl.isRunnable()) throw new IllegalArgumentException("lvl is not runnable");
 		
 		if (!this.running) {
 			
 			this.time = 0;
 			this.hasntYetStarted = true;
 			
-			this.level = lvl.clone();
+			this.level = lvl;
 			this.setRoom(this.level.getMainRoom());
+			initModules();
 			
 			this.isGameOver = false;
 			this.hasWon = false;
@@ -406,6 +410,26 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		}
 	}
 	
+	private void initModules() {
+
+		addAspect(new LampState(this));
+		addAspect(new PortalNameFinder(this));
+		addAspect(new GameEventDispatcher(this));
+		addAspect(new MapUpdater(this));
+		
+		if (this.level != null) {
+
+			switch (this.level.levelID) {
+			
+			case 1 : break;
+			
+			case 2 :
+				addAspect(new ControlPaneSystemManager());
+				break;
+			}
+		}
+	}
+	
 	/**
 	 * 
 	 * @deprecated On préfèrera <tt>getAspect(LampState.class).getLampState()</tt>
@@ -472,13 +496,14 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 			entity.updated = false;
 		}
 		
-		//Mise à jour du moteur physique
-		this.physics.update(this, delta);
-		
-		//Mise à jour des mouvements d'entités
+		//Mise à jour des variables physiques des entités, juste avant le tick de physique
 		for (Entity entity : this.entities) {
 			entity.updatePhysic(delta, this);
 		}
+		
+		//Mise à jour du moteur physique
+		this.physics.update(this, delta);
+		
 		//Mise à jour des entités
 		for (Entity entity : this.entities) {
 			entity.updateLogic(delta, this);
@@ -591,7 +616,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	
 	@Override
 	public void respawn() {
-		this.setNiveau(this.level);
+		this.setLevel(this.level);
 		
 		if (this.checkPoint != null) {
 			respawnOnCheckPoint();
@@ -667,9 +692,8 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	
 	@Override
 	public GamePlayingDefault decode(BufferedObjectInputStream in) throws GameIOException {
-		getAspect(LampState.class).setLampState(in.readBoolFieldWithDefaultValue(100, false));
 		
-		//plus utilisé : 101 et 102
+		//plus utilisé : 100 à 102
 		//Temps [103]
 		try {
 			this.time = in.readLongField(103);
@@ -684,13 +708,14 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		//Niveau [105]
 		try {
 			this.level = in.readCodableInstanceField(LevelDefault.class, 105);
+			this.currentRoom = this.level.getMainRoomID();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		//Plus utilisé : 106
 		
-		//décor [107-109 + 7]
+		//décor [107-109 + 112]
 		//taille
 		int width = in.readIntField(107);
 		int height = in.readIntField(108);
@@ -705,7 +730,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		//infos sur le décor
 		List<LandscapeInfos> infos = new ArrayList<LandscapeInfos>();
 		try {
-			in.readListField(infos, 114);
+			in.readListField(infos, 112);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -733,11 +758,10 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 				try {
 					GameAspect here = this.getAspect(aspect.getClass());
 					this.moduleList.remove(here);
-					this.moduleList.add(aspect);
-					aspect.setGame(this);
-				} catch (NullPointerException e) {
-					e.printStackTrace();
-				}
+				} catch (NullPointerException e) {}
+				
+				this.moduleList.add(aspect);
+				aspect.setGame(this);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

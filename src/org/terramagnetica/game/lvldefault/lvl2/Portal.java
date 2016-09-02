@@ -52,6 +52,14 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	
 	private Color4f color;
 	
+	/**
+	 * {@code true} si une mise à jour du rendu est nécessaire.
+	 */
+	private boolean updateRender = false;
+	private Texture texture = TexturesLoader.getQuad(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF);
+	
+	private AnimationManager animater = null;
+	
 	public Portal() {
 		this(new Color4f());
 	}
@@ -94,12 +102,6 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	}
 	
 	/**
-	 * {@code true} si une mise à jour du rendu est nécessaire.
-	 */
-	private boolean updateRender = false;
-	private Texture texture = TexturesLoader.getQuad(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF);
-	
-	/**
 	 * Définit la texture de cet objet et raffraichi le rendu.
 	 * @param tex - La nouvelle texture de cet objet.
 	 */
@@ -112,8 +114,6 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 		this.texture = tex;
 		recreateRender();
 	}
-	
-	private AnimationManager animater = null;
 	
 	/**
 	 * Définit une animation comme texture du portail.

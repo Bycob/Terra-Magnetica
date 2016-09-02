@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.terramagnetica.game.Level;
-import org.terramagnetica.game.lvldefault.lvl2.ControlPaneSystemManager;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.Codable;
@@ -43,21 +42,6 @@ public class LevelDefault extends Level implements Serializable, Cloneable, Coda
 	@Override
 	public GamePlayingDefault createGameEngine() {
 		GamePlayingDefault result = new GamePlayingDefault(this);
-		
-		result.addAspect(new LampState(result));
-		result.addAspect(new PortalNameFinder(result));
-		result.addAspect(new GameEventDispatcher(result));
-		result.addAspect(new MapUpdater(result));
-		
-		switch (this.levelID) {
-		
-		case 1 : break;
-		
-		case 2 :
-			result.addAspect(new ControlPaneSystemManager());
-			break;
-		}
-		
 		return result;
 	}
 	
@@ -136,6 +120,10 @@ public class LevelDefault extends Level implements Serializable, Cloneable, Coda
 	
 	public Room getMainRoom(){
 		return this.rooms.get(this.indexMainRoom);
+	}
+	
+	public int getMainRoomID() {
+		return this.indexMainRoom;
 	}
 	
 	@Override
