@@ -19,6 +19,7 @@ along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.ressources;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -32,6 +33,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.ByteBuffer;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.Level;
@@ -40,14 +42,17 @@ import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.opengl.gui.GuiTextPainter;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.GameIOException;
+import org.terramagnetica.utile.ImgUtil;
 
 public class RessourcesManager {
 	
+	private static boolean gameRessourcesLoaded = false;
 	private static String resLoc = "assets/";
 	
 	public static final int NB_LEVEL = 2;
 	
-	private static boolean gameRessourcesLoaded = false;
+	/** Icone du jeu */
+	public static ByteBuffer tmIcon;
 	
 	private RessourcesManager(){};
 	
@@ -55,7 +60,7 @@ public class RessourcesManager {
 	 * Cela comprend les textures, les polices de caractère, les
 	 * informations de sauvegarde, les options, les sons. */
 	public static void loadRessourcesGame(){
-		TexturesLoader.loadGLTextures();
+		TexturesLoader.loadTextureSet(GameRessources.gameTextureSet);
 		
 		GuiTextPainter.init();
 		
@@ -71,6 +76,15 @@ public class RessourcesManager {
 	/** Charge l'image d'écran de démarrage seul. */
 	public static void loadGameStartScreen() {
 		
+	}
+	
+	/**
+	 * Charge l'icone du jeu. Celui-ci est ensuite accessible via
+	 * {@link TexturesLoader#aimantIcon}.
+	 */
+	public static void loadIcon() {
+		BufferedImage img = ImagesLoader.readImage("gui/game/tm32.png");
+		if (img != null) tmIcon = ImgUtil.imageToByteBuffer(img);
 	}
 	
 	/**
