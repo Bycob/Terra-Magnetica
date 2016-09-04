@@ -37,9 +37,9 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
 import org.terramagnetica.creator.lvldefault.ModuleLevelDefault;
-import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.Level;
+import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.lvldefault.LevelDefault;
 import org.terramagnetica.ressources.ExternalFilesManager;
 import org.terramagnetica.ressources.ImagesLoader;
