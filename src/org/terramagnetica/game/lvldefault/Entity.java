@@ -91,7 +91,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	/** Une case en unité de base (256). */
 	public static final int CASE = 256;
 	/** La demi-case, qui n'est parfois pas une véritable demi-case ^^ */
-	public static final int DEMI_CASE = CASE / 2 + 1;
+	public static final int DEMI_CASE = CASE / 2;
 	/** La demi-case en cases (unité). */
 	public static final float DEMI_CASE_F = (float) DEMI_CASE / (float) CASE;
 	/** Si deux entités sont séparées par cette distance, on est sûr qu'elles ne

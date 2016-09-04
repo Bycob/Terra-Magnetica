@@ -223,9 +223,7 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	//GESTION DES COLLISIONS
 	@Override
 	public void onEntityCollision(long dT, GamePlayingDefault game, Entity ent) {
-		if (ent instanceof EntityMoving) {
-			((EntityMoving) ent).push((float) this.getVelocity() * 1.1f, this.getDirection(), game, this);
-		}
+		
 	}
 	
 	@Override

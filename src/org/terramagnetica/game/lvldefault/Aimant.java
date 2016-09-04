@@ -168,11 +168,6 @@ public class Aimant extends EntityMoving {
 			return;
 		}
 		
-		if (pusher instanceof PlayerDefault) {
-			if (getVelocity() > PlayerDefault.CRYSTAL_KILL) game.getPlayer().attack(1, game);
-		}
-		
-		this.setVelocity(force);
-		this.setDirection(direction);
+		super.push(force, direction, game, pusher);
 	}
 }

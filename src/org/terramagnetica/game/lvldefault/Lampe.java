@@ -49,8 +49,8 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	/** Les forces de magnétisme utilisées pour calculer les modifications de
 	 * trajectoire.
 	 * <ul><li>FORCE_IN : la force qui s'exerce vers l'intérieur.</li>
-	 * <li>FORCE_OUT : la force qui s'exerce vers l'extérieur, 2x plus forte.</li></ul> */
-	public static final double FORCE_IN = 40, FORCE_OUT = - FORCE_IN;
+	 * <li>FORCE_OUT : la force qui s'exerce vers l'extérieur.</li></ul> */
+	public static final double FORCE_IN = 40, FORCE_OUT = - 1.5f * FORCE_IN;
 	public static final double ROTATING = Math.PI / 2;
 	
 	//ETAT "PERMANENT"
@@ -88,6 +88,7 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 			renderLamp =  new RenderEntityDefault(PATH_COMPOSANTS + TEX_LAMP_IN);
 		}
 		
+		//Rendu des ondes si la lampe est activée en mode permanent.
 		if (this.renderPermanentMode == null) {
 			AnimationManager am = new AnimationManager(
 					TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM003_PERMANENT_MODE_LAMP));

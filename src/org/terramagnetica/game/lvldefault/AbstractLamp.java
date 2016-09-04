@@ -29,7 +29,7 @@ public abstract class AbstractLamp extends CaseEntity {
 	
 	/** <tt>true</tt> : activé (rouge), <tt>false</tt> : désactivé (jaune) */
 	protected boolean state = false;
-	protected boolean didStateChanged = false;
+	protected boolean didStateChanged = true;
 	protected boolean inverted = false;
 	protected boolean locked = false;
 	
@@ -65,15 +65,15 @@ public abstract class AbstractLamp extends CaseEntity {
 	public void updateLogic(long delta, GamePlayingDefault game) {
 		super.updateLogic(delta, game);
 		
+		boolean oldState = this.state;
+		
 		if (this.locked) {
 			this.state = this.inverted;
-			this.didStateChanged = false;
-			return;
 		}
-		
-		boolean oldState = this.state;
-		this.state = game.getAspect(LampState.class).getLampState();
-		if (this.inverted) this.state = !this.state;
+		else {
+			this.state = game.getAspect(LampState.class).getLampState();
+			if (this.inverted) this.state = !this.state;
+		}
 		
 		this.didStateChanged = oldState != this.state;
 	}
