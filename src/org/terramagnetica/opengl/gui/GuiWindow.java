@@ -78,8 +78,12 @@ public class GuiWindow {
 			this.running = true;
 			
 			while (this.running) {
-				mainMouseInput.registerInput();
-				mainKeyboardInput.registerInput();
+				try {
+					mainMouseInput.registerInput();
+					mainKeyboardInput.registerInput();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				
 				try {
 					Thread.sleep(2);
@@ -150,11 +154,11 @@ public class GuiWindow {
 	}
 	
 	public void destroy() {
+		enableInput(false);
+		
 		Display.destroy();
 		Mouse.destroy();
 		Keyboard.destroy();
-		
-		enableInput(false);
 	}
 
 

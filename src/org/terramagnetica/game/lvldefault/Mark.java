@@ -30,7 +30,11 @@ import net.bynaryscode.util.maths.geometric.DimensionsInt;
 public class Mark extends Entity {
 	
 	private static final long serialVersionUID = 1L;
-
+	
+	public Mark() {
+		this.hitbox.setSolid(false);
+	}
+	
 	@Override
 	public Image getImage() {
 		return ImagesLoader.get(ImagesLoader.marqueur);
@@ -49,11 +53,6 @@ public class Mark extends Entity {
 	@Override
 	public DimensionsInt getImgDimensions() {
 		return new DimensionsInt(128, 128);
-	}
-	
-	@Override
-	public boolean isSolid() {
-		return false;
 	}
 	
 	@Override

@@ -39,24 +39,32 @@ public class DecorationEntity extends Entity {
 	
 	public DecorationEntity() {
 		super();
+		init();
 	}
 	
 	public DecorationEntity(int x, int y) {
 		super(x, y);
+		init();
 	}
 	
 	public DecorationEntity(float x, float y) {
+		init();
 		this.setCoordonnéesf(x, y);
 	}
 	
 	public DecorationEntity(int x, int y, String decoID) {
 		super(x, y);
+		init();
 		this.skin = decoID;
 	}
 	
 	public DecorationEntity(float x, float y, String decoID) {
 		this(x, y);
 		this.skin = decoID;
+	}
+	
+	private void init() {
+		this.hitbox.setSolid(false);
 	}
 	
 	@Override
@@ -77,11 +85,6 @@ public class DecorationEntity extends Entity {
 	@Override
 	public DimensionsInt getImgDimensions() {
 		return new DimensionsInt(128, 128);
-	}
-	
-	@Override
-	public boolean isSolid() {
-		return false;
 	}
 	
 	@Override

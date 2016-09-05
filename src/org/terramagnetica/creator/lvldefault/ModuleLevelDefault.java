@@ -21,6 +21,7 @@ package org.terramagnetica.creator.lvldefault;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -92,7 +93,7 @@ import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec2f;
 import net.bynaryscode.util.maths.geometric.Vec2i;
 import net.bynaryscode.util.swing.DrawUnit;
-import net.bynaryscode.util.swing.SwingEventData;
+import net.bynaryscode.util.swing.SwingInputData;
 import net.bynaryscode.util.swing.SwingUtil;
 
 /**
@@ -109,14 +110,14 @@ public class ModuleLevelDefault extends CreatorModule {
 	{
 		//Initialisation des propriétés : nom, filtre, listener, panneau de propriétés
 		this.properties.getProperty(Aimant.class).setName("Cristal magnétique").setPaintingListener(new PaintEntityListener());
-		this.properties.getProperty(Lampe.class).setName("Lampe magnétique").setPaintingListener(new PaintCaseEntityListener()).setPropertyPanel(new PanelLampProperties());
-		this.properties.getProperty(LampePerturbatrice.class).setName("Lampe magnétique à champ variable").setPaintingListener(new PaintCaseEntityListener()).setPropertyPanel(new PanelLampProperties());
-		this.properties.getProperty(MagneticFieldGenerator.class).setName("Générateur de champ magnétique").setPaintingListener(new PaintCaseEntityListener()).setPropertyPanel(new PanelFieldGeneratorProperties());
-		this.properties.getProperty(MagneticWavesGenerator.class).setName("Générateur d'ondes magnétique").setPaintingListener(new PaintCaseEntityListener().withModule(new ModuleDirectionnalEntity())).setPropertyPanel(new PanelWaveGeneratorProperties());
-		this.properties.getProperty(VirtualWall.class).setName("Mur virtuel").setPaintingListener(new PaintCaseEntityListener());
+		this.properties.getProperty(Lampe.class).setName("Lampe magnétique").setPaintingListener(new PaintEntityListener()).setPropertyPanel(new PanelLampProperties());
+		this.properties.getProperty(LampePerturbatrice.class).setName("Lampe magnétique à champ variable").setPaintingListener(new PaintEntityListener()).setPropertyPanel(new PanelLampProperties());
+		this.properties.getProperty(MagneticFieldGenerator.class).setName("Générateur de champ magnétique").setPaintingListener(new PaintEntityListener()).setPropertyPanel(new PanelFieldGeneratorProperties());
+		this.properties.getProperty(MagneticWavesGenerator.class).setName("Générateur d'ondes magnétique").setPaintingListener(new PaintEntityListener().withModule(new ModuleDirectionnalEntity())).setPropertyPanel(new PanelWaveGeneratorProperties());
+		this.properties.getProperty(VirtualWall.class).setName("Mur virtuel").setPaintingListener(new PaintEntityListener());
 		this.properties.getProperty(Portal.class).setName("Portail").setPaintingListener(new PaintPortalEntityListener()).setPropertyPanel(new PanelPortalProperties());
-		this.properties.getProperty(Trap.class).setName("Piège").setFilter(new PinceauFilterLevelDefault(null, 2)).setPaintingListener(new PaintCaseEntityListener());
-		this.properties.getProperty(Rock.class).setName("Rocher").setFilter(new PinceauFilterLevelDefault(null, 2)).setPaintingListener(new PaintCaseEntityListener());
+		this.properties.getProperty(Trap.class).setName("Piège").setFilter(new PinceauFilterLevelDefault(null, 2)).setPaintingListener(new PaintEntityListener());
+		this.properties.getProperty(Rock.class).setName("Rocher").setFilter(new PinceauFilterLevelDefault(null, 2)).setPaintingListener(new PaintEntityListener());
 		this.properties.getProperty(TheCreature.class).setName("Créature").setFilter(new PinceauFilterLevelDefault(null, 2)).setPaintingListener(new PaintEntityListener()).setPropertyPanel(new PanelCreatureProperties());
 		this.properties.getProperty(Triggerer.class).setName("Déclencheur").setPaintingListener(new PaintTriggererListener());
 		this.properties.getProperty(Mark.class).setName("Marqueur").setPaintingListener(new PaintEntityListener());
@@ -186,8 +187,8 @@ public class ModuleLevelDefault extends CreatorModule {
 			this.scroll.getVerticalScrollBar().addAdjustmentListener(new ClipListener());
 			this.scroll.addMouseWheelListener(new MoletteListener());
 			
+			SwingInputData.setAnchor(this.view);
 			this.view.addKeyListener(new EchapListener());
-			this.view.addMouseListener(new SwingEventData());
 			this.view.addMouseListener(new RightClickListener());
 			
 			this.view.addMouseListener(new DecorationListener());
@@ -834,7 +835,7 @@ public class ModuleLevelDefault extends CreatorModule {
 
 		@Override
 		public void keyPressed(KeyEvent arg0) {
-			if (!moving && arg0.getKeyCode() == KeyEvent.VK_ESCAPE && SwingEventData.isMousePressed()){
+			if (!moving && arg0.getKeyCode() == KeyEvent.VK_ESCAPE && SwingInputData.isMousePressed()){
 				this.stopedListener = view.getPaintingListener();
 				view.setPaintingListener(this);
 				view.stopSelecting();
@@ -920,6 +921,10 @@ public class ModuleLevelDefault extends CreatorModule {
 			
 			if (arg0.getButton() != MouseEvent.BUTTON1)
 				return;
+
+			if (SwingInputData.isKeyPressed(KeyEvent.VK_CONTROL)) {
+				arg0 = toCase(arg0);
+			}
 			
 			if (this.pinceau == null) {
 				this.pinceau = entityPaintButton.getPinceau();
@@ -964,6 +969,11 @@ public class ModuleLevelDefault extends CreatorModule {
 			this.pinceau = null;
 			
 			view.repaint();
+
+			if (painted && SwingInputData.isKeyPressed(KeyEvent.VK_CONTROL)) {
+				Vec2i entCase = this.lastEntityCreated.getCoordonnéesCase();
+				this.lastEntityCreated.setCoordonnéesCase(entCase.x, entCase.y);
+			}
 			
 			//Activation du module facultatif
 			if (this.next != null && painted) {
@@ -974,6 +984,10 @@ public class ModuleLevelDefault extends CreatorModule {
 		
 		@Override
 		public void mouseDragged(MouseEvent arg0) {
+			if (SwingInputData.isKeyPressed(KeyEvent.VK_CONTROL)) {
+				arg0 = toCase(arg0);
+			}
+			
 			final double sf = view.getScaleFactor();
 			view.moveDrag((int) (arg0.getX() / sf), (int) (arg0.getY() / sf));
 			view.repaint();
@@ -1001,11 +1015,6 @@ public class ModuleLevelDefault extends CreatorModule {
 		public Entity getLastEntityCreated() {
 			return this.lastEntityCreated;
 		}
-	}
-	
-	
-	
-	class PaintCaseEntityListener extends PaintEntityListener {
 		
 		protected MouseEvent toCase(MouseEvent event) {
 			final int CASE_SIZE = view.getTailleCase();
@@ -1017,26 +1026,12 @@ public class ModuleLevelDefault extends CreatorModule {
 			
 			return SwingUtil.createMouseEvent(event, caseLocation.x, caseLocation.y);
 		}
-		
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			super.mousePressed(toCase(arg0));
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			super.mouseReleased(toCase(arg0));
-		}
-		
-		@Override
-		public void mouseDragged(MouseEvent arg0) {
-			super.mouseDragged(toCase(arg0));
-		}
 	}
 	
 	
 	
-	class PaintPortalEntityListener extends PaintCaseEntityListener {
+	
+	class PaintPortalEntityListener extends PaintEntityListener {
 		
 		private Portal moved = null; 
 		
@@ -1110,7 +1105,8 @@ public class ModuleLevelDefault extends CreatorModule {
 	
 	
 	
-	class PaintTriggererListener extends PaintCaseEntityListener {
+	
+	class PaintTriggererListener extends PaintEntityListener {
 		
 		private Triggerer moved;
 		
@@ -1197,7 +1193,20 @@ public class ModuleLevelDefault extends CreatorModule {
 			super.mouseReleased(event);
 			if (event.getButton() != MouseEvent.BUTTON1)
 				return;
-			actualRoom.removeEntityIn(view.getRoomSelection());
+			
+			Rectangle roomSelection = view.getRoomSelection();
+			float minSize = Entity.CASE * 0.4f;
+			
+			if (roomSelection.width < minSize) {
+				roomSelection.x = roomSelection.x + roomSelection.width / 2 - (int) minSize / 2;
+				roomSelection.width = (int) minSize;
+			}
+			if (roomSelection.height < minSize) {
+				roomSelection.y = roomSelection.y + roomSelection.height / 2 - (int) minSize / 2;
+				roomSelection.height = (int) minSize;
+			}
+			
+			actualRoom.removeEntityIn(roomSelection);
 		}
 	}
 	

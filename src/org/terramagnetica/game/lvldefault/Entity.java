@@ -25,9 +25,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
-import org.terramagnetica.game.physic.Hitbox;
-import org.terramagnetica.game.physic.HitboxCircle;
-import org.terramagnetica.game.physic.HitboxPolygon;
+import org.terramagnetica.opengl.engine.TextureQuad;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxCircle;
+import org.terramagnetica.physics.HitboxFamily;
+import org.terramagnetica.physics.HitboxPolygon;
+import org.terramagnetica.ressources.TexturesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.Codable;
@@ -46,6 +49,14 @@ import net.bynaryscode.util.maths.geometric.Vec2i;
 public abstract class Entity implements Serializable, Cloneable, Codable {
 	
 	private static final long serialVersionUID = 4199408739382933790L;
+
+	/** Famille de toutes les hitboxes pouvant traverser les murs virtuels. */
+	public static final HitboxFamily PASS_VIRTUAL_WALL_FAMILY = new HitboxFamily("passvirtualwall");
+	public static final HitboxFamily VIRTUAL_WALL_FAMILY = new HitboxFamily("virtualwall");
+	
+	static {
+		PASS_VIRTUAL_WALL_FAMILY.setCollisionPermission(VIRTUAL_WALL_FAMILY, false);
+	}
 	
 	//PHYSIQUE
 	
@@ -82,7 +93,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	/** Une case en unité de base (256). */
 	public static final int CASE = 256;
 	/** La demi-case, qui n'est parfois pas une véritable demi-case ^^ */
-	public static final int DEMI_CASE = CASE / 2 + 1;
+	public static final int DEMI_CASE = CASE / 2;
 	/** La demi-case en cases (unité). */
 	public static final float DEMI_CASE_F = (float) DEMI_CASE / (float) CASE;
 	/** Si deux entités sont séparées par cette distance, on est sûr qu'elles ne
@@ -96,7 +107,11 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	
 	protected Entity(int x, int y) {
 		this.setCoordonnéesf(x, y);
+		
 		this.recreateHitbox();
+		
+		this.hitbox.setStatic(true);
+		if (this.canPassVirtualWall()) this.hitbox.setFamily(PASS_VIRTUAL_WALL_FAMILY);
 	}
 	
 	protected Entity(int x, int y, int priority) {
@@ -143,7 +158,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 			if (other.hitbox != null) {
 				return false;
 			}
-		} else if (!this.hitbox.hasSamePhysic(other.hitbox)) {
+		} else if (!this.hitbox.hasSamePhysicVariables(other.hitbox)) {
 			return false;
 		}
 		
@@ -153,7 +168,73 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		return true;
 	}
 	
-	//ACCESSEURS
+	
+	// RENDU
+	
+	/**
+	 * Donne l'image qui représente l'entité dans l'éditeur de
+	 * niveau. Généralement une image fixe.
+	 * <p>Attention les dimensions de l'image prises en compte dans
+	 * l'éditeur de niveau (pour l'affichage) ne sont pas les dimensions
+	 * de l'image réelle, mais celles de la méthode {@link #getImgDimensions()}.
+	 * @return L'image sous forme d'objet {@link Image} (Le plus souvent
+	 * {@link BufferedImage})*/
+	public abstract Image getImage();
+	
+	/**
+	 * Donne les dimensions de l'image qui représente l'entité
+	 * dans l'éditeur de niveau.
+	 * @return Les dimensions de l'image en pixels. Il est conseillé
+	 * de donner les dimensions réelles de l'image en question.
+	 * @see #getImage() */
+	public DimensionsInt getImgDimensions() {
+		return getDimensions();
+	}
+	
+	public TextureQuad getMinimapIcon() {
+		return TexturesLoader.TEXTURE_NULL;
+	}
+	
+	/** @return l'objet qui va dessiner l'entité à l'écran. Cette
+	 * méthode est utilisée pour créer l'objet "rendu" de l'entité,
+	 * afin de le stocker en mémoire. */
+	protected abstract RenderEntity createRender();
+	
+	/** Recrée l'objet "rendu" de l'entité grâce à la méthode
+	 * {@link #createRender()}. Utilisé notament lorsque l'objet
+	 * change de texture en cours de jeu, ou se modifie... */
+	public final void recreateRender() {
+		this.render = createRender();
+	}
+	
+	/** Recharge le rendu. A la différence de la méthode {@link #recreateRender()},
+	 * cette méthode libère toutes les ressources avant de recréer
+	 * le rendu, ce qui permet de recharger les textures lorsqu'elles
+	 * ont été supprimées. */
+	public void reloadRender() {
+		recreateRender();
+	}
+	
+	/** @return l'objet "rendu" de l'entité, qui la dessinera à
+	 * l'écran. Par défaut, cet objet est stocké dans la classe
+	 * Entity sous le non de {@link Entity#render}. */
+	public RenderEntity getRender() {
+		if (this.render == null) this.render = createRender();
+		return this.render;
+	}
+	
+	public String getSkin() {
+		return this.skin;
+	}
+
+	public void setSkin(String skin) {
+		if (skin == null) skin = "";
+		this.skin = skin;
+	}
+	
+	
+	// PHYSIQUE / LOGIQUE
+	
 	/** @return les coordonnées de l'entité, en cases. */
 	public Vec2f getCoordonnéesf() {
 		return this.hitbox.getPosition();
@@ -219,63 +300,6 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	}
 	
 	/**
-	 * Donne l'image qui représente l'entité dans l'éditeur de
-	 * niveau. Généralement une image fixe.
-	 * <p>Attention les dimensions de l'image prises en compte dans
-	 * l'éditeur de niveau (pour l'affichage) ne sont pas les dimensions
-	 * de l'image réelle, mais celles de la méthode {@link #getImgDimensions()}.
-	 * @return L'image sous forme d'objet {@link Image} (Le plus souvent
-	 * {@link BufferedImage})*/
-	public abstract Image getImage();
-	
-	/**
-	 * Donne les dimensions de l'image qui représente l'entité
-	 * dans l'éditeur de niveau.
-	 * @return Les dimensions de l'image en pixels. Il est conseillé
-	 * de donner les dimensions réelles de l'image en question.
-	 * @see #getImage() */
-	public DimensionsInt getImgDimensions() {
-		return getDimensions();
-	}
-	
-	/** @return l'objet qui va dessiner l'entité à l'écran. Cette
-	 * méthode est utilisée pour créer l'objet "rendu" de l'entité,
-	 * afin de le stocker en mémoire. */
-	protected abstract RenderEntity createRender();
-	
-	/** Recrée l'objet "rendu" de l'entité grâce à la méthode
-	 * {@link #createRender()}. Utilisé notament lorsque l'objet
-	 * change de texture en cours de jeu, ou se modifie... */
-	public final void recreateRender() {
-		this.render = createRender();
-	}
-	
-	/** Recharge le rendu. A la différence de la méthode {@link #recreateRender()},
-	 * cette méthode libère toutes les ressources avant de recréer
-	 * le rendu, ce qui permet de recharger les textures lorsqu'elles
-	 * ont été supprimées. */
-	public void reloadRender() {
-		recreateRender();
-	}
-	
-	/** @return l'objet "rendu" de l'entité, qui la dessinera à
-	 * l'écran. Par défaut, cet objet est stocké dans la classe
-	 * Entity sous le non de {@link Entity#render}. */
-	public RenderEntity getRender() {
-		if (this.render == null) this.render = createRender();
-		return this.render;
-	}
-	
-	public String getSkin() {
-		return this.skin;
-	}
-	
-	public void setSkin(String skin) {
-		if (skin == null) skin = "";
-		this.skin = skin;
-	}
-	
-	/**
 	 * Donne les dimensions de l'entité dans le jeu. Ces dimensions sont
 	 * utilisées pour calculer la hitbox prédéfinie, entre autres.
 	 * @return Les dimensions de l'entité dans le jeu, en unité de base
@@ -322,19 +346,26 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	}
 	
 	public void recreateHitbox() {
+		this.setHitbox(createHitbox());
+	}
+	
+	public void setHitbox(Hitbox hb) {
+		if (hb == null) throw new NullPointerException("hb == null");
+		
 		Hitbox oldHitbox = this.hitbox;
-		this.hitbox = createHitbox();
+		this.hitbox = hb;
 		
 		if (oldHitbox != null) {
-			this.applyHitbox(oldHitbox);
+			this.hitbox.setSamePhysicPropertiesAndVariables(oldHitbox);
 		}
 		
 		if (this.lastHitbox == null) {
 			updateLastHitbox();
 		}
-		
-		this.hitbox.setStatic(true);
-		this.lastHitbox.setStatic(true);
+	}
+	
+	public final Hitbox getHitbox() {
+		return this.hitbox;
 	}
 	
 	public Hitbox getLastHitbox() {
@@ -353,15 +384,9 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		return clone;
 	}
 	
-	public final Hitbox getHitBoxf() {
-		return this.hitbox;
-	}
-	
-	public void applyHitbox(Hitbox hb) {
-		this.hitbox.setPosition(hb.getPositionX(), hb.getPositionY());
-		this.hitbox.setRotation(hb.getRotation());
-	}
-	
+	/** Cette méthode doit être appellée avant le début de chaque tour, pour 
+	 * que le champ {@link #lastHitbox} contiennent bien la hitbox de cette
+	 * entité avant la mise à jour de la physique.*/
 	public void updateLastHitbox() {
 		this.lastHitbox = this.hitbox.clone();
 	}
@@ -430,7 +455,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * hitbox.
 	 */
 	public boolean isSolid() {
-		return true;
+		return this.hitbox.isSolid();
 	}
 	
 	/** Permet de savoir si l'entité est visible sur la minimap.
@@ -475,6 +500,16 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * @param game - Le jeu dans lequelle est situé l'entité.
 	 */
 	public void updateLogic(long dT, GamePlayingDefault game) {
+		for (Entity collided : this.collidedEntities) {
+			this.onEntityCollision(dT, game, collided);
+		}
+		
+		if (this.wallCollisionCount > 0) {
+			this.onLandscapeCollision(dT, game);
+		}
+		
+		clearCollisions();
+		
 		this.updated = true;
 	}
 	
@@ -503,17 +538,17 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	
 	/**
 	 * Effectue les conséquences d'une collision avec une autre entité.
-	 * @param delta - le temps écoulé depuis la dernière mise à jour
-	 * @param game - le moteur de jeu qui contient toutes les entités et
+	 * @param delta le temps écoulé depuis la dernière mise à jour
+	 * @param game le moteur de jeu qui contient toutes les entités et
 	 * le décor.
-	 * @param collided - l'autre entité impliquées dans la collision.
+	 * @param collided l'autre entité impliquées dans la collision.
 	 */
 	public void onEntityCollision(long delta, GamePlayingDefault game, Entity collided) {}
-	protected void onLandscapeCollision(long delta, GamePlayingDefault game) {}
+	public void onLandscapeCollision(long delta, GamePlayingDefault game) {}
 	
 	/** 
 	 * Vérifie s'il y a collision avec l'entité passée en paramètres.
-	 * @param other - L'entité susceptible de percuter celle-ci.
+	 * @param other L'entité susceptible de percuter celle-ci.
 	 * @return <code>true</code> si une collision est en cours
 	 * avec cette entité, <code>false</code> sinon
 	 */
@@ -524,39 +559,10 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 			return false;
 		}
 		
-		if (!this.isSolid() || !other.isSolid()) return false;//pas de collision si l'un des deux est non-solide.
-		
-		if (other instanceof VirtualWall) {
-			if (this.canPassVirtualWall()) return false;//pas de collision si non sensible aux murs virtuels.
-			else {//Test : le mur virtuel est considéré comme un décor.
-				Vec2i c = other.getCoordonnéesCase();
-				if (c.x == this.getCoordonnéesCase().x && c.y == this.getCoordonnéesCase().y) {
-					return true;
-				} else return false;
-			}
-		}
+		if (!getHitbox().canCollide(other.getHitbox())) return false;
 
 		//Si aucun des cas particuliers ne s'est présenté, teste la collision des hitbox.
-		return getHitBoxf().intersects(other.getHitBoxf());
-	}
-	
-	/**
-	 * Pour savoir si une collision est en cours, d'une part avec le décor,
-	 * d'autre part avec toutes les entités passées en paramètre.
-	 * @param game - le jeu dans lequel se trouve l'entité.
-	 * @param entities - les entités avec lesquelles il faut tester la collision.
-	 * @return {@code true} si il y a collision, {@code false} sinon.
-	 */
-	protected boolean hasLandscapeCollision(GamePlayingDefault game) {
-		Vec2i caseLocation = this.getCoordonnéesCase();
-		
-		if (!(game.getLandscapeAt(caseLocation.x, caseLocation.y).isEnabled())) {
-			return true;
-		}
-		if (game.getCaseEntityAt(caseLocation.x, caseLocation.y) instanceof VirtualWall && !this.canPassVirtualWall()) {
-			return true;
-		}
-		return false;
+		return getHitbox().intersects(other.getHitbox());
 	}
 	
 	@Override

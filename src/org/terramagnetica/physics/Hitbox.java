@@ -17,13 +17,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
  </LICENSE> */
 
-package org.terramagnetica.game.physic;
+package org.terramagnetica.physics;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import net.bynaryscode.util.maths.MathUtil;
 import net.bynaryscode.util.maths.geometric.Vec2;
 import net.bynaryscode.util.maths.geometric.Vec2f;
+import net.bynaryscode.util.maths.geometric.Vec3d;
 
 /**
  * La class Hitbox est au coeur du moteur physique de Terra Magnetica,
@@ -38,6 +40,10 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	/** Ce champs permet d'ajouter des informations externes à la hitbox. */
+	public HitboxInfo infos;
+	
+	//Variables
 	protected Force force = new Force(0, 0);
 	
 	protected float x, y;
@@ -46,8 +52,11 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected float speedX, speedY;
 	protected float speedRotation;
 	
+	//Propriétés
 	protected float mass = 1;
 	protected boolean isStatic = false;
+	protected boolean isSolid = true;
+	protected float maxSpeed = -1;
 	
 	/** Coefficient de friction de l'objet. Indique la perte de vitesse
 	 * naturelle de l'objet pendant son déplacement. */
@@ -58,17 +67,46 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected float bounceN = 1;
 	protected float bounceT = 1;
 	
+	protected HitboxFamily family = null;
+	
+	//Collisions
 	/** Le nombre de secondes écoulées pour cette hitbox, à partir
 	 * de l'origine des calculs */
 	protected float timeOffset;
 	protected CollisionPoint nextCollisionPoint;
 	
-	public void setStatic(boolean isStatic) {
+	/** Cette liste enregistre les hitboxes collisionnées au temps "lastCollision".
+	 * Ainsi, on peut éviter les détections de collision infinies. */
+	protected ArrayList<Hitbox> lastHitboxes = new ArrayList<Hitbox>();
+	protected float lastCollision = 0;
+	protected float lastCollisionX;
+	protected float lastCollisionY;
+	
+	
+	public Hitbox setStatic(boolean isStatic) {
 		this.isStatic = isStatic;
+		return this;
 	}
 	
 	public boolean isStatic() {
 		return this.isStatic;
+	}
+	
+	public Hitbox setSolid(boolean solid) {
+		this.isSolid = solid;
+		return this;
+	}
+	
+	public boolean isSolid() {
+		return this.isSolid;
+	}
+	
+	public void setFamily(HitboxFamily family) {
+		this.family = family;
+	}
+	
+	public HitboxFamily getFamily() {
+		return this.family;
 	}
 	
 	public void setRotation(float rotation) {
@@ -80,9 +118,12 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		return this.rotation;
 	}
 	
+	/** Change directement la position de la hitbox. Cette méthode est à 
+	 * utiliser en dehors de la mise à jour du moteur physique. */
 	public void setPosition(float x, float y) {
 		this.x = x;
 		this.y = y;
+		updateLastCollisionData();
 		this.positionChanges();
 	}
 	
@@ -120,12 +161,37 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		return new Vec2f(this.speedX, this.speedY);
 	}
 	
+	public float getSquaredSpeedLength() {
+		return this.speedX * this.speedX + this.speedY * this.speedY;
+	}
+	
+	public float getSpeedLength() {
+		return (float) Math.sqrt(this.getSquaredSpeedLength());
+	}
+	
 	public float getSpeedX() {
 		return this.speedX;
 	}
 	
 	public float getSpeedY() {
 		return this.speedY;
+	}
+	
+	public void setMaxSpeed(float maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+	
+	public float getMaxSpeed() {
+		return this.maxSpeed;
+	}
+	
+	/** Si elle est trop grande, réduit la vitesse de cette hitbox pour
+	 * qu'elle ne soit pas plus grande que {@link #getMaxSpeed()}. */
+	protected void capSpeed() {
+		float scale = this.maxSpeed / this.getSpeedLength();
+		if (scale < 1) {
+			this.scaleLinearSpeed(scale, scale);
+		}
 	}
 	
 	public void setRotationSpeed(float speed) {
@@ -181,9 +247,10 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * quantifie l'importance du rebond (rebond normal), <tt>bounceT</tt> quantifie
 	 * inversement l'adhérence de la hitbox à la surface de rebond (rebond
 	 * tangentiel)  */
-	public void setBounceWeighting(float bounceN, float bounceT) {
+	public Hitbox setBounceWeighting(float bounceN, float bounceT) {
 		this.bounceN = bounceN;
 		this.bounceT = bounceT;
+		return this;
 	}
 	
 	public float getBounceN() {
@@ -197,6 +264,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	/** Cette méthode est appelée à chaque fois que la position de la hitbox
 	 * est modifiée */
 	protected void positionChanges() {}
+	
 	/** Cette méthode est appelée à chaque fois que la rotation de la hitbox
 	 * est modifiée */
 	protected void rotationChanges() {}
@@ -204,13 +272,41 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	/** Retourne {@code true} si les variables physique (position, angle,
 	 * vitesse) de cette hitbox sont les mêmes que les variables physiques
 	 * de la hitbox passée en paramètres. */
-	public boolean hasSamePhysic(Hitbox other) {
+	public boolean hasSamePhysicVariables(Hitbox other) {
 		return this.x == other.x &&
 				this.y == other.y &&
 				this.rotation == other.rotation &&
 				this.speedX == other.speedX &&
 				this.speedY == other.speedY && 
-				this.speedRotation == other.speedRotation;
+				this.speedRotation == other.speedRotation &&
+				this.force.equals(other.force);
+	}
+	
+	/** Copie toutes les données physiques de cette hitbox. */
+	public void setSamePhysicPropertiesAndVariables(Hitbox other) {
+		this.infos = other.infos;
+		
+		//Variables
+		this.x = other.x;
+		this.y = other.y;
+		this.rotation = other.rotation;
+		this.speedX = other.speedX;
+		this.speedY = other.speedY;
+		this.speedRotation = other.speedRotation;
+		
+		this.force = other.force.clone();
+		
+		//Propriétés
+		this.family = other.family;
+		this.mass = other.mass;
+		this.isStatic = other.isStatic;
+		this.isSolid = other.isSolid;
+		this.maxSpeed = other.maxSpeed;
+		
+		this.friction = other.friction;
+		this.bounce = other.bounce;
+		this.bounceT = other.bounceT;
+		this.bounceN = other.bounceN;
 	}
 	
 	public abstract boolean contains(Vec2 point);
@@ -235,6 +331,21 @@ public abstract class Hitbox implements Serializable, Cloneable {
 			this.speedX = (this.force.getForceX() * time + this.speedX) * frictionRatio;
 			this.speedY = (this.force.getForceY() * time + this.speedY) * frictionRatio;
 		}
+		
+		capSpeed();
+	}
+
+	public void impulse(float impulseX, float impulseY) {
+		//Obtention des variables dans le repère de Frenet.
+		Vec3d en = Vec3d.unitVector(impulseX, impulseY);
+		Vec3d v = new Vec3d(this.speedX, this.speedY);
+		double vn = v.dotProduct(en);
+		Vec3d vnVect = en.multiply(vn);
+		Vec3d vtVect = v.substract(vnVect);
+
+		double impulseLength = Math.sqrt(impulseX * impulseX + impulseY * impulseY);
+		this.speedX = (float) (vtVect.x + en.x * impulseLength);
+		this.speedY = (float) (vtVect.y + en.y * impulseLength);
 	}
 	
 	/** Fait varier la position de l'objet en fonction de sa vitesse.
@@ -243,16 +354,20 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * méthode {@link #completeMove(float)} à la fin d'un tick pour le complèter.
 	 * @param ms La durée du mouvement, en ms */
 	public void applyVelocity(float ms) {
-		float time = ms / 1000;
+		setTimeOffset(ms + this.timeOffset);
+	}
+	
+	protected void setTimeOffset(float ms) {
+		float time = (ms - this.lastCollision) / 1000;
 		
 		if (!this.isStatic) {
-			this.x = this.x + this.speedX * time;
-			this.y = this.y + this.speedY * time;
+			this.x = this.lastCollisionX + this.speedX * time;
+			this.y = this.lastCollisionY + this.speedY * time;
 			
 			positionChanges();
 		}
 		
-		this.timeOffset += ms;
+		this.timeOffset = ms;
 	}
 	
 	/** Complète le mouvement pour qu'il aie duré le temps <tt>completeTime</tt>,
@@ -262,7 +377,9 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		if (this.timeOffset != completeMsTime) {
 			this.applyVelocity(completeMsTime - this.timeOffset);
 		}
+		this.nextCollisionPoint = null;
 		this.timeOffset = 0;
+		updateLastCollisionData();
 	}
 	
 	public boolean hasNextCollisionPoint() {
@@ -273,17 +390,42 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		return this.nextCollisionPoint;
 	}
 	
+	public float getLastCollisionTime() {
+		return this.lastCollision;
+	}
+	
 	public void calculateNextCollisionPoint(Hitbox other, float time) {
 		if (!testCollision(other, time)) {
 			return;
 		}
 		
 		CollisionPoint cp = getCurrentCollisionPoint(other, time);
+		
+		//détection des collisions infinies
+		if (this.lastCollision >= cp.getTime() && this.lastHitboxes.contains(other)) {
+			return;
+		}
+		
 		Hitbox[] both = new Hitbox[] {this, other};
 		
 		for (Hitbox hb : both) {
-			hb.nextCollisionPoint = cp; //testCollision ne détecte que les collisions prioritaires.
+			if (hb.nextCollisionPoint != null) hb.nextCollisionPoint.delete();
+			hb.nextCollisionPoint = cp; 
 		}
+	}
+	
+	public boolean canCollide(Hitbox other) {
+		if (this.isStatic && other.isStatic) return false;
+		if (!this.isSolid || !other.isSolid) return false;
+		
+		if (this.family != null) {
+			if (!this.family.canCollide(other.family)) return false;
+		}
+		else if (other.family != null) {
+			if (!other.family.canCollide(this.family)) return false;
+		}
+		
+		return true;
 	}
 	
 	/** Cette méthode teste si une collision va avoir lieu entre les deux hitbox
@@ -299,7 +441,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * Un appel à la méthode {@link #completeMove(float)} permettra de clore le
 	 * mouvement, une fois toutes les collisions calculées.*/
 	protected boolean testCollision(Hitbox other, float time) {
-		if (this.isStatic && other.isStatic) return false;
+		if (!canCollide(other)) return false;
 		
 		Hitbox[] both = new Hitbox[] {this, other};
 		
@@ -321,7 +463,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		}
 		
 		for (Hitbox hb : both) {
-			hb.applyVelocity(maxTime - hb.timeOffset);
+			hb.setTimeOffset(maxTime);
 		}
 		
 		return this.intersects(other);
@@ -341,13 +483,14 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	protected final CollisionPoint findCollisionPointDefault(Hitbox other, float time) {
 		Hitbox both[] = new Hitbox[] {this, other};
 		
-		float lower = 0;
+		float lower = Math.max(this.lastCollision, other.lastCollision);
 		float higher = time;
 		
 		while (higher - lower > 0.0001) {
 			float bound = (higher + lower) / 2;
+			
 			for (Hitbox hb : both) {
-				applyVelocity(bound - hb.timeOffset);
+				hb.applyVelocity(bound - hb.timeOffset);
 			}
 			
 			if (this.intersects(other)) {
@@ -365,16 +508,84 @@ public abstract class Hitbox implements Serializable, Cloneable {
 	 * par la méthode {@link #calculateNextCollisionPoint(Hitbox, float)}.<p>
 	 * Place les deux hitbox concernées par cette collision, à l'instant de leur
 	 * collision, puis calcule leur nouvelles vitesses suite au rebond. */
-	public abstract void doNextCollision();
+	public abstract void calculateNextCollisionReaction();
+	
+	protected void beforeCollision() {}
+	
+	protected void afterCollision() {
+		updateLastCollisionData();
+		this.nextCollisionPoint = null;
+		
+		this.capSpeed();
+	}
+	
+	/** Enregistre l'état de la hitbox lors de la dernière collision, afin
+	 * de servir d'origine pour les calculs suivants.
+	 * <p>Cette méthode permet aussi de réinitialiser les variables concernant
+	 * la dernière collision, entre chaque tour. */
+	public void updateLastCollisionData() {
+		if (this.nextCollisionPoint != null) {
+			if (this.lastCollision != this.nextCollisionPoint.getTime()) {
+				this.lastHitboxes.clear();
+			}
+			
+			this.lastCollision = this.nextCollisionPoint.getTime();
+			this.lastHitboxes.add(this.nextCollisionPoint.getOtherHitbox(this));
+		}
+		else {
+			this.lastCollision = 0;
+			this.lastHitboxes.clear();
+		}
+		
+		this.lastCollisionX = this.x;
+		this.lastCollisionY = this.y;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((force == null) ? 0 : force.hashCode());
+		result = prime * result + Float.floatToIntBits(rotation);
+		result = prime * result + Float.floatToIntBits(speedRotation);
+		result = prime * result + Float.floatToIntBits(speedX);
+		result = prime * result + Float.floatToIntBits(speedY);
+		result = prime * result + Float.floatToIntBits(x);
+		result = prime * result + Float.floatToIntBits(y);
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Hitbox)) {
+			return false;
+		}
+		Hitbox other = (Hitbox) obj;
+		if (!hasSamePhysicVariables(other)) {
+			return false;
+		}
+		return true;
+	}
 	
 	@Override
 	public Hitbox clone() {
+		Hitbox clone = null;
+		
 		try {
-			return (Hitbox) super.clone();
+			clone = (Hitbox) super.clone();
 		}
 		catch (CloneNotSupportedException e) {
 			e.printStackTrace();
-			return null;
 		}
+		
+		clone.force = this.force.clone();
+		
+		return clone;
 	}
 }

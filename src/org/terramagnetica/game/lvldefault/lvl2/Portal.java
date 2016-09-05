@@ -39,8 +39,8 @@ import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
 
 import net.bynaryscode.util.Color4f;
-import net.bynaryscode.util.maths.geometric.Vec2i;
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
+import net.bynaryscode.util.maths.geometric.Vec2i;
 
 public class Portal extends CaseEntity implements BarrierStateListener {
 
@@ -52,6 +52,14 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	
 	private Color4f color;
 	
+	/**
+	 * {@code true} si une mise à jour du rendu est nécessaire.
+	 */
+	private boolean updateRender = false;
+	private Texture texture = TexturesLoader.getQuad(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF);
+	
+	private AnimationManager animater = null;
+	
 	public Portal() {
 		this(new Color4f());
 	}
@@ -62,6 +70,8 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 			this.state = true;
 			this.updateRender = true;
 		}
+		
+		this.hitbox.setSolid(false);
 	}
 	
 	@Override
@@ -92,12 +102,6 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	}
 	
 	/**
-	 * {@code true} si une mise à jour du rendu est nécessaire.
-	 */
-	private boolean updateRender = false;
-	private Texture texture = TexturesLoader.getQuad(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF);
-	
-	/**
 	 * Définit la texture de cet objet et raffraichi le rendu.
 	 * @param tex - La nouvelle texture de cet objet.
 	 */
@@ -110,8 +114,6 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 		this.texture = tex;
 		recreateRender();
 	}
-	
-	private AnimationManager animater = null;
 	
 	/**
 	 * Définit une animation comme texture du portail.
@@ -144,11 +146,6 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	@Override
 	public DimensionsInt getDimensions() {
 		return new DimensionsInt(256, 256);
-	}
-	
-	@Override
-	public boolean isSolid() {
-		return false;
 	}
 	
 	@Override

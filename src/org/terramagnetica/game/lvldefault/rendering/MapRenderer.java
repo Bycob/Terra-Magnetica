@@ -107,10 +107,9 @@ public class MapRenderer extends RenderGameDefaultElement {
 			//Dessin des entités
 			MapEntity entitiesMapped[] = this.theMap.getAllEntitiesMapped();
 			for (MapEntity me : entitiesMapped) {
-				String texID = me.getTexture();
-				painter.setTexture(TexturesLoader.get(texID));
+				TextureQuad tex = me.getTexture();
+				painter.setTexture(tex);
 				
-				TextureQuad tex = TexturesLoader.getQuad(texID);
 				int imgSize;
 				
 				float alpha = getCaseColor(MathUtil.getDistance(me.getLocation(), playerc)).getAlphaf() / CASE_MAX_ALPHA;

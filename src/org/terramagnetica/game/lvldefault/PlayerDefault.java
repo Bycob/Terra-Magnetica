@@ -29,7 +29,10 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.CameraTrackPoint3D;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.SoundManager;
 import org.terramagnetica.ressources.TexturesLoader;
@@ -76,19 +79,42 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	}
 	
 	private void init() {
+		this.hitbox.setBounceWeighting(0, 1);
+		this.hitbox.setBounce(1f);
 		this.updateTrackPoint();
 	}
 	
-	@Override
-	public void setCoordonnéesf(float x, float y) {
-		super.setCoordonnéesf(x, y);
-		
-		this.updateTrackPoint();
+	//----------------------- CAMERA ----------------------
+	
+	private CameraTrackPoint3D trackPoint = new CameraTrackPoint3D();
+	
+	/**
+	 * Donne un {@link CameraTrackPoint3D} qui suit le joueur et indique
+	 * ainsi à la caméra où elle doit regarder.
+	 * @return Un point mobile qui suit le joueur et qui sert de point de
+	 * repère à la camera.
+	 */
+	public CameraTrackPoint3D getCameraTrackPoint() {
+		return this.trackPoint;
 	}
+	
+	protected void updateTrackPoint() {
+		if (this.trackPoint != null) {
+			Vec2f c = getCoordonnéesf();
+			this.trackPoint.set(c.x, c.y, 0);
+		}
+	}
+	
+	//-----
 	
 	@Override
 	public Image getImage(){
 		return ImagesLoader.get(GameRessources.PATH_PLAYER);
+	}
+	
+	@Override
+	public TextureQuad getMinimapIcon() {
+		return TexturesLoader.getQuad(GameRessources.ID_MAP_PLAYER);
 	}
 	
 	@Override
@@ -107,8 +133,20 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	}
 	
 	@Override
+	public void setCoordonnéesf(float x, float y) {
+		super.setCoordonnéesf(x, y);
+		
+		this.updateTrackPoint();
+	}
+	
+	@Override
 	public DimensionsInt getDimensions() {
 		return new DimensionsInt(WIDTH, HEIGHT);
+	}
+	
+	@Override
+	public Hitbox createHitbox() {
+		return new HitboxCircle(0.25f);
 	}
 	
 	@Override
@@ -121,6 +159,34 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 		return true;
 	}
 	
+	//----------------------- BONUS -----------------------
+	
+	/**
+	 * Donne une copie de la liste des bonus du jeu. On peut donc
+	 * parcourir cette copie et en même temps supprimer ou ajouter
+	 * des objets sur l'originale.
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private ArrayList<Bonus> getBonusListShallowCopy() {
+		return (ArrayList<Bonus>) this.bonus.clone();
+	}
+
+	public void addBonus(Bonus bonus) {
+		this.bonus.add(bonus);
+		bonus.setPlayer(this);
+	}
+
+	public void removeBonus(Bonus bonus) {
+		if (this.bonus.remove(bonus)) {
+			bonus.setPlayer(null);
+		}
+	}
+
+	public ArrayList<Bonus> getBonusList() {
+		return getBonusListShallowCopy();
+	}
+
 	public void attack(float damages, GamePlayingDefault game) {
 		ArrayList<Bonus> bonusList = getBonusListShallowCopy();
 		for (Bonus bonus : bonusList) {
@@ -131,22 +197,19 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 		}
 	}
 	
+	//-----
+	
 	public void onDeath() {
 		SoundManager.stopLoopSound(GameRessources.SOUND_STEPS);
 	}
 	
 	@Override
-	public void updatePhysic(long dT, GamePlayingDefault game) {
-		this.input(game.getInput());
-		
-		//mise à jour des forces
-		applyForces();
-		
-		super.updatePhysic(dT, game);
-	}
-	
-	@Override
 	public void updateLogic(long delta, GamePlayingDefault game) {
+		super.updateLogic(delta, game);
+
+		this.input(game.input);
+		
+		this.updateTrackPoint();
 		
 		//Effet sonore des pas.
 		if (this.getVelocity() != 0 && !game.isGameOver()) {
@@ -161,22 +224,17 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 		for (Bonus b : bonusList) {
 			b.updateBonus(delta, game);
 		}
-		
-		//test des collisions et mouvement
-		super.updateLogic(delta, game);
-		
-		this.updateTrackPoint();
-
-		this.updated = true;
 	}
 	
 	//GESTION DES COLLISIONS
 	@Override
 	public void onEntityCollision(long dT, GamePlayingDefault game, Entity ent) {
-		if (ent instanceof EntityMoving) {
-			((EntityMoving) ent).push((float) this.getVelocity() * 1.1f, this.getDirection(), game, this);
-		}
-		bounceEntity(game, ent, dT);
+		
+	}
+	
+	@Override
+	public void onLandscapeCollision(long dT, GamePlayingDefault game) {
+		
 	}
 	
 	
@@ -204,92 +262,11 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 		if (getVelocity() > DEFAULT_VELOCITY) setVelocity(DEFAULT_VELOCITY);
 	}
 	
-	
-	/** Les forces exercées sur le personnage lors d'un tour de jeu.
-	 * Ces variables sont réinitialisées à chaque tour, après la mise
-	 * à jour de l'entité joueur. */
-	private float forceX = 0, forceY = 0;
-	
-	@Override
-	public void push(float force, float direction, GamePlayingDefault game, Entity pusher) {
-		float fX = (float) (Math.cos(direction) * force);
-		float fY = (float) (- Math.sin(direction) * force);
-		
-		this.forceX += fX;
-		this.forceY += fY;
-	}
-	
-	private void applyForces() {
-		if (this.forceX == 0 && this.forceY == 0) {
-			return;
-		}
-		
-		float speedX = this.getMovementX() + this.forceX;
-		float speedY = this.getMovementY() + this.forceY;
-		this.hitbox.setLinearSpeed(speedX, speedY);
-		
-		this.forceX = 0;
-		this.forceY = 0;
-	}
-	
-	
-	
-	//----------------------- CAMERA ----------------------
-	
-	private CameraTrackPoint3D trackPoint = new CameraTrackPoint3D();
-	
-	/**
-	 * Donne un {@link CameraTrackPoint3D} qui suit le joueur et indique
-	 * ainsi à la caméra où elle doit regarder.
-	 * @return Un point mobile qui suit le joueur et qui sert de point de
-	 * repère à la camera.
-	 */
-	public CameraTrackPoint3D getCameraTrackPoint() {
-		return this.trackPoint;
-	}
-	
-	protected void updateTrackPoint() {
-		if (this.trackPoint != null) {
-			Vec2f c = getCoordonnéesf();
-			this.trackPoint.set(c.x, c.y, 0);
-		}
-	}
-	
-	
-	
 	@Override
 	public PlayerDefault clone() {
 		PlayerDefault result = (PlayerDefault) super.clone();
 		result.bonus = new ArrayList<Bonus>();
 		
 		return result;
-	}
-	
-	//----------------------- BONUS -----------------------
-	
-	/**
-	 * Donne une copie de la liste des bonus du jeu. On peut donc
-	 * parcourir cette copie et en même temps supprimer ou ajouter
-	 * des objets sur l'originale.
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private ArrayList<Bonus> getBonusListShallowCopy() {
-		return (ArrayList<Bonus>) this.bonus.clone();
-	}
-	
-	public void addBonus(Bonus bonus) {
-		this.bonus.add(bonus);
-		bonus.setPlayer(this);
-	}
-	
-	public void removeBonus(Bonus bonus) {
-		if (this.bonus.remove(bonus)) {
-			bonus.setPlayer(null);
-		}
-	}
-	
-	public ArrayList<Bonus> getBonusList() {
-		return getBonusListShallowCopy();
 	}
 }

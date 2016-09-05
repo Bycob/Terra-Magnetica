@@ -344,6 +344,8 @@ public class LevelDefaultView extends JPanel {
 		return selection;
 	}
 	
+	/** @return un rectangle qui définit la dernière zone de sélection créée
+	 * par l'utilisateur, en unité entière (une case = {@link Entity#CASE }). */
 	public Rectangle getRoomSelection(){
 		Rectangle result = new Rectangle((int) (selection.x / scaleFactor),
 				(int) (selection.y / scaleFactor),

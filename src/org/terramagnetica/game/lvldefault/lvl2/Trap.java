@@ -39,8 +39,8 @@ import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
 
-import net.bynaryscode.util.maths.geometric.Vec2i;
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
+import net.bynaryscode.util.maths.geometric.Vec2i;
 
 public class Trap extends CaseEntity {
 	
@@ -52,11 +52,12 @@ public class Trap extends CaseEntity {
 	private boolean active = false;
 	
 	public Trap() {
-		super();
+		this(0, 0);
 	}
 	
 	public Trap(int x, int y) {
 		super(x, y);
+		this.hitbox.setSolid(false);
 	}
 	
 	public Trap(Vec2i centre) {
@@ -95,11 +96,6 @@ public class Trap extends CaseEntity {
 	@Override
 	public DimensionsInt getDimensions() {
 		return new DimensionsInt(CASE, CASE);
-	}
-	
-	@Override
-	public boolean isSolid() {
-		return false;
 	}
 	
 	/** Indique si le piège fonctionne */

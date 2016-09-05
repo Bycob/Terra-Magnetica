@@ -29,8 +29,8 @@ import java.util.Map.Entry;
 
 import org.terramagnetica.game.lvldefault.rendering.RenderLandscape;
 import org.terramagnetica.game.lvldefault.rendering.RenderLandscapeNothing;
-import org.terramagnetica.game.physic.Hitbox;
-import org.terramagnetica.game.physic.HitboxPolygon;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxPolygon;
 
 import net.bynaryscode.util.Util;
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
@@ -229,7 +229,7 @@ public abstract class LandscapeTile implements Serializable, Cloneable {
 		return this.skin;
 	}
 	
-	public Hitbox getHitBoxf() {
+	public Hitbox getHitboxf() {
 		Hitbox result = new HitboxPolygon(getBoundsf());
 		result.setPosition(place.x, place.y);
 		result.setStatic(true);

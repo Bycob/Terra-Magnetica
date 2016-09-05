@@ -23,8 +23,8 @@ import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
-import org.terramagnetica.game.physic.Hitbox;
-import org.terramagnetica.game.physic.HitboxPolygon;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxPolygon;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
@@ -57,6 +57,7 @@ public class MagneticWave extends EntityMoving {
 	}
 	
 	protected MagneticWave(float speed, float distance, float direction) {
+		this();
 		this.setVelocity(speed);
 		this.setDirection(direction);
 		this.distance = distance;
@@ -79,31 +80,32 @@ public class MagneticWave extends EntityMoving {
 		return new DimensionsInt(CASE, CASE);
 	}
 	
-	@Override
-	public boolean isSolid() {
-		return true;
-	}
-	
 	public boolean isAlive() {
 		return this.isAlive;
 	}
 	
 	@Override
 	public void updateLogic(long dT, GamePlayingDefault game) {
-		//Coordonnées d'origine
-		Vec2f co = this.getCoordonnéesf();
+		super.updateLogic(dT, game);
 		
-		this.move(dT);
+		this.updateLastHitbox();
+		this.hitbox.completeMove(dT);
 		
-		//Coordonnées d'arrivée
+		Vec2f co = this.lastHitbox.getPosition();
 		Vec2f ca = this.getCoordonnéesf();
+		
 		this.coveredDist += MathUtil.getDistance(co, ca);
 		
 		if (this.coveredDist >= this.distance) {
 			this.isAlive = false;
 		}
 		
-		doCollision(dT, game);
+		//collision
+		for (Entity ent : game.getEntities()) {
+			if (ent instanceof EntityMoving && this.hasCollision(ent)) {
+				((EntityMoving) ent).push((float) this.getVelocity(), this.getDirection(), game, this);
+			}
+		}
 	}
 	
 	@Override
@@ -138,17 +140,6 @@ public class MagneticWave extends EntityMoving {
 		
 		return caseParam && super.hasCollision(ent);
 	}
-	
-	private void doCollision(long dT, GamePlayingDefault game) {
-		
-		for (Entity e : game.getEntities()) {
-			if (hasCollision(e) && e instanceof EntityMoving) {
-				EntityMoving em = (EntityMoving) e;
-				em.push((float) this.getVelocity(), this.getDirection(), game, this);
-			}
-		}
-	}
-	
 	
 	@Override
 	public void code(BufferedObjectOutputStream out) throws GameIOException {

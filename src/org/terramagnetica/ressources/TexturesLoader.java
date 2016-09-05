@@ -32,7 +32,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.lwjgl.opengl.GL11;
-import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.opengl.engine.AnimatedTexture;
 import org.terramagnetica.opengl.engine.Texture;
 import org.terramagnetica.opengl.engine.TextureQuad;
@@ -46,26 +45,7 @@ public final class TexturesLoader {
 	
 	private static ArrayList<TextureSet> loaded = new ArrayList<TextureSet>();
 	
-	public static ByteBuffer aimantIcon;
-	
 	private static Map<String, Texture> textureMap = new HashMap<String, Texture>();
-	
-	
-	/**
-	 * Charge l'icone du jeu. Celui-ci est ensuite accessible via
-	 * {@link TexturesLoader#aimantIcon}.
-	 */
-	public static void loadIcon() {
-		BufferedImage img = ImagesLoader.readImage("gui/game/tm32.png");
-		if (img != null) aimantIcon = ImgUtil.imageToByteBuffer(img);
-	}
-	
-	/** Charge les ressources nécessaires pour lancer le jeu, soit
-	 * les textures de l'interface graphique. */
-	public static void loadGLTextures(){
-		loadTextureSet(GameRessources.guiTextureSet);
-	}
-	
 	
 	
 	/** Détruit toutes les ressources, et libère la mémoire. */

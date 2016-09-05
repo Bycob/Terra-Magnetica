@@ -31,15 +31,14 @@ import org.terramagnetica.opengl.engine.Light.LightColor;
 import org.terramagnetica.opengl.engine.Painter;
 
 import net.bynaryscode.util.Color4f;
+import net.bynaryscode.util.maths.geometric.RectangleInt;
 import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec2i;
-import net.bynaryscode.util.maths.geometric.RectangleInt;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
 /**
  * Dessine le décor en entier.
  * @author Louis JEAN
- *
  */
 public class RenderFullLandscape extends RenderGameDefaultElement {
 	

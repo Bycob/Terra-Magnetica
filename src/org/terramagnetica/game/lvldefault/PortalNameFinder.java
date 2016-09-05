@@ -80,7 +80,7 @@ public class PortalNameFinder extends GameAspect {
 		if (game instanceof GamePlayingDefault) {
 			this.game = (GamePlayingDefault) game;
 		}
-		else throw new IllegalArgumentException("Seuls les GamePlayingDefault sont acceptés.");
+		else throw new IllegalArgumentException("Seuls les " + GamePlayingDefault.class.getSimpleName() + " sont acceptés.");
 	}
 	
 	@Override

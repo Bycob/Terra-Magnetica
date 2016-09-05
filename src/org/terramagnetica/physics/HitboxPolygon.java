@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
  </LICENSE> */
 
-package org.terramagnetica.game.physic;
+package org.terramagnetica.physics;
 
 import java.util.ArrayList;
 
@@ -183,15 +183,19 @@ public class HitboxPolygon extends Hitbox {
 	}
 	
 	@Override
-	public void doNextCollision() {
+	public void calculateNextCollisionReaction() {
 		if (this.nextCollisionPoint == null) {
 			throw new IllegalStateException("Il n'y a aucune collision à effectuer.");
 		}
 		
 		Hitbox other = this.nextCollisionPoint.getOtherHitbox(this);
+		Hitbox[] both = new Hitbox[] {this, other};
 
 		if (other instanceof HitboxPolygon) {
-			if (this.isStatic) other.doNextCollision();
+			if (this.isStatic) {
+				other.calculateNextCollisionReaction();
+				return;
+			}
 			//-> Je ne suis pas statique
 			
 			HitboxPolygon otherPoly = (HitboxPolygon) other;
@@ -270,22 +274,23 @@ public class HitboxPolygon extends Hitbox {
 				//Calcul des nouvelles vitesses
 				double v1nNew = (v1n * this.mass + v2n * other.mass - (v1n - v2n) * other.mass) / massSum;
 				double v2nNew = (v2n * other.mass + v1n * this.mass - (v2n - v1n) * this.mass) / massSum;
-				
+
 				//Application sur les données physiques des deux hitbox
-				this.speedX = (float) (v1tVect.x + v1nNew * en.x);
-				this.speedY = (float) (v1tVect.y + v1nNew * en.y);
+				this.speedX = (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
+				this.speedY = (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
 				
-				other.speedX = (float) (v2tVect.x + v2nNew * en.x);
-				other.speedY = (float) (v2tVect.y + v2nNew * en.y);
+				other.speedX = (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
+				other.speedY = (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
 			}
 			else {
 				//Rebondissement de base.
-				this.speedX = (float) (v1tVect.x - v1n * en.x);
-				this.speedY = (float) (v1tVect.y - v1n * en.y);
+				this.speedX = (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
+				this.speedY = (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
 			}
 			
-			this.nextCollisionPoint = null;
-			other.nextCollisionPoint = null;
+			for (Hitbox hb : both) {
+				hb.afterCollision();
+			}
 		}
 		else if (other instanceof HitboxCircle) {
 			this.nextCollisionPoint.goToPoint();
@@ -294,6 +299,7 @@ public class HitboxPolygon extends Hitbox {
 			HitboxCircle otherCircle = (HitboxCircle) other;
 			float radius2 = otherCircle.getRadius() * otherCircle.getRadius();
 			
+			boolean edgeCollision = false;
 			Vec2f closerPoint = null;
 			Line2D closerEdge = null;
 			double distance = Double.MAX_VALUE;
@@ -303,19 +309,20 @@ public class HitboxPolygon extends Hitbox {
 				Vec2f point2 = this.realPositions.get((i + 1) % this.realPositions.size());
 				Line2D line = this.edgeList.get(i);
 				
-				//distance à la ligne
-				double lineDistance = Math.abs(line.squaredDistance(otherCircle.x, otherCircle.y) - radius2);
 				//collision de bord ?
 				Vec3d segment1 = new Vec3d(point1.x - point2.x, point1.y - point2.y);
 				Vec3d vec1 = new Vec3d(otherCircle.x - point2.x, otherCircle.y - point2.y);
 				double dotProd = segment1.dotProduct(vec1);
-				boolean edgeCollision = dotProd >= 0 && dotProd <= segment1.dotProduct(segment1);
+				edgeCollision = edgeCollision || (dotProd >= 0 && dotProd <= segment1.dotProduct(segment1));
+				
+				//distance à la ligne
+				double lineDistance = Math.abs(line.squaredDistance(otherCircle.x, otherCircle.y) - radius2);
 				
 				//distance au point
 				double pointDistance = Math.abs(MathUtil.getSquaredDistance(point1.x, point1.y, otherCircle.x, otherCircle.y) - radius2);
 				
-				if (lineDistance < pointDistance && edgeCollision) {
-					if (lineDistance < distance) {
+				if (edgeCollision) {
+					if (lineDistance < distance || closerEdge == null) {
 						distance = lineDistance;
 						closerEdge = line;
 						closerPoint = null;
@@ -340,7 +347,6 @@ public class HitboxPolygon extends Hitbox {
 				en = Vec3d.unitVector(otherCircle.x - closerPoint.x, otherCircle.y - closerPoint.y);
 			}
 			
-			
 			//Initialisation des variables
 			Vec3d v1 = new Vec3d(this.speedX, this.speedY);
 			double v1n = v1.dotProduct(en);
@@ -353,13 +359,13 @@ public class HitboxPolygon extends Hitbox {
 			Vec3d v2tVect = v2.substract(v2nVect);
 			
 			if (this.isStatic) {
-				other.speedX = (float) (v2tVect.x - v2n * en.x);
-				other.speedY = (float) (v2tVect.y - v2n * en.y);
+				other.speedX = (float) (v2tVect.x * other.bounceT - v2n * en.x * other.bounceN) * other.bounce;
+				other.speedY = (float) (v2tVect.y * other.bounceT - v2n * en.y * other.bounceN) * other.bounce;
 			}
 			else if (other.isStatic) {
 				//Rebondissement de base.
-				this.speedX = (float) (v1tVect.x - v1n * en.x);
-				this.speedY = (float) (v1tVect.y - v1n * en.y);
+				this.speedX = (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
+				this.speedY = (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
 			}
 			else {
 				double massSum = this.mass + other.mass;
@@ -367,20 +373,21 @@ public class HitboxPolygon extends Hitbox {
 				//Calcul des nouvelles vitesses
 				double v1nNew = (v1n * this.mass + v2n * other.mass - (v1n - v2n) * other.mass) / massSum;
 				double v2nNew = (v2n * other.mass + v1n * this.mass - (v2n - v1n) * this.mass) / massSum;
-				
+
 				//Application sur les données physiques des deux hitbox
-				this.speedX = (float) (v1tVect.x + v1nNew * en.x);
-				this.speedY = (float) (v1tVect.y + v1nNew * en.y);
+				this.speedX = (float) (v1tVect.x * this.bounceT + v1nNew * en.x * this.bounceN) * this.bounce;
+				this.speedY = (float) (v1tVect.y * this.bounceT + v1nNew * en.y * this.bounceN) * this.bounce;
 				
-				other.speedX = (float) (v2tVect.x + v2nNew * en.x);
-				other.speedY = (float) (v2tVect.y + v2nNew * en.y);
+				other.speedX = (float) (v2tVect.x * other.bounceT + v2nNew * en.x * other.bounceN) * other.bounce;
+				other.speedY = (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
 			}
-			
-			this.nextCollisionPoint = null;
-			other.nextCollisionPoint = null;
+
+			for (Hitbox hb : both) {
+				hb.afterCollision();
+			}
 		}
 		else {
-			other.doNextCollision();
+			other.calculateNextCollisionReaction();
 		}
 	}
 	
@@ -398,5 +405,35 @@ public class HitboxPolygon extends Hitbox {
 		clone.edgeList = new ArrayList<Line2D>();
 		
 		return clone;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((points == null) ? 0 : points.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof HitboxPolygon)) {
+			return false;
+		}
+		HitboxPolygon other = (HitboxPolygon) obj;
+		if (points == null) {
+			if (other.points != null) {
+				return false;
+			}
+		} else if (!points.equals(other.points)) {
+			return false;
+		}
+		return true;
 	}
 }

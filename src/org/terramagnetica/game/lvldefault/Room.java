@@ -37,10 +37,10 @@ import org.terramagnetica.ressources.io.Codable;
 import org.terramagnetica.ressources.io.GameIOException;
 
 import net.bynaryscode.util.Util;
-import net.bynaryscode.util.maths.geometric.Vec2f;
-import net.bynaryscode.util.maths.geometric.Vec2i;
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
 import net.bynaryscode.util.maths.geometric.RectangleInt;
+import net.bynaryscode.util.maths.geometric.Vec2f;
+import net.bynaryscode.util.maths.geometric.Vec2i;
 
 /**
  * Une {@link Room} représente un étage d'un niveau de type {@link
@@ -335,7 +335,7 @@ public class Room implements Serializable, Cloneable, Codable {
 	}
 	
 	@Override
-	public Room clone(){
+	public Room clone() {
 		Room result = null;
 		try {
 			result = (Room) super.clone();
@@ -344,7 +344,7 @@ public class Room implements Serializable, Cloneable, Codable {
 		}
 		
 		result.entities = new ArrayList<Entity>();
-		for (Entity entity : this.entities){
+		for (Entity entity : this.entities) {
 			result.addEntityByPriority(entity.clone());
 		}
 		
@@ -631,25 +631,27 @@ public class Room implements Serializable, Cloneable, Codable {
 		this.entities.add(entity);
 	}
 	
-	public Entity getEntityAt(int x, int y){
+	public Entity getEntityAt(int x, int y) {
 		return getEntityAt(new Vec2i(x,y));
 	}
 	
-	public Entity getAndDeleteEntityAt(int x, int y){
+	public Entity getAndDeleteEntityAt(int x, int y) {
 		return getAndDeleteEntityAt(new Vec2i(x,y));
 	}
 	
-	public Entity getEntityAt(Vec2i p){
-		for (Entity composant : entities){
-			Vec2i origine = composant.getCoordonnées();
-			DimensionsInt dims = composant.getDimensions();
+	/** Donne la première entité trouvée située aux coordonnées entières passées
+	 * en paramètres. */
+	public Entity getEntityAt(Vec2i p) {
+		for (Entity entity : entities) {
+			Vec2i origine = entity.getCoordonnées();
+			DimensionsInt dims = entity.getDimensions();
 			
 			if (dims.getWidth() < 32) dims.setWidth(32);
 			if (dims.getHeight() < 32) dims.setHeight(32);
 			
-			if (origine.x - dims.getWidth() / 2 < p.x && origine.y - dims.getHeight() / 2< p.y &&
+			if (origine.x - dims.getWidth() / 2 < p.x && origine.y - dims.getHeight() / 2 < p.y &&
 					origine.x + dims.getWidth() / 2 > p.x && origine.y + dims.getHeight() / 2 > p.y){
-				return composant;
+				return entity;
 			}
 		}
 		return null;
@@ -657,7 +659,7 @@ public class Room implements Serializable, Cloneable, Codable {
 	
 	/** Supprime et retourne l'entité à l'endroit indiqué, sauf s'il s'agit du
 	 * joueur. */
-	public Entity getAndDeleteEntityAt(Vec2i p){
+	public Entity getAndDeleteEntityAt(Vec2i p) {
 		Entity got = getEntityAt(p);
 		if (!(got instanceof PlayerDefault)) {
 			this.entities.remove(got);

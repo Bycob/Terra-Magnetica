@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
  </LICENSE> */
 
-package org.terramagnetica.game.physic;
+package org.terramagnetica.physics;
 
 import net.bynaryscode.util.maths.geometric.Vec2;
 
@@ -35,7 +35,7 @@ public class HitboxNull extends Hitbox {
 	}
 
 	@Override
-	public void doNextCollision() {
+	public void calculateNextCollisionReaction() {
 		
 	}
 

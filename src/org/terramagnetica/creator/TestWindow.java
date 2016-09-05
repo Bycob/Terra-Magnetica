@@ -21,9 +21,10 @@ package org.terramagnetica.creator;
 
 import javax.swing.JOptionPane;
 
-import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.GameEngine;
+import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.Level;
+import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.gui.GameScreen;
 import org.terramagnetica.game.gui.GameWindow;
 import org.terramagnetica.game.gui.ScreenGamePlaying;
@@ -75,7 +76,7 @@ public class TestWindow extends GameWindow {
 	
 	@Override
 	public void loadRessources() {
-		TexturesLoader.loadGLTextures();
+		TexturesLoader.loadTextureSet(GameRessources.guiTextureSet);
 		
 		GuiTextPainter.init();
 		

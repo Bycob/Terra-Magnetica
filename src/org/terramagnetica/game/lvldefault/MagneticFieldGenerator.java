@@ -29,9 +29,11 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
-import org.terramagnetica.game.physic.Hitbox;
-import org.terramagnetica.game.physic.HitboxCircle;
+import org.terramagnetica.opengl.engine.TextureQuad;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
+import org.terramagnetica.ressources.TexturesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
@@ -184,6 +186,11 @@ public class MagneticFieldGenerator extends CaseEntity {
 	@Override
 	public DimensionsInt getImgDimensions() {
 		return new DimensionsInt(5 * CASE, 5* CASE);
+	}
+	
+	@Override
+	public TextureQuad getMinimapIcon() {
+		return TexturesLoader.getQuad(GameRessources.ID_MAP_GENERATOR);
 	}
 	
 	@Override

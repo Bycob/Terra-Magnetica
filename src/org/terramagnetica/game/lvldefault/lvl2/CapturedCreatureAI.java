@@ -53,7 +53,6 @@ public class CapturedCreatureAI extends CreatureAI implements Level2 {
 	
 	public CapturedCreatureAI(TheCreature creature) {
 		super(creature);
-		
 		this.loco = new Locomotor(creature);
 	}
 	

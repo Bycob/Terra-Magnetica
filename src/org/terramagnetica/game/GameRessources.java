@@ -51,7 +51,11 @@ public class GameRessources {
 	 * Les identifiants sont rangés par ordre alphabétiques.
 	 ****************************************************/
 	
+	
+	
 	//---------------------- I -------------------------
+	
+	
 	
 	public static final String 
 	SPEC_PATH_TERRAIN = "decor/terrain%d.png",
@@ -126,7 +130,11 @@ public class GameRessources {
 	
 	public static final TextureSet gameTextureSet = new TextureSet();
 	
+	
+	
 	//---------------------- II ------------------------
+	
+	
 	
 	/** set de textures - interface graphique. */
 	public static final TextureSet guiTextureSet = new TextureSet();
@@ -155,7 +163,11 @@ public class GameRessources {
 	/** set de textures - menu du jeu libre */
 	public static final TextureSet freeGameTextureSet = new TextureSet();
 	
+	
+	
 	//--------------------- III ------------------------
+	
+	
 	
 	/** set de textures - décor 1 de montagne */
 	public static final TextureSet decorMONTSTextureSet = new TextureSet();
@@ -165,7 +177,11 @@ public class GameRessources {
 	/** set de textures - décor bonus des enfers */
 	public static final TextureSet decorENFERSTextureSet = new TextureSet();
 	
+	
+	
 	//--------------------- IV -------------------------
+	
+	
 	
 	/** set de textures - niveau 1 */
 	public static final TextureSet level1TextureSet = new TextureSet();
@@ -198,7 +214,11 @@ public class GameRessources {
 	TEX_TRAP_OFF_IMAGE = ".trap.off",
 	TEX_TRAP_ACTIVE = ".trap.active";
 	
+	
+	
 	//---------------------- V -------------------------
+	
+	
 	
 	public static final String
 	SPEC_DIR_MODEL_TERRAIN = "decor/terrain%d/";
@@ -216,7 +236,11 @@ public class GameRessources {
 	/** set de modèles - décor bonus des enfers */
 	public static final List<String> decorENFERSModelSet = new ArrayList<String>();
 	
+	
+	
 	//------------------------ VI ----------------------
+	
+	
 	
 	public static final ArrayList<String> level1ModelSet = new ArrayList<String>();
 	
@@ -226,7 +250,11 @@ public class GameRessources {
 	PATH_MODEL_LVL2_CONTROLPANE = "niveaux/niveau2/controlPane.obj",
 	PATH_MODEL_LVL2_ROCKS = "niveaux/niveau2/rocks.obj";
 	
+	
+	
 	//----------------------- VII ----------------------
+	
+	
 	
 	public static final SoundSet tmSoundSet = new SoundSet();
 	
@@ -296,7 +324,9 @@ public class GameRessources {
 			gameTextureSet.addTextureModel(pathsMurs[WallTile.ANGLE_GAUCHE_BAS], new TextureQuad(3, 2, width, height, 0));
 		}
 		
+		
 		//Texture des différents composants du jeu.
+		
 		
 		gameTextureSet.createImage(PATH_COMPOSANTS); width = 2048; height = 2048;
 		gameTextureSet.addTextureModel(ID_AIMANT, new TextureQuad(0, 1664, 128, 1856, width, height, 0));
@@ -408,7 +438,10 @@ public class GameRessources {
 		level2TextureSet.addTextureModel(TEX_PORTAL_ON, new TextureQuad(512, 0, 768, 256, width, height, 0));
 		
 		level2TextureSet.createImage(PATH_CREATURE); width = 678; height = 240;
-		level2TextureSet.addTextureModel(PATH_CREATURE, new TextureQuad(0, 0, 678, 240, 678, 240, 0));
+		level2TextureSet.addTextureModel(PATH_CREATURE, new TextureQuad(0, 0, 678, 240, width, height, 0));
+		
+		level2TextureSet.createImage(PATH_MAP); width = 512; height = 512;
+		level2TextureSet.addTextureModel(TEX_MAP_ROCK, new TextureQuad(384, 0, 416, 32, width, height, 0));
 		
 		
 		

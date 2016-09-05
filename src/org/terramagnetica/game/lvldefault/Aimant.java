@@ -28,7 +28,10 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.TexturesLoader;
 
@@ -49,9 +52,15 @@ public class Aimant extends EntityMoving {
 		super(x,y);
 	}
 	
+	
 	@Override
 	public Image getImage() {
 		return ImagesLoader.get(PATH_COMPOSANTS + TEX_CRYSTAL);
+	}
+	
+	@Override
+	public TextureQuad getMinimapIcon() {
+		return TexturesLoader.getQuad(GameRessources.ID_MAP_CRYSTAL);
 	}
 	
 	@Override
@@ -86,7 +95,7 @@ public class Aimant extends EntityMoving {
 			RenderCompound render = (RenderCompound) this.render;
 			if (this.renderAnimation != null) {
 				
-				if (this.getVelocity() > PlayerDefault.CRYSTAL_KILL) {
+				if (this.lastHitbox.getSpeedLength() > PlayerDefault.CRYSTAL_KILL) {
 					
 					render.addRender(this.renderAnimation);
 					this.renderAnimation.getAnimationManager().start();
@@ -100,9 +109,15 @@ public class Aimant extends EntityMoving {
 		}
 	}
 
+	
 	@Override
 	public DimensionsInt getDimensions() {
 		return new DimensionsInt(128, 128);
+	}
+	
+	@Override
+	public Hitbox createHitbox() {
+		return new HitboxCircle(0.25f);
 	}
 	
 	@Override
@@ -133,7 +148,7 @@ public class Aimant extends EntityMoving {
 		}
 		
 		if (this.influence != null) {
-			this.enableCollision(this.influence.hasPermissionForCollision(this));
+			this.hitbox.setSolid(this.influence.hasPermissionForCollision(this));
 			this.influence.controls(game, dT, this);
 		}
 		
@@ -149,10 +164,7 @@ public class Aimant extends EntityMoving {
 		
 		if (entity != this.influence && entity != this) {
 			if (entity instanceof PlayerDefault) {
-				if (getVelocity() > PlayerDefault.CRYSTAL_KILL) game.getPlayer().attack(1, game);
-			}
-			else {
-				this.bounceEntity(game, entity, dT);
+				if (this.lastHitbox.getSpeedLength() > PlayerDefault.CRYSTAL_KILL) game.getPlayer().attack(1, game);
 			}
 		}
 	}
@@ -164,11 +176,6 @@ public class Aimant extends EntityMoving {
 			return;
 		}
 		
-		if (pusher instanceof PlayerDefault) {
-			if (getVelocity() > PlayerDefault.CRYSTAL_KILL) game.getPlayer().attack(1, game);
-		}
-		
-		this.setVelocity(force);
-		this.setDirection(direction);
+		super.push(force, direction, game, pusher);
 	}
 }

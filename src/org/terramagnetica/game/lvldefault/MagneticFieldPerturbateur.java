@@ -40,6 +40,10 @@ public class MagneticFieldPerturbateur extends Entity {
 	
 	private DirectionVariable direction = new DirectionVariable();
 	
+	public MagneticFieldPerturbateur() {
+		this.hitbox.setSolid(false);
+	}
+	
 	@Override
 	public Image getImage() {
 		return ImagesLoader.get(GameRessources.ID_PERTURBATEUR);
@@ -58,11 +62,6 @@ public class MagneticFieldPerturbateur extends Entity {
 	@Override
 	public DimensionsInt getImgDimensions() {
 		return new DimensionsInt(128, 128);
-	}
-	
-	@Override
-	public boolean isSolid() {
-		return false;
 	}
 	
 	@Override

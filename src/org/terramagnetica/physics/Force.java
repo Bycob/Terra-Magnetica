@@ -17,11 +17,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
  </LICENSE> */
 
-package org.terramagnetica.game.physic;
+package org.terramagnetica.physics;
 
 import net.bynaryscode.util.maths.geometric.Vec2f;
 
-public class Force {
+public class Force implements Cloneable {
 	private float forceX, forceY;
 	
 	public Force(float forceX, float forceY) {
@@ -51,5 +51,49 @@ public class Force {
 	
 	public float getForceY() {
 		return this.forceY;
+	}
+	
+	@Override
+	public Force clone() {
+		Force result = null;
+		
+		try {
+			result = (Force) super.clone();
+		}
+		catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(forceX);
+		result = prime * result + Float.floatToIntBits(forceY);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Force)) {
+			return false;
+		}
+		Force other = (Force) obj;
+		if (Float.floatToIntBits(forceX) != Float.floatToIntBits(other.forceX)) {
+			return false;
+		}
+		if (Float.floatToIntBits(forceY) != Float.floatToIntBits(other.forceY)) {
+			return false;
+		}
+		return true;
 	}
 }

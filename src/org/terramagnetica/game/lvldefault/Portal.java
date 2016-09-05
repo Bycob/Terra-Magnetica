@@ -26,8 +26,8 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
-import org.terramagnetica.game.physic.Hitbox;
-import org.terramagnetica.game.physic.HitboxCircle;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
@@ -64,7 +64,11 @@ public class Portal extends CaseEntity implements IGoal {
 	private double scaleX = 1, scaleY = 0.8;
 	
 	private transient DecorType type;
-
+	
+	public Portal() {
+		this.hitbox.setSolid(false);
+	}
+	
 	@Override
 	public Image getImage() {
 		return ImagesLoader.get(GameRessources.ID_PORTAL);
@@ -135,11 +139,6 @@ public class Portal extends CaseEntity implements IGoal {
 	@Override
 	public Hitbox createHitbox() {
 		return new HitboxCircle(0.5f);
-	}
-	
-	@Override
-	public boolean isSolid() {
-		return false;
 	}
 	
 	public void goToRoom(Room r) {

@@ -21,7 +21,6 @@ package debug;
 
 import org.terramagnetica.creator.Creator;
 import org.terramagnetica.game.TerraMagnetica;
-import org.terramagnetica.game.lvldefault.Aimant;
 import org.terramagnetica.game.lvldefault.DialogInGame;
 import org.terramagnetica.game.lvldefault.DialogInGame.Statement;
 
@@ -38,25 +37,6 @@ public class Debug {
 		d.goToIndex(0);
 		System.out.println(d.getCurrentStatement());
 		System.out.println(d.getCurrentStatementIndex());
-	}
-	
-	
-	//Procédure de test
-	private static void testCollision(float moveX1, float moveY1, float moveX2, float moveY2) {
-		Aimant aimant1 = new Aimant(129, 129);
-		Aimant aimant2 = new Aimant(130, 129);
-		
-		aimant1.setMovement(moveX1, moveY1);
-		aimant2.setMovement(moveX2, moveY2);
-		
-		System.out.println("#########################");
-		System.out.println("vitesse de départ aimant 1 : (" + aimant1.getMovementX() + " ;" + aimant1.getMovementY() + ")");
-		System.out.println("vitesse de départ aimant 2 : (" + aimant2.getMovementX() + " ;" + aimant2.getMovementY() + ")");
-		System.out.println();
-		aimant1.bounceEntity(null, aimant2, 20);
-		aimant2.bounceEntity(null, aimant1, 20);
-		System.out.println("vitesse après collision aimant 1 : (" + aimant1.getMovementX() + " ;" + aimant1.getMovementY() + ")");
-		System.out.println("vitesse après collision aimant 2 : (" + aimant2.getMovementX() + " ;" + aimant2.getMovementY() + ")");
 	}
 	
 	

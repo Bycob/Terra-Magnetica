@@ -23,7 +23,7 @@ import java.awt.Image;
 
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
-import org.terramagnetica.game.physic.Hitbox;
+import org.terramagnetica.physics.Hitbox;
 
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
 

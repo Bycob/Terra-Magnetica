@@ -24,22 +24,24 @@ import java.awt.Image;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
-import org.terramagnetica.game.physic.Hitbox;
-import org.terramagnetica.game.physic.HitboxCircle;
+import org.terramagnetica.opengl.engine.TextureQuad;
+import org.terramagnetica.physics.Force;
+import org.terramagnetica.physics.Hitbox;
+import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
+import org.terramagnetica.ressources.TexturesLoader;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
+import net.bynaryscode.util.maths.geometric.Vec2f;
+import net.bynaryscode.util.maths.geometric.Vec3d;
 
 /**
  * Une lampe perturbatrice est un type particulier de lampe.
- * <ul><li>Lorsqu'elle est jaune, elle n'exerce aucun contrôle
- * sur la trajectoire des éléments magnétiques (à part les délivrer
- * de toute autre influence, car une lampe perturbatrice est une
- * {@link InfluenceMagnetiqueMajeure}).
- * <li>Lorsqu'elle est rouge, elle donne une trajectoire aléatoire
- * aux éléments magnétiques. La trajectoire est déterminée par un
- * objet {@link DirectionVariable}.
+ * <ul><li>Lorsqu'elle est jaune, l'aimant tourne autour d'elle, plus
+ * ou moins vite, mais ne change pas de sens.
+ * <li>Lorsqu'elle est rouge, l'aimant tourne toujours, mais effectue
+ * des oscillations violentes.
  * </ul>
  * <p>Dans le jeu elle est appelée : "lampe magnétique à champs".
  * @author Louis JEAN
@@ -49,15 +51,18 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static final float FORCE = 40;
+	private static final float TANGENT_FORCE = 40;
+	private static final float DEFAULT_PERIOD = 1000;
 	
-	/** L'objet qui va déterminer l'influence de la lampe sur les objets
-	 * magnétiques sous son contrôle. La direction indiquée par l'objet
-	 * est celle qui sera induise aux éléments magnétiques. */
-	private DirectionVariable direction = new DirectionVariable();
+	//Variables d'influence
+	/** La période en ms */
+	private float period = DEFAULT_PERIOD;
+	private float normalMoveOrigin = 0;
+	private float normalMoveOffset = 0;
 	
 	//RENDUS
 	private RenderEntityDefault renderMainIndicator;
+	private float indicatorDirection = 0;
 
 	public LampePerturbatrice() {
 		super();
@@ -65,6 +70,16 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	
 	public LampePerturbatrice(int x, int y) {
 		super(x, y);
+	}
+	
+	@Override
+	public Image getImage() {
+		return ImagesLoader.get(GameRessources.ID_LAMP_PERTURBATRICE_OFF);
+	}
+	
+	@Override
+	public TextureQuad getMinimapIcon() {
+		return TexturesLoader.getQuad(GameRessources.ID_MAP_LAMP_RANDOM);
 	}
 	
 	@Override
@@ -89,16 +104,11 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	/** Met à jour la position du rendu de l'indicateur de direction
 	 * de la lampe  */
 	private void updateIndicatorTranslation() {
-		float dir = this.direction.getDirection();
+		float dir = indicatorDirection;
 		float tX = (float) Math.cos(dir) * 0.7f;
 		float tY = (float) Math.sin(dir) * 0.5f;
 		
 		if (this.renderMainIndicator != null) this.renderMainIndicator.setTranslation(tX, tY);
-	}
-	
-	@Override
-	public Image getImage() {
-		return ImagesLoader.get(GameRessources.ID_LAMP_PERTURBATRICE_OFF);
 	}
 	
 	@Override
@@ -117,24 +127,39 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	}
 	
 	@Override
-	public void controls(GamePlayingDefault game, long delta, EntityMoving controlled) {
+	public void controls(GamePlayingDefault game, long delta, EntityMoving ent) {
 		updateLogic(delta, game);
 		
+		double t = game.getTime();
+		
+		float forceX = 0, forceY = 0;
+		
+		Vec2f entLoc = ent.getCoordonnéesf();
+		double d = getDistancef(ent);
+		Vec3d en = Vec3d.unitVector(entLoc.x - this.hitbox.getPositionX(), entLoc.y - this.hitbox.getPositionY());
+		Vec3d et = new Vec3d(en.y, - en.x);
+		Vec3d vi = new Vec3d(ent.getMovementX(), ent.getMovementY());
+		double vn = vi.dotProduct(en);
+		Vec3d vnVect = en.multiply(vn);
+		Vec3d vtVect = vi.substract(vnVect);
+		double vt = vtVect.length();
+		
+		//Force tangentielle sinusoïdale
+		double tangentForce = TANGENT_FORCE * Math.sin(t / this.period * (0.5f / Math.PI));
+		double normalCorrection = -0;
+		
+		forceX += tangentForce * et.x + normalCorrection * en.x;
+		forceY += tangentForce * et.y + normalCorrection * en.y;
+		
 		if (this.state) {
-			float d = (float) this.getDistancef(controlled);
-			float dir = this.direction.getDirection();
-			
-			float vX = (float) Math.cos(dir);//vecteur x déviant
-			float vY = (float) Math.sin(dir);//vecteur y déviant
-			
-			float newMoveX = controlled.getMovementX() + (FORCE * vX) / (d * d) * (delta / 1000f);
-			float newMoveY = controlled.getMovementY() + (FORCE * vY) / (d * d) * (delta / 1000f);
-			
-			controlled.setMovement(newMoveX, newMoveY);
+			float normalForce = 0;
 		}
 		else {
-			
+			//TEMPORAIRE
+			forceX = forceY = 0;
 		}
+		
+		ent.getHitbox().addForce(new Force(forceX, forceY));
 	}
 	
 	@Override
@@ -154,14 +179,20 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 		
 		super.updateLogic(dT, game);
 		
+		//mise à jour de l'état
+		if (this.didStateChanged) {
+			if (this.state) {
+				this.normalMoveOrigin = game.getTime() / 1000f - this.normalMoveOffset;
+			}
+			else {
+				this.normalMoveOffset = (game.getTime() / 1000f - this.normalMoveOrigin) % this.period;
+			}
+		}
+		
+		//mise à jour du rendu
 		if (this.didStateChanged) {
 			recreateRender();
 		}
-		
-		//mise à jour de la direction
-		if (this.state) this.direction.update(dT);
-		
-		//mise à jour du rendu
 		updateIndicatorTranslation();
 	}
 }

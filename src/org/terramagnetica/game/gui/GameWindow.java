@@ -128,8 +128,8 @@ public class GameWindow {
 		try {
 			window.setTitle("Terra Magnetica - V" + TerraMagnetica.VERSION);
 			
-			TexturesLoader.loadIcon();
-			window.setIcon(new ByteBuffer[] {TexturesLoader.aimantIcon});
+			RessourcesManager.loadIcon();
+			window.setIcon(new ByteBuffer[] {RessourcesManager.tmIcon});
 			
 			window.createWindow();
 			

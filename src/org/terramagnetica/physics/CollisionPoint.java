@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
  </LICENSE> */
 
-package org.terramagnetica.game.physic;
+package org.terramagnetica.physics;
 
 public class CollisionPoint {
 	
@@ -26,6 +26,7 @@ public class CollisionPoint {
 	private Hitbox hitbox1, hitbox2;
 	
 	public CollisionPoint(float time, Hitbox hb1, Hitbox hb2) {
+		this.setHitboxes(hb1, hb2);
 		this.setTime(time);
 	}
 	
@@ -58,5 +59,14 @@ public class CollisionPoint {
 	void goToPoint() {
 		this.hitbox1.applyVelocity(this.time - this.hitbox1.timeOffset);
 		this.hitbox2.applyVelocity(this.time - this.hitbox2.timeOffset);
+	}
+	
+	void delete() {
+		Hitbox[] hitboxes = getHitboxes();
+		for (Hitbox hb : hitboxes) {
+			if (hb.nextCollisionPoint == this) {
+				hb.nextCollisionPoint = null;
+			}
+		}
 	}
 }

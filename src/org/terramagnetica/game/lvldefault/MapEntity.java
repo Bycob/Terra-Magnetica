@@ -19,36 +19,23 @@ along with BynarysCode. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game.lvldefault;
 
-import java.util.HashMap;
-
-import org.terramagnetica.game.GameRessources;
+import org.terramagnetica.opengl.engine.TextureQuad;
+import org.terramagnetica.ressources.TexturesLoader;
 
 import net.bynaryscode.util.maths.geometric.Vec2f;
 
 public class MapEntity {
 	
-	private static final HashMap<Class<? extends Entity>, String> mapEntityTextureMap = new HashMap<Class<? extends Entity>, String>();
-	
-	static {
-		mapEntityTextureMap.put(Aimant.class, GameRessources.ID_MAP_CRYSTAL);
-		mapEntityTextureMap.put(PlayerDefault.class, GameRessources.ID_MAP_PLAYER);
-		mapEntityTextureMap.put(Lampe.class, GameRessources.ID_MAP_LAMP);
-		mapEntityTextureMap.put(LampePerturbatrice.class, GameRessources.ID_MAP_LAMP_RANDOM);
-		mapEntityTextureMap.put(MagneticFieldGenerator.class, GameRessources.ID_MAP_GENERATOR);
-	}
-	
-	
-	
 	private float x, y;
-	private String texture = "";
+	private TextureQuad texture = null;
 	
-	public MapEntity() {
-		this(0, 0);
+	public MapEntity(Entity ent) {
+		this(ent, 0, 0);
 	}
 	
-	public MapEntity(float x, float y) {
-		this.x = x;
-		this.y = y;
+	public MapEntity(Entity ent, float x, float y) {
+		setLocation(x, y);
+		setTexture(ent.getMinimapIcon());
 	}
 	
 	public void setLocation(float x, float y) {
@@ -68,15 +55,11 @@ public class MapEntity {
 		return new Vec2f(this.x, this.y);
 	}
 	
-	public void setTexture(String tex) {
-		this.texture = tex == null ? "" : tex;
+	public void setTexture(TextureQuad tex) {
+		this.texture = tex == null ? TexturesLoader.TEXTURE_NULL : tex;
 	}
 	
-	public void setTexture(Class<? extends Entity> clazz) {
-		setTexture(mapEntityTextureMap.get(clazz));
-	}
-	
-	public String getTexture() {
+	public TextureQuad getTexture() {
 		return this.texture;
 	}
 }
