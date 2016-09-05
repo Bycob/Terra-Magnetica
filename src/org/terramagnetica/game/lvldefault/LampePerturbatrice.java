@@ -25,6 +25,7 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
 import org.terramagnetica.opengl.engine.TextureQuad;
+import org.terramagnetica.physics.Force;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
@@ -32,6 +33,8 @@ import org.terramagnetica.ressources.TexturesLoader;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
+import net.bynaryscode.util.maths.geometric.Vec2f;
+import net.bynaryscode.util.maths.geometric.Vec3d;
 
 /**
  * Une lampe perturbatrice est un type particulier de lampe.
@@ -48,7 +51,7 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static final float FORCE = 40;
+	private static final float TANGENT_FORCE = 40;
 	private static final float DEFAULT_PERIOD = 1000;
 	
 	//Variables d'influence
@@ -124,14 +127,39 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	}
 	
 	@Override
-	public void controls(GamePlayingDefault game, long delta, EntityMoving controlled) {
+	public void controls(GamePlayingDefault game, long delta, EntityMoving ent) {
 		updateLogic(delta, game);
 		
+		double t = game.getTime();
 		
+		float forceX = 0, forceY = 0;
+		
+		Vec2f entLoc = ent.getCoordonnéesf();
+		double d = getDistancef(ent);
+		Vec3d en = Vec3d.unitVector(entLoc.x - this.hitbox.getPositionX(), entLoc.y - this.hitbox.getPositionY());
+		Vec3d et = new Vec3d(en.y, - en.x);
+		Vec3d vi = new Vec3d(ent.getMovementX(), ent.getMovementY());
+		double vn = vi.dotProduct(en);
+		Vec3d vnVect = en.multiply(vn);
+		Vec3d vtVect = vi.substract(vnVect);
+		double vt = vtVect.length();
+		
+		//Force tangentielle sinusoïdale
+		double tangentForce = TANGENT_FORCE * Math.sin(t / this.period * (0.5f / Math.PI));
+		double normalCorrection = -0;
+		
+		forceX += tangentForce * et.x + normalCorrection * en.x;
+		forceY += tangentForce * et.y + normalCorrection * en.y;
 		
 		if (this.state) {
-			
+			float normalForce = 0;
 		}
+		else {
+			//TEMPORAIRE
+			forceX = forceY = 0;
+		}
+		
+		ent.getHitbox().addForce(new Force(forceX, forceY));
 	}
 	
 	@Override
