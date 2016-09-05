@@ -28,6 +28,7 @@ import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.physics.Force;
 import org.terramagnetica.physics.Hitbox;
@@ -75,6 +76,11 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	@Override
 	public Image getImage(){
 		return ImagesLoader.get(PATH_COMPOSANTS + TEX_LAMP_IN);
+	}
+	
+	@Override
+	public TextureQuad getMinimapIcon() {
+		return TexturesLoader.getQuad(GameRessources.ID_MAP_LAMP);
 	}
 	
 	@Override

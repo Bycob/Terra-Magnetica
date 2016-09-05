@@ -28,6 +28,7 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
@@ -51,9 +52,15 @@ public class Aimant extends EntityMoving {
 		super(x,y);
 	}
 	
+	
 	@Override
 	public Image getImage() {
 		return ImagesLoader.get(PATH_COMPOSANTS + TEX_CRYSTAL);
+	}
+	
+	@Override
+	public TextureQuad getMinimapIcon() {
+		return TexturesLoader.getQuad(GameRessources.ID_MAP_CRYSTAL);
 	}
 	
 	@Override
@@ -102,6 +109,7 @@ public class Aimant extends EntityMoving {
 		}
 	}
 
+	
 	@Override
 	public DimensionsInt getDimensions() {
 		return new DimensionsInt(128, 128);

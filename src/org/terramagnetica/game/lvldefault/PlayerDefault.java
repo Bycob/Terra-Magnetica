@@ -29,6 +29,7 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.CameraTrackPoint3D;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
@@ -107,15 +108,13 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	//-----
 	
 	@Override
-	public void setCoordonnéesf(float x, float y) {
-		super.setCoordonnéesf(x, y);
-		
-		this.updateTrackPoint();
+	public Image getImage(){
+		return ImagesLoader.get(GameRessources.PATH_PLAYER);
 	}
 	
 	@Override
-	public Image getImage(){
-		return ImagesLoader.get(GameRessources.PATH_PLAYER);
+	public TextureQuad getMinimapIcon() {
+		return TexturesLoader.getQuad(GameRessources.ID_MAP_PLAYER);
 	}
 	
 	@Override
@@ -131,6 +130,13 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	public void reloadRender() {
 		this.textures = null;
 		super.reloadRender();
+	}
+	
+	@Override
+	public void setCoordonnéesf(float x, float y) {
+		super.setCoordonnéesf(x, y);
+		
+		this.updateTrackPoint();
 	}
 	
 	@Override

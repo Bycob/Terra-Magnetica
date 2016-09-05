@@ -60,7 +60,7 @@ public class RessourcesManager {
 	 * Cela comprend les textures, les polices de caractère, les
 	 * informations de sauvegarde, les options, les sons. */
 	public static void loadRessourcesGame(){
-		TexturesLoader.loadTextureSet(GameRessources.gameTextureSet);
+		TexturesLoader.loadTextureSet(GameRessources.guiTextureSet);
 		
 		GuiTextPainter.init();
 		

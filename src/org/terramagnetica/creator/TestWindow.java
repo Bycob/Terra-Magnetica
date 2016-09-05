@@ -76,7 +76,7 @@ public class TestWindow extends GameWindow {
 	
 	@Override
 	public void loadRessources() {
-		TexturesLoader.loadTextureSet(GameRessources.gameTextureSet);
+		TexturesLoader.loadTextureSet(GameRessources.guiTextureSet);
 		
 		GuiTextPainter.init();
 		

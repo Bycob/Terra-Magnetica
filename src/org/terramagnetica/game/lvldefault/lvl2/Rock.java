@@ -25,8 +25,10 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
+import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.physics.HitboxPolygon;
 import org.terramagnetica.ressources.ImagesLoader;
+import org.terramagnetica.ressources.TexturesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
@@ -40,9 +42,11 @@ public class Rock extends CaseEntity {
 	
 	private float elevation = 0f;
 	
+	// RENDU
+	
 	@Override
 	public Image getImage() {
-		return ImagesLoader.get(ImagesLoader.marqueur);
+		return ImagesLoader.get(GameRessources.PATH_MAP + GameRessources.TEX_MAP_ROCK);
 	}
 
 	@Override
@@ -51,12 +55,19 @@ public class Rock extends CaseEntity {
 	}
 	
 	@Override
+	public TextureQuad getMinimapIcon() {
+		return TexturesLoader.getQuad(GameRessources.PATH_MAP + GameRessources.TEX_MAP_ROCK);
+	}
+	
+	@Override
 	protected RenderEntity createRender() {
 		return new RenderEntityModel3D(GameRessources.PATH_MODEL_LVL2_ROCKS)
 				.withRotation(90)
 				.withTranslation(0, 0, this.elevation);
 	}
-
+	
+	// LOGIQUE / PHYSIQUE
+	
 	@Override
 	public DimensionsInt getDimensions() {
 		return new DimensionsInt((int) (CASE * 0.8f), (int) (CASE * 0.8f));

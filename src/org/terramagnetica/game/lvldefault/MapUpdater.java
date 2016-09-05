@@ -114,8 +114,7 @@ public class MapUpdater extends GameAspect {
 				for (Vec2i c : visited) {
 					if (cCase.equals(c) && e.isMapVisible()) {
 						Vec2f ce = e.getCoordonnéesf();
-						MapEntity me = new MapEntity(ce.x, ce.y);
-						me.setTexture(e.getClass());
+						MapEntity me = new MapEntity(e, ce.x, ce.y);
 						this.theMap.addMapEntity(me);
 						break;
 					}

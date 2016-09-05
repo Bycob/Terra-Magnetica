@@ -25,10 +25,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.physics.HitboxFamily;
 import org.terramagnetica.physics.HitboxPolygon;
+import org.terramagnetica.ressources.TexturesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.Codable;
@@ -166,7 +168,73 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		return true;
 	}
 	
-	//ACCESSEURS
+	
+	// RENDU
+	
+	/**
+	 * Donne l'image qui représente l'entité dans l'éditeur de
+	 * niveau. Généralement une image fixe.
+	 * <p>Attention les dimensions de l'image prises en compte dans
+	 * l'éditeur de niveau (pour l'affichage) ne sont pas les dimensions
+	 * de l'image réelle, mais celles de la méthode {@link #getImgDimensions()}.
+	 * @return L'image sous forme d'objet {@link Image} (Le plus souvent
+	 * {@link BufferedImage})*/
+	public abstract Image getImage();
+	
+	/**
+	 * Donne les dimensions de l'image qui représente l'entité
+	 * dans l'éditeur de niveau.
+	 * @return Les dimensions de l'image en pixels. Il est conseillé
+	 * de donner les dimensions réelles de l'image en question.
+	 * @see #getImage() */
+	public DimensionsInt getImgDimensions() {
+		return getDimensions();
+	}
+	
+	public TextureQuad getMinimapIcon() {
+		return TexturesLoader.TEXTURE_NULL;
+	}
+	
+	/** @return l'objet qui va dessiner l'entité à l'écran. Cette
+	 * méthode est utilisée pour créer l'objet "rendu" de l'entité,
+	 * afin de le stocker en mémoire. */
+	protected abstract RenderEntity createRender();
+	
+	/** Recrée l'objet "rendu" de l'entité grâce à la méthode
+	 * {@link #createRender()}. Utilisé notament lorsque l'objet
+	 * change de texture en cours de jeu, ou se modifie... */
+	public final void recreateRender() {
+		this.render = createRender();
+	}
+	
+	/** Recharge le rendu. A la différence de la méthode {@link #recreateRender()},
+	 * cette méthode libère toutes les ressources avant de recréer
+	 * le rendu, ce qui permet de recharger les textures lorsqu'elles
+	 * ont été supprimées. */
+	public void reloadRender() {
+		recreateRender();
+	}
+	
+	/** @return l'objet "rendu" de l'entité, qui la dessinera à
+	 * l'écran. Par défaut, cet objet est stocké dans la classe
+	 * Entity sous le non de {@link Entity#render}. */
+	public RenderEntity getRender() {
+		if (this.render == null) this.render = createRender();
+		return this.render;
+	}
+	
+	public String getSkin() {
+		return this.skin;
+	}
+
+	public void setSkin(String skin) {
+		if (skin == null) skin = "";
+		this.skin = skin;
+	}
+	
+	
+	// PHYSIQUE / LOGIQUE
+	
 	/** @return les coordonnées de l'entité, en cases. */
 	public Vec2f getCoordonnéesf() {
 		return this.hitbox.getPosition();
@@ -229,63 +297,6 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		if (priority < 1)
 			throw new IllegalArgumentException("La priorité ne peut être négative ou nulle");
 		this.priority = priority;
-	}
-	
-	/**
-	 * Donne l'image qui représente l'entité dans l'éditeur de
-	 * niveau. Généralement une image fixe.
-	 * <p>Attention les dimensions de l'image prises en compte dans
-	 * l'éditeur de niveau (pour l'affichage) ne sont pas les dimensions
-	 * de l'image réelle, mais celles de la méthode {@link #getImgDimensions()}.
-	 * @return L'image sous forme d'objet {@link Image} (Le plus souvent
-	 * {@link BufferedImage})*/
-	public abstract Image getImage();
-	
-	/**
-	 * Donne les dimensions de l'image qui représente l'entité
-	 * dans l'éditeur de niveau.
-	 * @return Les dimensions de l'image en pixels. Il est conseillé
-	 * de donner les dimensions réelles de l'image en question.
-	 * @see #getImage() */
-	public DimensionsInt getImgDimensions() {
-		return getDimensions();
-	}
-	
-	/** @return l'objet qui va dessiner l'entité à l'écran. Cette
-	 * méthode est utilisée pour créer l'objet "rendu" de l'entité,
-	 * afin de le stocker en mémoire. */
-	protected abstract RenderEntity createRender();
-	
-	/** Recrée l'objet "rendu" de l'entité grâce à la méthode
-	 * {@link #createRender()}. Utilisé notament lorsque l'objet
-	 * change de texture en cours de jeu, ou se modifie... */
-	public final void recreateRender() {
-		this.render = createRender();
-	}
-	
-	/** Recharge le rendu. A la différence de la méthode {@link #recreateRender()},
-	 * cette méthode libère toutes les ressources avant de recréer
-	 * le rendu, ce qui permet de recharger les textures lorsqu'elles
-	 * ont été supprimées. */
-	public void reloadRender() {
-		recreateRender();
-	}
-	
-	/** @return l'objet "rendu" de l'entité, qui la dessinera à
-	 * l'écran. Par défaut, cet objet est stocké dans la classe
-	 * Entity sous le non de {@link Entity#render}. */
-	public RenderEntity getRender() {
-		if (this.render == null) this.render = createRender();
-		return this.render;
-	}
-	
-	public String getSkin() {
-		return this.skin;
-	}
-	
-	public void setSkin(String skin) {
-		if (skin == null) skin = "";
-		this.skin = skin;
 	}
 	
 	/**
