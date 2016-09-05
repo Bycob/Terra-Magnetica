@@ -419,7 +419,7 @@ public class Creator extends JFrame {
 				int id = parsing[0];
 				
 				boolean setID = true;
-				if (!TerraMagnetica.op) {
+				if (!TerraMagnetica.dev) {
 					int option = JOptionPane.showConfirmDialog(this,
 							"Le nom du fichier indique que celui ci pourrait contenir du contenu additionnel. Charger" +
 									" ce contenu ?",
