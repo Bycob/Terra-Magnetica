@@ -146,8 +146,8 @@ public class FreeCreatureAI extends CreatureAI implements Codable {
 			if (this.trapWhichTrappedMeT_T != null) {
 				//La créature se centre sur le piège.
 				TheCreature creature = this.getCreature();
-				Vec2f cpos = creature.getCoordonnéesf();
-				Vec2f tpos = this.trapWhichTrappedMeT_T.getCoordonnéesf();
+				Vec2f cpos = creature.getPositionf();
+				Vec2f tpos = this.trapWhichTrappedMeT_T.getPositionf();
 				
 				creature.setMovement(tpos.x - cpos.x, tpos.y - cpos.y);
 			}
@@ -194,7 +194,7 @@ public class FreeCreatureAI extends CreatureAI implements Codable {
 		out.writeLongField(this.liberatingDuration, 1);
 		
 		if (this.trapWhichTrappedMeT_T != null) { //[2-3]
-			Vec2i trapCase = this.trapWhichTrappedMeT_T.getCoordonnéesCase();
+			Vec2i trapCase = this.trapWhichTrappedMeT_T.getCasePosition();
 			out.writeIntField(trapCase.x, 2); out.writeIntField(trapCase.y, 3);
 		}
 	}
@@ -217,7 +217,7 @@ public class FreeCreatureAI extends CreatureAI implements Codable {
 		FreeCreatureAI clone = (FreeCreatureAI) super.clone();
 		
 		clone.bounds = this.bounds == null ? null : this.bounds.clone();
-		clone.trapCase = this.trapWhichTrappedMeT_T == null ? (this.trapCase == null ? null : this.trapCase.clone()) : this.trapWhichTrappedMeT_T.getCoordonnéesCase();
+		clone.trapCase = this.trapWhichTrappedMeT_T == null ? (this.trapCase == null ? null : this.trapCase.clone()) : this.trapWhichTrappedMeT_T.getCasePosition();
 		
 		return clone;
 	}

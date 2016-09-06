@@ -127,10 +127,10 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	}
 	
 	@Override
-	public Vec2i getCoordonnéesToDraw() {
+	public Vec2i getImagePosition() {
 		return new Vec2i(
-				this.getCoordonnées().x - this.getImgDimensions().getWidth() / 2,
-				this.getCoordonnées().y - this.getImgDimensions().getHeight() * 2 / 3);
+				this.getPositioni().x - this.getImgDimensions().getWidth() / 2,
+				this.getPositioni().y - this.getImgDimensions().getHeight() * 2 / 3);
 	}
 
 	@Override
@@ -141,8 +141,8 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	@Override
 	public void controls(GamePlayingDefault game, long dT, EntityMoving ent) {
 		updateLogic(dT, game);
-		Vec2f centre = this.getCoordonnéesf();
-		Vec2f otherCentre = ent.getCoordonnéesf();
+		Vec2f centre = this.getPositionf();
+		Vec2f otherCentre = ent.getPositionf();
 		double df = getDistancef(ent);
 		
 		double dX = centre.x - otherCentre.x;

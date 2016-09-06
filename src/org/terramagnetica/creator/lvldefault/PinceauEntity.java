@@ -55,10 +55,10 @@ public class PinceauEntity extends Pinceau {
 		
 		if (result != null){
 			if (!isCased){
-				result.setCoordonnées(x, y);
+				result.setPositioni(x, y);
 			}
 			else{
-				result.setCoordonnéesCase(x, y);
+				result.setCasePosition(x, y);
 			}
 		}
 		

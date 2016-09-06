@@ -34,8 +34,8 @@ public class DialogEntityProperties extends DialogComponentProperties implements
 	
 	public DialogEntityProperties(Entity e, Frame parent, PaintingPropertiesMap propertyMap, boolean isCreatingEntity) {
 		super(
-				new ComponentInfos(e.getCoordonnéesf(), propertyMap.getPropertyPanel(e.getClass())),
-				"Propriété de l'entité " + propertyMap.getName(e.getClass()) + " en " + e.getCoordonnéesf(),
+				new ComponentInfos(e.getPositionf(), propertyMap.getPropertyPanel(e.getClass())),
+				"Propriété de l'entité " + propertyMap.getName(e.getClass()) + " en " + e.getPositionf(),
 				parent);
 		
 		this.creating = isCreatingEntity;

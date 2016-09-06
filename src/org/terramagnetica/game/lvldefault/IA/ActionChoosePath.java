@@ -73,7 +73,7 @@ public class ActionChoosePath extends Action {
 		comparator.setAI(aiMove);
 		
 		//Obtention des chemins disponibles
-		Vec2i start = ent.getCoordonnéesCase();
+		Vec2i start = ent.getCasePosition();
 		Path[] paths = pathSeeker.seekPaths(start);
 		
 		if (paths.length == 0) {

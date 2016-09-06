@@ -158,7 +158,7 @@ public class Trap extends CaseEntity {
 		
 		//Si la créature se prend dans le piège
 		if (this.isWorking()) {
-			Vec2i cCase = this.getCoordonnéesCase();
+			Vec2i cCase = this.getCasePosition();
 			Entity[] onMyTerritory = game.getEntitiesOnCase(cCase.x, cCase.y);
 			
 			for (Entity kwazzzaaaa : onMyTerritory) {

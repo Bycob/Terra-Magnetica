@@ -158,7 +158,7 @@ public class MagneticWavesGenerator extends CaseEntity implements IDirectionnalE
 		if (timeElapsed >= period) {
 			long aliveTime = timeElapsed - period;//Indique la durée depuis laquelle l'onde existe déjà.
 			MagneticWave createdWave = new MagneticWave(this.speed, this.distance, this.direction.getDirection());
-			createdWave.setCoordonnéesf(this.getCoordonnéesf());
+			createdWave.setPositionf(this.getPositionf());
 			
 			createdWave.updateLogic(aliveTime + (int) (DEMI_CASE_F / this.speed), game);
 			

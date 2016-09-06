@@ -39,23 +39,23 @@ public class InterruptionEnd extends InterruptionPhasesLvlDefault implements Lev
 		
 		if (rock != null && creature != null) {
 			//Variables
-			final Vec2f creatureStartingPoint = creature.getCoordonnéesf();
+			final Vec2f creatureStartingPoint = creature.getPositionf();
 			final Vec2f creaturePoint1 = creatureStartingPoint.clone(); creaturePoint1.translate(CREATURE_FIRST_MOVE, 0);
 			final Vec2f creaturePoint2 = creaturePoint1.clone(); creaturePoint2.translate(CREATURE_SECOND_MOVE, 0);
 			
-			final Vec2f playerStartingPoint = player.getCoordonnéesf();
+			final Vec2f playerStartingPoint = player.getPositionf();
 			final Vec2f playerEndPoint = playerStartingPoint.clone(); playerEndPoint.translate(5, 0);
 			
 			
 			//Scrolling sur le rocher
-			addPhase(new PhaseScrolling(rock.getCoordonnéesCase(), game));
+			addPhase(new PhaseScrolling(rock.getCasePosition(), game));
 			
 			//L'entité passe le rocher et appuie sur un machin
 			addPhase(new Phase() {
 				
 				@Override
 				public void update(long ms) {
-					creature.setCoordonnéesf(
+					creature.setPositionf(
 							MathUtil.interpolateLinear(creatureStartingPoint, creaturePoint1, (double) ms / duration()).asFloat());
 				}
 				
@@ -86,7 +86,7 @@ public class InterruptionEnd extends InterruptionPhasesLvlDefault implements Lev
 
 				@Override
 				public void update(long ms) {
-					creature.setCoordonnéesf(
+					creature.setPositionf(
 							MathUtil.interpolateLinear(creaturePoint1, creaturePoint2, (double) ms / duration()).asFloat());
 				}
 				
@@ -102,7 +102,7 @@ public class InterruptionEnd extends InterruptionPhasesLvlDefault implements Lev
 
 				@Override
 				public void update(long ms) {
-					player.setCoordonnéesf(
+					player.setPositionf(
 							MathUtil.interpolateLinear(playerStartingPoint, playerEndPoint, (double) ms / duration()).asFloat());
 				}
 				

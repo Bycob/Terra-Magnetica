@@ -45,7 +45,7 @@ public class Main {
 		
 		int i = 0;
 		for (Portal p2 : p) {
-			output(i + p2.getCoordonnéesCase().toString() + " , ");
+			output(i + p2.getCasePosition().toString() + " , ");
 			i++;
 		}
 		
@@ -56,7 +56,7 @@ public class Main {
 		output("Aller à :");
 		
 		try {
-			output(lvl.getRoom(1).getPlayer().getCoordonnéesCase().toString());
+			output(lvl.getRoom(1).getPlayer().getCasePosition().toString());
 		} catch (Exception e) {
 			
 		}

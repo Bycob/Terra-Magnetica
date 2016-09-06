@@ -971,8 +971,8 @@ public class ModuleLevelDefault extends CreatorModule {
 			view.repaint();
 
 			if (painted && SwingInputData.isKeyPressed(KeyEvent.VK_CONTROL)) {
-				Vec2i entCase = this.lastEntityCreated.getCoordonnéesCase();
-				this.lastEntityCreated.setCoordonnéesCase(entCase.x, entCase.y);
+				Vec2i entCase = this.lastEntityCreated.getCasePosition();
+				this.lastEntityCreated.setCasePosition(entCase.x, entCase.y);
 			}
 			
 			//Activation du module facultatif
@@ -1137,7 +1137,7 @@ public class ModuleLevelDefault extends CreatorModule {
 					actualRoom.removeEntity(this.moved);
 				}
 				else {
-					this.moved.setCoordonnéesCase(caseLoc.x, caseLoc.y);
+					this.moved.setCasePosition(caseLoc.x, caseLoc.y);
 				}
 			}
 			else if (shouldPlace) {
@@ -1316,7 +1316,7 @@ public class ModuleLevelDefault extends CreatorModule {
 			
 			Entity lastEnt = this.caller.getLastEntityCreated();
 			if (lastEnt != null) {
-				this.origine = lastEnt.getCoordonnéesf().asDouble();
+				this.origine = lastEnt.getPositionf().asDouble();
 			}
 		}
 		

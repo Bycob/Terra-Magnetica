@@ -87,7 +87,7 @@ public class BonusTrap extends Bonus {
 			PlayerDefault player = this.myPlayer;
 			if (player != null) {
 				
-				Vec2i playerCase = player.getCoordonnéesCase();
+				Vec2i playerCase = player.getCasePosition();
 				if (game.getCaseEntityAt(playerCase.x, playerCase.y) == null
 						&& game.getLandscapeAt(playerCase.x, playerCase.y).isEnabled()
 						&& this.removeTrap()) {

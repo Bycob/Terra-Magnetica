@@ -127,13 +127,13 @@ public class Room implements Serializable, Cloneable, Codable {
 		r.removePlayer();
 		
 		for (Entity e : r.entities) {
-			Vec2f c = e.getCoordonnéesf();
-			e.setCoordonnéesf(c.x - bounds.xmin, c.y - bounds.ymin);
+			Vec2f c = e.getPositionf();
+			e.setPositionf(c.x - bounds.xmin, c.y - bounds.ymin);
 			result.entities.add(e);
 		}
 		
-		Vec2f cperso = r.player.getCoordonnéesf();
-		r.player.setCoordonnéesf(cperso.x - bounds.xmin, cperso.y - bounds.ymin);
+		Vec2f cperso = r.player.getPositionf();
+		r.player.setPositionf(cperso.x - bounds.xmin, cperso.y - bounds.ymin);
 		result.setPlayer(r.player);
 		
 		result.id = r.id;
@@ -195,14 +195,14 @@ public class Room implements Serializable, Cloneable, Codable {
 		r.removePlayer();
 		
 		for (Entity e : r.entities) {
-			Vec2f c = e.getCoordonnéesf();
-			e.setCoordonnéesf(c.x + left, c.y + top);
+			Vec2f c = e.getPositionf();
+			e.setPositionf(c.x + left, c.y + top);
 			result.entities.add(e);
 		}
 		
 		if (r.player != null) {
-			Vec2f cperso = r.player.getCoordonnéesf();
-			r.player.setCoordonnéesf(cperso.x + left, cperso.y + top);
+			Vec2f cperso = r.player.getPositionf();
+			r.player.setPositionf(cperso.x + left, cperso.y + top);
 			result.setPlayer(r.player);
 		}
 		
@@ -500,7 +500,7 @@ public class Room implements Serializable, Cloneable, Codable {
 			this.permitCount++;
 			if (this.permitCount == 1) {
 				this.player = new PlayerDefault();
-				this.player.setCoordonnéesCase(x, y);
+				this.player.setCasePosition(x, y);
 				this.optimizePerso();
 				this.entities.add(this.player);
 			}
@@ -538,11 +538,11 @@ public class Room implements Serializable, Cloneable, Codable {
 	 */
 	public void setPlayerLocation(int caseX, int caseY) {
 		if (this.player == null) return;
-		Vec2i ol = this.player.getCoordonnéesCase().clone();
-		this.player.setCoordonnéesCase(caseX, caseY);
+		Vec2i ol = this.player.getCasePosition().clone();
+		this.player.setCasePosition(caseX, caseY);
 		
 		if (!checkPlayerLocation(this.player)) {
-			this.player.setCoordonnéesCase(ol.x, ol.y);
+			this.player.setCasePosition(ol.x, ol.y);
 		}
 		
 		if (!this.entities.contains(this.player)) {
@@ -559,7 +559,7 @@ public class Room implements Serializable, Cloneable, Codable {
 	 * la salle.
 	 */
 	private boolean checkPlayerLocation(PlayerDefault perso) {
-		Vec2i checkPoint = perso.getCoordonnéesCase();
+		Vec2i checkPoint = perso.getCasePosition();
 		return this.decor[checkPoint.x][checkPoint.y].isEnabled();
 	}
 	
@@ -580,7 +580,7 @@ public class Room implements Serializable, Cloneable, Codable {
 			for (LandscapeTile land : lands) {
 				if (land.isEnabled()) {
 					Vec2i c = land.getCoordonnéesCase();
-					this.player.setCoordonnéesCase(c.x, c.y);
+					this.player.setCasePosition(c.x, c.y);
 					break bcl1;
 				}
 			}
@@ -643,7 +643,7 @@ public class Room implements Serializable, Cloneable, Codable {
 	 * en paramètres. */
 	public Entity getEntityAt(Vec2i p) {
 		for (Entity entity : entities) {
-			Vec2i origine = entity.getCoordonnées();
+			Vec2i origine = entity.getPositioni();
 			DimensionsInt dims = entity.getDimensions();
 			
 			if (dims.getWidth() < 32) dims.setWidth(32);
@@ -671,7 +671,7 @@ public class Room implements Serializable, Cloneable, Codable {
 		for (Entity e : this.entities) {
 			if (e instanceof CaseEntity) {
 				CaseEntity ce = (CaseEntity) e;
-				Vec2i cec = ce.getCoordonnéesCase();
+				Vec2i cec = ce.getCasePosition();
 				if (cec.equals(new Vec2i(x, y))) {
 					return ce;
 				}
@@ -688,7 +688,7 @@ public class Room implements Serializable, Cloneable, Codable {
 	public Entity[] getEntityIn(Rectangle r){
 		ArrayList<Entity> array = new ArrayList<Entity>();
 		for (Entity entity : entities){
-			if (r.contains(new Point(entity.getCoordonnées().x, entity.getCoordonnées().y))){
+			if (r.contains(new Point(entity.getPositioni().x, entity.getPositioni().y))){
 				array.add(entity);
 			}
 		}
@@ -703,7 +703,7 @@ public class Room implements Serializable, Cloneable, Codable {
 		ArrayList<Entity> var1 = new ArrayList<Entity>();
 		
 		for (Entity composant : entities){
-			if (r.contains(new Point(composant.getCoordonnées().x, composant.getCoordonnées().y))
+			if (r.contains(new Point(composant.getPositioni().x, composant.getPositioni().y))
 					&& !(composant instanceof PlayerDefault)){
 				var1.add(composant);
 			}

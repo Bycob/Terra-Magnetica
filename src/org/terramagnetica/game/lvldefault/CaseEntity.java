@@ -30,11 +30,11 @@ public abstract class CaseEntity extends Entity implements Serializable {
 	}
 	
 	protected CaseEntity(int x , int y){
-		this.setCoordonnéesCase(x, y);
+		this.setCasePosition(x, y);
 	}
 	
 	@Override
-	public void setCoordonnéesf(float x, float y) {
-		super.setCoordonnéesf((int) x + DEMI_CASE_F, (int) y + DEMI_CASE_F);
+	public void setPositionf(float x, float y) {
+		super.setPositionf((int) x + DEMI_CASE_F, (int) y + DEMI_CASE_F);
 	}
 }

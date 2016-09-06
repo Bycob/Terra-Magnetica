@@ -106,7 +106,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	}
 	
 	protected Entity(int x, int y) {
-		this.setCoordonnéesf(x, y);
+		this.setPositionf(x, y);
 		
 		this.recreateHitbox();
 		
@@ -236,12 +236,12 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	// PHYSIQUE / LOGIQUE
 	
 	/** @return les coordonnées de l'entité, en cases. */
-	public Vec2f getCoordonnéesf() {
+	public Vec2f getPositionf() {
 		return this.hitbox.getPosition();
 	}
 
 	/** @return les coordonnees de l'entité, en unité de base (une case = {@value #CASE}) */
-	public Vec2i getCoordonnées() {
+	public Vec2i getPositioni() {
 		return new Vec2i(
 				(int)(this.hitbox.getPositionX() * CASE),
 				(int)(this.hitbox.getPositionY() * CASE));
@@ -250,13 +250,13 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	/** @return Les coordonnées du coin en haut à gauche de l'image dessinée du
 	 * composant. Ces coordonnées sont valables si l'échelle est 1 pixel = 1 unité de base.
 	 * (rappel : avec l'unité de base, une case = {@value #CASE}) */
-	public Vec2i getCoordonnéesToDraw(){
+	public Vec2i getImagePosition(){
 		return new Vec2i(
-				this.getCoordonnées().x - this.getImgDimensions().getWidth() / 2,
-				this.getCoordonnées().y - this.getImgDimensions().getHeight() / 2);
+				this.getPositioni().x - this.getImgDimensions().getWidth() / 2,
+				this.getPositioni().y - this.getImgDimensions().getHeight() / 2);
 	}
 
-	public Vec2i getCoordonnéesCase(){
+	public Vec2i getCasePosition(){
 		return new Vec2i(
 				(int) this.hitbox.getPositionX(),
 				(int) this.hitbox.getPositionY());
@@ -267,24 +267,24 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * classe qui définissent les coordonnées de l'entité font appel
 	 * à cette méthode-ci. Si elle est implémentée, elle ne doit pas
 	 * modifier les coordonnées en appelant une méthode tierce
-	 * (par exemple {@link #setCoordonnéesCase(int, int)}) sous risque
+	 * (par exemple {@link #setCasePosition(int, int)}) sous risque
 	 * de plantage du programme. */
-	public void setCoordonnéesf(float x, float y){
+	public void setPositionf(float x, float y){
 		this.hitbox.setPosition(x, y);
 	}
 	
-	public void setCoordonnéesf(Vec2f c) {
-		this.setCoordonnéesf(c.x, c.y);
+	public void setPositionf(Vec2f c) {
+		this.setPositionf(c.x, c.y);
 	}
 
-	public void setCoordonnées(int x, int y){
-		this.setCoordonnéesf(
+	public void setPositioni(int x, int y){
+		this.setPositionf(
 				(float) x / (float) CASE,
 				(float) y / (float) CASE);
 	}
 	
-	public void setCoordonnéesCase(int x, int y){
-		this.setCoordonnéesf(
+	public void setCasePosition(int x, int y){
+		this.setPositionf(
 				x + Entity.DEMI_CASE_F,
 				y + Entity.DEMI_CASE_F);
 	}
@@ -317,7 +317,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		DimensionsInt dim = this.getDimensions();
 		int hwidth = dim.getWidth() / 2;
 		int hheight = dim.getHeight() / 2;
-		Vec2i point = this.getCoordonnées();
+		Vec2i point = this.getPositioni();
 		int x = point.x;
 		int y = point.y;
 		
@@ -330,7 +330,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		DimensionsFloat dim = this.getDimensionsf();
 		float hwidth = dim.getWidth() / 2;
 		float hheight = dim.getHeight() / 2;
-		Vec2f point = this.getCoordonnéesf();
+		Vec2f point = this.getPositionf();
 		float x = point.x;
 		float y = point.y;
 		
@@ -418,7 +418,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * @param entity - la seconde entité.
 	 * @return La distance voulue */
 	public double getDistance(Entity entity){
-		return MathUtil.getDistance(getCoordonnées().asDouble(), entity.getCoordonnées().asDouble());
+		return MathUtil.getDistance(getPositioni().asDouble(), entity.getPositioni().asDouble());
 	}
 	
 	/** 
@@ -428,7 +428,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * @param entity - la seconde entité.
 	 * @return La distance voulue */
 	public double getDistancef(Entity entity) {
-		return MathUtil.getDistance(getCoordonnéesf().asDouble(), entity.getCoordonnéesf().asDouble());
+		return MathUtil.getDistance(getPositionf().asDouble(), entity.getPositionf().asDouble());
 	}
 	
 	/** 
@@ -438,7 +438,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * @return La distance voulue, en unité de base (1 case = 256).
 	 */
 	public double getDistance(LandscapeTile land) {
-		return MathUtil.getDistance(land.getCoordonnéesCentre().asDouble(), getCoordonnées().asDouble());
+		return MathUtil.getDistance(land.getCoordonnéesCentre().asDouble(), getPositioni().asDouble());
 	}
 	
 	public double getDistancef(LandscapeTile land) {
@@ -446,7 +446,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		landCentre.x += DEMI_CASE_F;
 		landCentre.y += DEMI_CASE_F;
 		
-		return MathUtil.getDistance(landCentre, getCoordonnéesf().asDouble());
+		return MathUtil.getDistance(landCentre, getPositionf().asDouble());
 	}
 	
 	/**
@@ -577,7 +577,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	@Override
 	public Entity decode(BufferedObjectInputStream in) throws GameIOException {
 		this.priority = in.readIntField(0);
-		this.hitbox.setPosition(in.readFloatField(1), in.readFloatField(2));
+		this.setPositionf(in.readFloatField(1), in.readFloatField(2));
 		
 		this.skin = in.readStringFieldWithDefaultValue(3, this.skin);
 		return this;

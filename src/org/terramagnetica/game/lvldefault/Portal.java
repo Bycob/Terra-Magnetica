@@ -245,7 +245,7 @@ public class Portal extends CaseEntity implements IGoal {
 			this.recreateRender();
 			
 			if (this.getRender() instanceof RenderEntityModel3D) {
-				Vec2i c = this.getCoordonnéesCase();
+				Vec2i c = this.getCasePosition();
 				game.getLandscapeAt(c.x, c.y).setUnrendered(true);
 			}
 		}
@@ -270,8 +270,8 @@ public class Portal extends CaseEntity implements IGoal {
 	
 	private boolean isPlayerInPortal(PlayerDefault player) {
 		if (this.onWall) {
-			Vec2f pc = player.getCoordonnéesf();
-			Vec2f centre = this.getCoordonnéesf();
+			Vec2f pc = player.getPositionf();
+			Vec2f centre = this.getPositionf();
 			
 			boolean changeAxis = (this.orientation %= 180) == 90;
 			double hDepth = changeAxis ? Math.abs(pc.x - centre.x) : Math.abs(pc.y - centre.y);

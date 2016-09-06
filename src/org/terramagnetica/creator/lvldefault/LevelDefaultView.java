@@ -150,8 +150,8 @@ public class LevelDefaultView extends JPanel {
 		//dessin des entités
 		for (Entity objet : entities){
 			g2d.drawImage(objet.getImage(),
-					objet.getCoordonnéesToDraw().x,
-					objet.getCoordonnéesToDraw().y,
+					objet.getImagePosition().x,
+					objet.getImagePosition().y,
 					objet.getImgDimensions().getWidth(),
 					objet.getImgDimensions().getHeight(),
 					this);
@@ -161,8 +161,8 @@ public class LevelDefaultView extends JPanel {
 		if (isDragging) {
 			if (dragged != null) {
 				g2d.drawImage(dragged.getImage(),
-						dragged.getCoordonnéesToDraw().x,
-						dragged.getCoordonnéesToDraw().y,
+						dragged.getImagePosition().x,
+						dragged.getImagePosition().y,
 						dragged.getImgDimensions().getWidth(),
 						dragged.getImgDimensions().getHeight(),
 						this);
@@ -367,7 +367,7 @@ public class LevelDefaultView extends JPanel {
 	
 	public void moveDrag(int x, int y){
 		if (isDragging == true)
-			this.dragged.setCoordonnées(x, y);
+			this.dragged.setPositioni(x, y);
 	}
 	
 	public void stopDrag(){

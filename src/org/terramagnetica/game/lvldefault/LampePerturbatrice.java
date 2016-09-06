@@ -134,7 +134,7 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 		
 		float forceX = 0, forceY = 0;
 		
-		Vec2f entLoc = ent.getCoordonnéesf();
+		Vec2f entLoc = ent.getPositionf();
 		double d = getDistancef(ent);
 		Vec3d en = Vec3d.unitVector(entLoc.x - this.hitbox.getPositionX(), entLoc.y - this.hitbox.getPositionY());
 		Vec3d et = new Vec3d(en.y, - en.x);

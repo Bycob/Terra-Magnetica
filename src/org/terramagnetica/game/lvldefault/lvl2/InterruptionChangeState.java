@@ -59,7 +59,7 @@ public class InterruptionChangeState extends InterruptionPhasesLvlDefault {
 		//scrolling vers le portail
 		ArrayList<Portal> portalList = extractPortals(game, this.handle.getColor());
 		for (Portal p : portalList) {
-			addPhase(new PhaseScrolling(p.getCoordonnéesf(), game));
+			addPhase(new PhaseScrolling(p.getPositionf(), game));
 			
 			addPhase(new PhasePause(500));
 			

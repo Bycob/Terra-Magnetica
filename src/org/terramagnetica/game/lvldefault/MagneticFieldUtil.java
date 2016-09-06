@@ -48,7 +48,7 @@ public class MagneticFieldUtil {
 		
 		Vec2f c = centre.asFloat();
 		Vec2f invertCentre = new Vec2f(c.x, - c.y);//coordonnées inversées
-		Vec2f oc = object.getCoordonnéesf(); oc.y = -oc.y;//coordonnées inversées
+		Vec2f oc = object.getPositionf(); oc.y = -oc.y;//coordonnées inversées
 		double dirBut = objectif;
 		double dirNow = Boussole.getDirection(invertCentre, oc);
 		double addedAngle = MathUtil.angleMainValue(dirBut - dirNow);
@@ -67,7 +67,7 @@ public class MagneticFieldUtil {
 		}
 		
 		dirNow = MathUtil.angleMainValue(dirNow + addedAngle);
-		object.setCoordonnéesf((float) (c.x + Math.cos(dirNow) * rayon), (float) (c.y - Math.sin(dirNow) * rayon));
+		object.setPositionf((float) (c.x + Math.cos(dirNow) * rayon), (float) (c.y - Math.sin(dirNow) * rayon));
 		
 		return returned;
 	}
@@ -87,7 +87,7 @@ public class MagneticFieldUtil {
 	 */
 	public static void rotate(Entity object, Vec2 centre, double rayon, double rotationSpeed, long dT) {
 		Vec2f c = centre.asFloat();
-		Vec2f entityCoordinates = object.getCoordonnéesf();
+		Vec2f entityCoordinates = object.getPositionf();
 		double oldDir = Boussole.getDirection(c, entityCoordinates);
 		double newDir = MathUtil.angleMainValue(oldDir + rotationSpeed * dT / 1000);
 		
@@ -95,6 +95,6 @@ public class MagneticFieldUtil {
 		entityCoordinates.x = (float) (c.x + Math.cos(newDir) * rayon);
 		entityCoordinates.y = (float) (c.y + Math.sin(newDir) * rayon);
 		
-		object.setCoordonnéesf(entityCoordinates);
+		object.setPositionf(entityCoordinates);
 	}
 }

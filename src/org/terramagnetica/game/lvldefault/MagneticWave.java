@@ -92,7 +92,7 @@ public class MagneticWave extends EntityMoving {
 		this.hitbox.completeMove(dT);
 		
 		Vec2f co = this.lastHitbox.getPosition();
-		Vec2f ca = this.getCoordonnéesf();
+		Vec2f ca = this.getPositionf();
 		
 		this.coveredDist += MathUtil.getDistance(co, ca);
 		
@@ -122,8 +122,8 @@ public class MagneticWave extends EntityMoving {
 	public boolean hasCollision(Entity ent) {
 		boolean caseParam = false;
 		
-		Vec2i entC = ent.getCoordonnéesCase();
-		Vec2i myC = getCoordonnéesCase();
+		Vec2i entC = ent.getCasePosition();
+		Vec2i myC = getCasePosition();
 		
 		Boussole thisDir = Boussole.getPointCardinalPourAngle(getDirection());
 		

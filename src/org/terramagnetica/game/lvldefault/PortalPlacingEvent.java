@@ -36,7 +36,7 @@ public class PortalPlacingEvent extends GameEvent {
 	public void trigger(GamePlayingDefault game) {
 		PlayerDefault p = game.getPlayer();
 		if (game.getLandscapeAt(this.caseX, this.caseY).isEnabled()) {
-			p.setCoordonnéesCase(this.caseX, this.caseY);
+			p.setCasePosition(this.caseX, this.caseY);
 		}
 	}
 	

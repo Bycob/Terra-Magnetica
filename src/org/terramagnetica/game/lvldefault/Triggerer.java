@@ -52,11 +52,11 @@ public class Triggerer extends Entity {
 	}
 	
 	@Override
-	public void setCoordonnéesf(float x, float y) {
-		super.setCoordonnéesf(x, y);
+	public void setPositionf(float x, float y) {
+		super.setPositionf(x, y);
 		
 		if (this.evt != null) {
-			this.evt.setEventLocation(this.getCoordonnéesCase().x, this.getCoordonnéesCase().y);
+			this.evt.setEventLocation(this.getCasePosition().x, this.getCasePosition().y);
 		}
 	}
 	

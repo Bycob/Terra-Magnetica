@@ -51,7 +51,7 @@ public class Locomotor {
 			new Vec2f(cCase.x, cCase.y + 0.5f)//OUEST
 		};
 		
-		Vec2f loc = this.movedEntity.getCoordonnéesf();
+		Vec2f loc = this.movedEntity.getPositionf();
 		Vec2f nearestPoint = null;
 		
 		for (Vec2f point : pointsToMoveTo) {

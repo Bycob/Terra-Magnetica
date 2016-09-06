@@ -51,7 +51,7 @@ public class LampObserver {
 			return;
 		}
 		
-		Vec2i c = l.getCoordonnéesCase();
+		Vec2i c = l.getCasePosition();
 		if (c.x != 4 || c.y != 61) {
 			return;
 		}
@@ -77,7 +77,7 @@ public class LampObserver {
 		
 		String objstr = "";
 		objstr += "Situation géographique : \n";
-		objstr += this.theLamp.getCoordonnéesCase().toString() + "\n";
+		objstr += this.theLamp.getCasePosition().toString() + "\n";
 		
 		for (int i = 0 ; i < 4 ; i++) {
 			objstr += "-";

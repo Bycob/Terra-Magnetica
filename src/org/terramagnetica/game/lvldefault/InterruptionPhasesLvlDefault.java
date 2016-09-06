@@ -35,7 +35,7 @@ public class InterruptionPhasesLvlDefault extends InterruptionPhases {
 	
 
 	public final PhaseScrolling scrollingToPlayer(GamePlayingDefault game) {
-		PhaseScrolling scrolling = new PhaseScrolling(game.getPlayer().getCoordonnéesf(), game);
+		PhaseScrolling scrolling = new PhaseScrolling(game.getPlayer().getPositionf(), game);
 		scrolling.isDirectionPlayer = true;
 		
 		return scrolling;

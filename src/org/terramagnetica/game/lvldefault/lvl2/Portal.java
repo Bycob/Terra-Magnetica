@@ -154,7 +154,7 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 		
 		if (this.state && getDistancef(game.getPlayer()) < 0.25f) {
 			Vec2i c = game.getAspect(ControlPaneSystemManager.class).getCenterOfRoom1();
-			game.getPlayer().setCoordonnéesCase(c.x, c.y);
+			game.getPlayer().setCasePosition(c.x, c.y);
 		}
 	}
 	

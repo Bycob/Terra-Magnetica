@@ -84,7 +84,7 @@ public class ZoneStateTriggerer extends CaseEntity {
 	}
 	
 	public boolean isInZone(Entity e) {
-		return this.zone.isInZone(e.getCoordonnéesf());
+		return this.zone.isInZone(e.getPositionf());
 	}
 	
 	//----------

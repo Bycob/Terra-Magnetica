@@ -53,7 +53,7 @@ public class SensorPathScanner extends Sensor {
 			PathSeeker pathSeeker = aiMove.getPathSeeker();
 			
 			if (pathSeeker != null) {
-				Path[] paths = pathSeeker.seekPaths(ent.getCoordonnéesCase());
+				Path[] paths = pathSeeker.seekPaths(ent.getCasePosition());
 				
 				for (Path path : paths) {
 					checkPath(path);

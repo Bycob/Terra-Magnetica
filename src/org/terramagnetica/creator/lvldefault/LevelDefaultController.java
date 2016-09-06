@@ -141,7 +141,7 @@ public class LevelDefaultController {
 			return false;
 		}
 		Entity toPaint = entity.clone();
-		toPaint.setCoordonnées(x, y);
+		toPaint.setPositioni(x, y);
 		
 		if (isValideCase(toPaint) || allPermission) {
 			this.room.addEntityByPriority(toPaint);
@@ -184,7 +184,7 @@ public class LevelDefaultController {
 		if (this.room != null){
 			
 			if (entity instanceof CaseEntity) {
-				Vec2i c = entity.getCoordonnéesCase();
+				Vec2i c = entity.getCasePosition();
 				if (this.room.getLandscapeAt(c.x, c.y).isEnabled() && this.room.getCaseEntityAt(c.x, c.y) == null) {
 					return true;
 				}

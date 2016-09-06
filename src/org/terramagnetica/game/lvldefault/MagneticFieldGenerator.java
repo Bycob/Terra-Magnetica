@@ -84,7 +84,7 @@ public class MagneticFieldGenerator extends CaseEntity {
 	}
 	
 	public MagneticFieldGenerator(float x, float y, int count) {
-		this.setCoordonnéesf(x, y);
+		this.setPositionf(x, y);
 		this.generateCrystals(count, 2.5f);
 	}
 	
@@ -97,7 +97,7 @@ public class MagneticFieldGenerator extends CaseEntity {
 		this.cristaux.clear();
 		this.rayons.clear();
 		
-		Vec2f centre = this.getCoordonnéesf();
+		Vec2f centre = this.getPositionf();
 		
 		Circle c = new Circle(centre.x, centre.y, rayon);
 		c.setNbSommets(count);
@@ -109,10 +109,10 @@ public class MagneticFieldGenerator extends CaseEntity {
 	}
 	
 	@Override
-	public void setCoordonnéesf(float x, float y) {
-		Vec2f oldCentre = this.getCoordonnéesf();
-		super.setCoordonnéesf(x, y);
-		Vec2f newCentre = this.getCoordonnéesf();
+	public void setPositionf(float x, float y) {
+		Vec2f oldCentre = this.getPositionf();
+		super.setPositionf(x, y);
+		Vec2f newCentre = this.getPositionf();
 		
 		if (this.cristaux != null) {
 			for (MiniElectrocrystal c : this.cristaux) {
@@ -120,8 +120,8 @@ public class MagneticFieldGenerator extends CaseEntity {
 				float difX = newCentre.x - oldCentre.x;
 				float difY = newCentre.y - oldCentre.y;
 				
-				Vec2f cf = c.getCoordonnéesf();
-				c.setCoordonnéesf(cf.x + difX, cf.y + difY);
+				Vec2f cf = c.getPositionf();
+				c.setPositionf(cf.x + difX, cf.y + difY);
 			}
 		}
 	}
@@ -244,7 +244,7 @@ public class MagneticFieldGenerator extends CaseEntity {
 		int i = 0;
 		
 		for (MiniElectrocrystal crystal : this.cristaux) {
-			MagneticFieldUtil.rotate(crystal, this.getCoordonnéesf(), this.rayons.get(i), getRadiusSpeed(), dT);
+			MagneticFieldUtil.rotate(crystal, this.getPositionf(), this.rayons.get(i), getRadiusSpeed(), dT);
 			crystal.updateLogic(dT, game);
 			i++;
 		}

@@ -73,7 +73,7 @@ public class MapUpdater extends GameAspect {
 			ArrayList<Vec2i> visiting = new ArrayList<Vec2i>();
 			ArrayList<Vec2i> visited = new ArrayList<Vec2i>();
 			
-			Vec2i ref = this.game.getPlayer().getCoordonnéesCase();
+			Vec2i ref = this.game.getPlayer().getCasePosition();
 			toVisit.add(ref);
 			
 			while (toVisit.size() != 0) {
@@ -109,11 +109,11 @@ public class MapUpdater extends GameAspect {
 			}
 			
 			for (Entity e : this.game.getEntities()) {
-				Vec2i cCase = e.getCoordonnéesCase();
+				Vec2i cCase = e.getCasePosition();
 				
 				for (Vec2i c : visited) {
 					if (cCase.equals(c) && e.isMapVisible()) {
-						Vec2f ce = e.getCoordonnéesf();
+						Vec2f ce = e.getPositionf();
 						MapEntity me = new MapEntity(e, ce.x, ce.y);
 						this.theMap.addMapEntity(me);
 						break;

@@ -100,7 +100,7 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	
 	protected void updateTrackPoint() {
 		if (this.trackPoint != null) {
-			Vec2f c = getCoordonnéesf();
+			Vec2f c = getPositionf();
 			this.trackPoint.set(c.x, c.y, 0);
 		}
 	}
@@ -133,8 +133,8 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	}
 	
 	@Override
-	public void setCoordonnéesf(float x, float y) {
-		super.setCoordonnéesf(x, y);
+	public void setPositionf(float x, float y) {
+		super.setPositionf(x, y);
 		
 		this.updateTrackPoint();
 	}

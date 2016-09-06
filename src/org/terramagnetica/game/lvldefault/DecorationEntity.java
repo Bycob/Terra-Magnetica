@@ -49,7 +49,7 @@ public class DecorationEntity extends Entity {
 	
 	public DecorationEntity(float x, float y) {
 		init();
-		this.setCoordonnéesf(x, y);
+		this.setPositionf(x, y);
 	}
 	
 	public DecorationEntity(int x, int y, String decoID) {

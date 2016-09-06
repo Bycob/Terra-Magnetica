@@ -103,7 +103,7 @@ public class RenderCompound extends RenderEntity {
 			render.renderEntity3D(x, y, painter);
 		}
 		for (Entity e : this.entities) {
-			Vec2f c = e.getCoordonnéesf();
+			Vec2f c = e.getPositionf();
 			RenderEntity r = e.getRender();
 			if (r != null) {
 				r.renderEntity3D(c.x, c.y, painter);

@@ -181,7 +181,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		for (Entity e : this.entities) {
 			if (e instanceof CaseEntity) {
 				CaseEntity ce = (CaseEntity) e;
-				Vec2i cec = ce.getCoordonnéesCase();
+				Vec2i cec = ce.getCasePosition();
 				
 				if (cec.matches(x, y)) {
 					return ce;
@@ -200,7 +200,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		ArrayList<Entity> result = new ArrayList<Entity>();
 		
 		for (Entity e : this.entities) {
-			Vec2i c = e.getCoordonnéesCase();
+			Vec2i c = e.getCasePosition();
 			
 			if (c.matches(x, y)) {
 				result.add(e);
@@ -474,7 +474,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		
 		this.setRoom(this.level.getRoom(this.checkPoint.getRoomID()));
 		Vec2i loc = this.checkPoint.getLocation();
-		this.player.setCoordonnéesCase(loc.x, loc.y);
+		this.player.setCasePosition(loc.x, loc.y);
 	}
 	
 	public void addEventOnChangingRoom(GameEvent evt) {

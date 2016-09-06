@@ -160,7 +160,7 @@ public class DialogTriggerer extends JDialog {
 		if (this.approved) {
 			if (this.current instanceof TriggererPanelZone) {
 				ZoneStateTriggerer t = new ZoneStateTriggerer();
-				t.setCoordonnéesCase(x, y);
+				t.setCasePosition(x, y);
 				
 				((TriggererPanelZone) this.current).configTriggerer(t);
 				
@@ -168,7 +168,7 @@ public class DialogTriggerer extends JDialog {
 			}
 			else {
 				Triggerer t = new Triggerer();
-				t.setCoordonnéesCase(x, y);
+				t.setCasePosition(x, y);
 				t.setEvent(this.current.getEvent(x, y));
 				return t;
 			}

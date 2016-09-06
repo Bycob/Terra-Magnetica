@@ -65,7 +65,7 @@ public class ActionFollowPath extends Action {
 			Vec2i nextCase = entPath.getNext().getPoint().asInteger();
 			
 			//Si on est déjà sur la bonne case, on avance et on recommence.
-			if (ent.getCoordonnéesCase().equals(nextCase)) {
+			if (ent.getCasePosition().equals(nextCase)) {
 				entPath.next();
 				execute(ai);
 			}

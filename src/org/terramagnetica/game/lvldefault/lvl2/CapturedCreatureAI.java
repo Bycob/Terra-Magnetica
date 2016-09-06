@@ -68,7 +68,7 @@ public class CapturedCreatureAI extends CreatureAI implements Level2 {
 			//Pour le level designer -> il peut changer la case en mettant une marque du bon ID
 			Mark mark = game.findMark(ROOM2_EXIT_CASE_MARK_ID);
 			if (mark != null) {
-				exitCase = mark.getCoordonnéesCase();
+				exitCase = mark.getCasePosition();
 			}
 			
 			findPath(exitCase.x, exitCase.y, game);
@@ -81,7 +81,7 @@ public class CapturedCreatureAI extends CreatureAI implements Level2 {
 					//On suit le chemin.
 					Vec2i nextCase = this.followedPath.getNext().getPoint().asInteger();
 					//Incrémentation
-					if (myCreature.getCoordonnéesCase().equals(nextCase)) {
+					if (myCreature.getCasePosition().equals(nextCase)) {
 						this.followedPath.next();
 						
 						if (this.followedPath.hasNext()) nextCase = this.followedPath.getNext().getPoint().asInteger();
@@ -123,7 +123,7 @@ public class CapturedCreatureAI extends CreatureAI implements Level2 {
 		graph.setIgnoreCaseEntity(true);
 		
 		PathFinder pathFinder = new PathFinder(graph);
-		this.followedPath = pathFinder.findPath(graph.getCase(this.getEntity().getCoordonnéesCase()), graph.getCase(caseX, caseY));
+		this.followedPath = pathFinder.findPath(graph.getCase(this.getEntity().getCasePosition()), graph.getCase(caseX, caseY));
 	}
 
 	@Override

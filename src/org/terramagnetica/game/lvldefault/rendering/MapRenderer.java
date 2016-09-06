@@ -84,7 +84,7 @@ public class MapRenderer extends RenderGameDefaultElement {
 			painter.setTexture(null);
 			
 			PlayerDefault player = game.getPlayer();
-			Vec2f playerc = player.getCoordonnéesf();
+			Vec2f playerc = player.getPositionf();
 			
 			//Dessin du paysage (les cases)
 			MapLandscape landMapped[] = this.theMap.getAllLandscapeMapped();
