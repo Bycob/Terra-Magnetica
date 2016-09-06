@@ -3,7 +3,7 @@
 
 
 **** VERSION 0.1.1 *****
-//Pour correction de bugs.
+//correction de bugs.
 Editeur de niveaux :
 	- ajout d'un zoom réglable.
 	
@@ -39,8 +39,6 @@ Terra Magnetica :
 
 
 ***** VERSION 0.4 ******
-//Après deux ans, peut-être qu'il faut incrémenter le numéro de version...
-
 Editeur de niveaux :
 	- ajout d'un outil "Optimiser la place", qui supprime les zones inutiles.
 	- ajout d'un outil "Agrandir la salle", qui permet de rajouter du décor en haut, en bas, à gauche et à droite
@@ -91,9 +89,12 @@ Général :
 
 Terra Magnetica
 	- Mise à jour du décor Grotte
+	- Refonte du moteur physique
+	- Modification des lampes magnétiques. Des améliorations sont encore prévues pour la version 0.4.3 !
 	
 Editeur de niveaux
 	- Fix du contenu additionnel. Pour activer le contenu additionnel d'un niveau, renommer le fichier en "niveau[n° du niveau].mlv"
+	- Maintenir ctrl en positionnant une entité permet de la placer précisément au centre d'une case.
 	
 Général :
 	- Corrections de bugs
