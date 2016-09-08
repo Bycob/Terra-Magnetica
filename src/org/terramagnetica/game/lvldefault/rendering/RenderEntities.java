@@ -45,7 +45,6 @@ public class RenderEntities extends RenderGameDefaultElement {
 		int i = -1;
 		priorityOrder.put(RenderEntityModel3D.class, ++i);
 		priorityOrder.put(RenderEntityTexture.class, ++i);
-		priorityOrder.put(RenderEntityAnimatedTexture.class, i);
 	}
 	
 	private static int getPriorityOrder(Class<? extends RenderObject> clazz) {

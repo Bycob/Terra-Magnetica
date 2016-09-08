@@ -24,7 +24,8 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
+import org.terramagnetica.opengl.engine.RenderManager;
+import org.terramagnetica.opengl.engine.Renderable;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
@@ -68,8 +69,9 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	protected ArrayList<Entity> collidedEntities = new ArrayList<Entity>();
 	
 	//RENDU
-
-	protected RenderObject render;
+	
+	protected RenderManager renderManager = new RenderManager();
+	private boolean createdRenderManager = false;
 	/** Indique l'apparence de l'entité (sa texture). Si c'est une chaine de
 	 * caractère vide, la texture par défaut sera choisie.
 	 * <p>Les skins ne sont pas gérés par la classe {@link Entity}, il
@@ -128,7 +130,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 			e.printStackTrace();
 		}
 		
-		result.render = null;
+		result.renderManager = new RenderManager();
 		result.hitbox = this.hitbox.clone();
 		
 		return result;
@@ -198,29 +200,22 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	/** @return l'objet qui va dessiner l'entité à l'écran. Cette
 	 * méthode est utilisée pour créer l'objet "rendu" de l'entité,
 	 * afin de le stocker en mémoire. */
-	protected abstract RenderObject createRender();
-	
-	/** Recrée l'objet "rendu" de l'entité grâce à la méthode
-	 * {@link #createRender()}. Utilisé notament lorsque l'objet
-	 * change de texture en cours de jeu, ou se modifie... */
-	public final void recreateRender() {
-		this.render = createRender();
-	}
+	protected abstract void createRender();
 	
 	/** Recharge le rendu. A la différence de la méthode {@link #recreateRender()},
 	 * cette méthode libère toutes les ressources avant de recréer
 	 * le rendu, ce qui permet de recharger les textures lorsqu'elles
 	 * ont été supprimées. */
 	public void reloadRender() {
-		recreateRender();
+		this.createdRenderManager = false;
 	}
 	
 	/** @return l'objet "rendu" de l'entité, qui la dessinera à
 	 * l'écran. Par défaut, cet objet est stocké dans la classe
 	 * Entity sous le non de {@link Entity#render}. */
-	public RenderObject getRender() {
-		if (this.render == null) this.render = createRender();
-		return this.render;
+	public Renderable getRender() {
+		if (!this.createdRenderManager) createRender();
+		return this.renderManager.getRender();
 	}
 	
 	public String getSkin() {

@@ -87,31 +87,7 @@ public class RenderableObject3D extends Renderable {
 		
 		//Si la matrice n'est pas modifiée, pas besoin de vider le tampon du Painter
 		painter.pushTransformState();
-		
-		//ROTATION
-		if (this.rotOffset.z != 0) {
-			painter.addTransform(Transform.newRotation((float) this.rotOffset.z, new Vec3d(0, 0, 1)));
-		}
-		if (rotation != 0) {
-			if (up.isNull()) throw new IllegalArgumentException("cant rotate around a null vector");
-			painter.addTransform(Transform.newRotation((float) rotation, up));
-		}
-		
-		//SCALE
-		if (!this.scaleOffset.isNull()) {
-			painter.addTransform(Transform.newScale((float) this.scaleOffset.x, (float) this.scaleOffset.y, (float) this.scaleOffset.z));
-		}
-		if (!scale.isNull()) {
-			painter.addTransform(Transform.newScale((float) scale.x, (float) scale.y, (float) scale.z));
-		}
-		
-		//POSITION
-		if (!this.posOffset.isNull()) {
-			painter.addTransform(Transform.newTranslation(this.posOffset));
-		}
-		if (!position.isNull()) {
-			painter.addTransform(Transform.newTranslation(position));
-		}
+		applyTransforms(position, rotation, up, scale, painter);
 		
 		//DESSIN
 		for (Vec3d vertex : this.points) {
