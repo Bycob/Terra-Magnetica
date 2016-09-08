@@ -21,7 +21,7 @@ package org.terramagnetica.game.lvldefault.rendering;
 
 import org.terramagnetica.opengl.engine.Painter;
 
-public class RenderEntityNothing extends RenderEntity {
+public class RenderEntityNothing extends RenderObject {
 	
 	@Override
 	public void renderEntity3D(float x, float y, Painter painter) {

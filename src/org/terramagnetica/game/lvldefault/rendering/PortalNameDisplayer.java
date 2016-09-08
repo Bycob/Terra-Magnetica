@@ -21,7 +21,6 @@ package org.terramagnetica.game.lvldefault.rendering;
 
 import org.terramagnetica.opengl.engine.GLUtil;
 import org.terramagnetica.opengl.engine.Painter;
-import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.opengl.gui.FontSizeManager;
 import org.terramagnetica.opengl.gui.FontSizeRelativeToRectangle;
 import org.terramagnetica.opengl.gui.GuiComponent;
@@ -137,10 +136,5 @@ public class PortalNameDisplayer extends GuiComponent implements Animation {
 	public void reset() {
 		if (this.animTimer.isRunning()) this.animTimer.restart();
 		else this.animTimer.stop();
-	}
-
-	@Override
-	public TextureQuad get() {
-		return null;
 	}
 }

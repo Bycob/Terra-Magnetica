@@ -27,7 +27,7 @@ import org.terramagnetica.game.GameInputBuffer;
 import org.terramagnetica.game.GameInputBuffer.InputKey;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.CameraTrackPoint3D;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
@@ -118,7 +118,7 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	}
 	
 	@Override
-	public RenderEntity createRender() {
+	public RenderObject createRender() {
 		if (this.textures == null) {
 			this.textures = new AnimationManager();
 			this.textures.addState(TexturesLoader.getAnimatedTexture(GameRessources.ID_PLAYER_STANDING));

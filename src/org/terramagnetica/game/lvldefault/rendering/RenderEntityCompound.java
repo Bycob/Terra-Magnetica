@@ -37,16 +37,16 @@ import net.bynaryscode.util.maths.geometric.Vec2f;
  * @author Louis JEAN
  *
  */
-public class RenderEntityCompound extends RenderEntity {
+public class RenderEntityCompound extends RenderObject {
 	
 	private List<Entity> entities = new ArrayList<Entity>();
-	private List<RenderEntity> renders = new ArrayList<RenderEntity>();
+	private List<RenderObject> renders = new ArrayList<RenderObject>();
 	
 	public RenderEntityCompound() {
 		
 	}
 	
-	public RenderEntityCompound(RenderEntity... renders) {
+	public RenderEntityCompound(RenderObject... renders) {
 		this.renders = Util.createList(renders);
 	}
 	
@@ -78,12 +78,12 @@ public class RenderEntityCompound extends RenderEntity {
 	 * de nouveau.
 	 * @param r - Le rendu ajouté.
 	 */
-	public void addRender(RenderEntity r) {
+	public void addRender(RenderObject r) {
 		if (r == null) throw new NullPointerException();
 		if (!this.renders.contains(r)) this.renders.add(r);
 	}
 	
-	public void removeRender(RenderEntity r) {
+	public void removeRender(RenderObject r) {
 		this.renders.remove(r);
 	}
 	
@@ -91,20 +91,20 @@ public class RenderEntityCompound extends RenderEntity {
 		this.entities.remove(toDelete);
 	}
 
-	public ArrayList<RenderEntity> getRenders() {
-		ArrayList<RenderEntity> list = new ArrayList<RenderEntity>();
+	public ArrayList<RenderObject> getRenders() {
+		ArrayList<RenderObject> list = new ArrayList<RenderObject>();
 		list.addAll(renders);
 		return list;
 	}
 	
 	@Override
 	public void renderEntity3D(float x, float y, Painter painter) {
-		for (RenderEntity render : this.renders) {
+		for (RenderObject render : this.renders) {
 			render.renderEntity3D(x, y, painter);
 		}
 		for (Entity e : this.entities) {
 			Vec2f c = e.getPositionf();
-			RenderEntity r = e.getRender();
+			RenderObject r = e.getRender();
 			if (r != null) {
 				r.renderEntity3D(c.x, c.y, painter);
 			}

@@ -33,7 +33,7 @@ import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
 import net.bynaryscode.util.maths.geometric.Vec2f;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
-public class RenderEntityTexture extends RenderEntity implements Cloneable {
+public class RenderEntityTexture extends RenderObject implements Cloneable {
 	
 	protected TextureQuad texture;
 	protected double width;

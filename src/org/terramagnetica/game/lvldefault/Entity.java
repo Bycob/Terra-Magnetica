@@ -24,7 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
@@ -69,7 +69,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	
 	//RENDU
 
-	protected RenderEntity render;
+	protected RenderObject render;
 	/** Indique l'apparence de l'entité (sa texture). Si c'est une chaine de
 	 * caractère vide, la texture par défaut sera choisie.
 	 * <p>Les skins ne sont pas gérés par la classe {@link Entity}, il
@@ -198,7 +198,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	/** @return l'objet qui va dessiner l'entité à l'écran. Cette
 	 * méthode est utilisée pour créer l'objet "rendu" de l'entité,
 	 * afin de le stocker en mémoire. */
-	protected abstract RenderEntity createRender();
+	protected abstract RenderObject createRender();
 	
 	/** Recrée l'objet "rendu" de l'entité grâce à la méthode
 	 * {@link #createRender()}. Utilisé notament lorsque l'objet
@@ -218,7 +218,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	/** @return l'objet "rendu" de l'entité, qui la dessinera à
 	 * l'écran. Par défaut, cet objet est stocké dans la classe
 	 * Entity sous le non de {@link Entity#render}. */
-	public RenderEntity getRender() {
+	public RenderObject getRender() {
 		if (this.render == null) this.render = createRender();
 		return this.render;
 	}

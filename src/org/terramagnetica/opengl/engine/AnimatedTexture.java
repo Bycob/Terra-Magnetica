@@ -149,8 +149,7 @@ public class AnimatedTexture implements Animation, Texture, Cloneable {
 		this.paused = false;
 	}
 	
-	@Override
-	public TextureQuad get() {
+	public Texture get() {
 		if (!this.running) {
 			if (this.textures.size() != 0) {
 				return this.textures.get(0);

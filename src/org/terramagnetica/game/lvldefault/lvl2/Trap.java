@@ -29,7 +29,7 @@ import org.terramagnetica.game.lvldefault.CaseEntity;
 import org.terramagnetica.game.lvldefault.Entity;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.PlayerDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
@@ -75,7 +75,7 @@ public class Trap extends CaseEntity {
 	}
 	
 	@Override
-	protected RenderEntity createRender() {
+	protected RenderObject createRender() {
 		if (!this.active) {
 			AnimationManager animation = new AnimationManager(
 					TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM004_TRAP_OFF));

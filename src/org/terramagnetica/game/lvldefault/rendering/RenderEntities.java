@@ -38,8 +38,8 @@ import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class RenderEntities extends RenderGameDefaultElement {
 	
-	private static HashMap<Class<? extends RenderEntity>, Integer> priorityOrder =
-			new HashMap<Class<? extends RenderEntity>, Integer>();
+	private static HashMap<Class<? extends RenderObject>, Integer> priorityOrder =
+			new HashMap<Class<? extends RenderObject>, Integer>();
 	
 	static {
 		int i = -1;
@@ -48,7 +48,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 		priorityOrder.put(RenderEntityAnimatedTexture.class, i);
 	}
 	
-	private static int getPriorityOrder(Class<? extends RenderEntity> clazz) {
+	private static int getPriorityOrder(Class<? extends RenderObject> clazz) {
 		Integer value = priorityOrder.get(clazz);
 		return value == null ? -1 : value;
 	}
@@ -61,9 +61,9 @@ public class RenderEntities extends RenderGameDefaultElement {
 		private float x;
 		private float y;
 		
-		private RenderEntity render;
+		private RenderObject render;
 		
-		private RenderEntityUnit(RenderEntity render, float x, float y) {
+		private RenderEntityUnit(RenderObject render, float x, float y) {
 			this.render = render;
 			this.x = x;
 			this.y = y;
@@ -181,7 +181,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 	
 	private void addRenderFromEntity(Entity e, List<RenderEntityUnit> renderList) {
 		Vec2f loc = e.getPositionf();
-		RenderEntity render = e.getRender();
+		RenderObject render = e.getRender();
 		
 		if (render instanceof RenderEntityCompound) {
 			addRendersFromCompoundOne((RenderEntityCompound) render, renderList, loc);
@@ -194,7 +194,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 	private void addRendersFromCompoundOne(RenderEntityCompound render,
 			List<RenderEntityUnit> renderList, Vec2f loc) {
 		
-		for (RenderEntity r : render.getRenders()) {
+		for (RenderObject r : render.getRenders()) {
 			if (r instanceof RenderEntityCompound) {
 				addRendersFromCompoundOne((RenderEntityCompound) r, renderList, loc);
 			}

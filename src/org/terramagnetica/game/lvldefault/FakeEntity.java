@@ -21,7 +21,7 @@ package org.terramagnetica.game.lvldefault;
 
 import java.awt.Image;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
 import org.terramagnetica.physics.Hitbox;
 
@@ -49,7 +49,7 @@ public class FakeEntity extends Entity {
 	}
 
 	@Override
-	protected RenderEntity createRender() {
+	protected RenderObject createRender() {
 		return new RenderEntityNothing();
 	}
 	

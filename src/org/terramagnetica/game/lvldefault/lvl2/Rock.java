@@ -23,7 +23,7 @@ import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.physics.HitboxPolygon;
@@ -60,7 +60,7 @@ public class Rock extends CaseEntity {
 	}
 	
 	@Override
-	protected RenderEntity createRender() {
+	protected RenderObject createRender() {
 		return new RenderEntityModel3D(GameRessources.PATH_MODEL_LVL2_ROCKS)
 				.withRotation(90)
 				.withTranslation(0, 0, this.elevation);

@@ -19,8 +19,6 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.miscellaneous;
 
-import org.terramagnetica.opengl.engine.TextureQuad;
-
 public interface Animation {
 	
 	/** Démarre l'animation. C'est à dire, l'animation passe d'un
@@ -33,5 +31,4 @@ public interface Animation {
 	
 	/** Réinitialise l'animation. */
 	void reset();
-	TextureQuad get();
 }

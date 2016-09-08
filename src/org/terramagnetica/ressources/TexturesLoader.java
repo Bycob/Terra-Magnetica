@@ -35,7 +35,6 @@ import org.lwjgl.opengl.GL11;
 import org.terramagnetica.opengl.engine.AnimatedTexture;
 import org.terramagnetica.opengl.engine.Texture;
 import org.terramagnetica.opengl.engine.TextureQuad;
-import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.ressources.TextureSet.TextureSheet;
 import org.terramagnetica.utile.ImgUtil;
 
@@ -124,34 +123,6 @@ public final class TexturesLoader {
 		}
 		
 		loaded.add(set);
-	}
-	
-	public static AnimationManager createAnimationManagerFromImage(int nbStates, int[] states, int[] nbFrames,
-			int spriteSizeX, int spriteSizeY, int imgWidth, int imgHeight, int texID) {
-		
-		if (states == null) {
-			states = new int[nbStates];
-		}
-		
-		if (states.length < nbStates || nbFrames.length < nbStates) {
-			throw new IndexOutOfBoundsException(
-					"un des tableaux \"states\" ou \"nbFrames\" est trop petit.");
-		}
-		
-		AnimationManager sheet = new AnimationManager(nbStates);
-		
-		for (int i = 0 ; i < nbStates ; i++) {
-			states[i] = sheet.addState(
-					createAnimatedTextureFromImage(
-							spriteSizeX, spriteSizeY,
-							imgWidth, imgHeight,
-							0, i, nbFrames[i] - 1, i,
-							true, texID));
-		}
-		
-		sheet.setDimensions(spriteSizeX, spriteSizeY);
-		
-		return sheet;
 	}
 	
 	/**

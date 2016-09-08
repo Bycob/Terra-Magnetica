@@ -21,7 +21,7 @@ package org.terramagnetica.game.lvldefault;
 
 import java.awt.Image;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
@@ -73,7 +73,7 @@ public class DecorationEntity extends Entity {
 	}
 	
 	@Override
-	public RenderEntity createRender() {
+	public RenderObject createRender() {
 		return this.onGround ? new RenderEntityTexture(this.skin).setOnGround(true) : new RenderEntityTexture(this.skin);
 	}
 	

@@ -38,7 +38,7 @@ import net.bynaryscode.util.maths.geometric.Vec3d;
  * @author Louis JEAN
  *
  */
-public class RenderEntityModel3D extends RenderEntity {
+public class RenderEntityModel3D extends RenderObject {
 	
 	private Model3D model;
 	

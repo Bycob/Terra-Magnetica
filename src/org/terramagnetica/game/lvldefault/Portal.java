@@ -23,7 +23,7 @@ import java.awt.Image;
 import java.util.HashMap;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
 import org.terramagnetica.physics.Hitbox;
@@ -80,7 +80,7 @@ public class Portal extends CaseEntity implements IGoal {
 	}
 	
 	@Override
-	public RenderEntity createRender() {
+	public RenderObject createRender() {
 		//RENDU MODELE
 		//Détermination du modèle
 		String key = modelIDMap.get(this.type);

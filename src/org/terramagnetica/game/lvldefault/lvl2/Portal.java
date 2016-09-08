@@ -24,7 +24,7 @@ import java.awt.Image;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
@@ -130,7 +130,7 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	}
 	
 	@Override
-	protected RenderEntity createRender() {
+	protected RenderObject createRender() {
 		if (this.texture instanceof TextureQuad) {
 			return new RenderEntityTexture((TextureQuad) this.texture).setOnGround(true);
 		}

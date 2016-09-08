@@ -25,7 +25,7 @@ import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.opengl.engine.TextureQuad;
@@ -84,7 +84,7 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	}
 	
 	@Override
-	public RenderEntity createRender() {
+	public RenderObject createRender() {
 		//RENDU DE LA LAMPE
 		RenderEntityTexture renderLamp;
 		if (this.state) {

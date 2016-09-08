@@ -25,7 +25,7 @@ import org.terramagnetica.game.GameInputBuffer.InputKey;
 import org.terramagnetica.game.lvldefault.Bonus;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.PlayerDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
 
 import net.bynaryscode.util.maths.geometric.Vec2i;
@@ -103,6 +103,6 @@ public class BonusTrap extends Bonus {
 	
 	
 	@Override public Image getImage() {return null;}
-	@Override protected RenderEntity createRender() {return new RenderEntityNothing();}
+	@Override protected RenderObject createRender() {return new RenderEntityNothing();}
 	@Override public DimensionsInt getDimensions() {return new DimensionsInt();}
 }

@@ -24,7 +24,7 @@ import java.awt.Image;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
@@ -103,7 +103,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 	}
 	
 	@Override
-	public RenderEntity createRender() {
+	public RenderObject createRender() {
 		if (!this.state) {
 			return new RenderEntityNothing();
 		}

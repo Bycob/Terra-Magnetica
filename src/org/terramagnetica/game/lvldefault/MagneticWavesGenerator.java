@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
@@ -132,7 +132,7 @@ public class MagneticWavesGenerator extends CaseEntity implements IDirectionnalE
 	private RenderEntityCompound waveRender = new RenderEntityCompound();
 	
 	@Override
-	protected RenderEntity createRender() {
+	protected RenderObject createRender() {
 		RenderEntityCompound render = new RenderEntityCompound();
 		
 		render.addRender(new RenderEntityTexture(getTextureID()));

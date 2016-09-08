@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.physics.Hitbox;
@@ -194,7 +194,7 @@ public class MagneticFieldGenerator extends CaseEntity {
 	}
 	
 	@Override
-	public RenderEntity createRender() {
+	public RenderObject createRender() {
 		RenderEntityCompound render = new RenderEntityCompound();
 		render.addRender(new RenderEntityTexture(GameRessources.ID_GENERATOR, (float) (Math.PI / 6)).withTranslation(0, 0.6f));
 		for (MiniElectrocrystal e : this.cristaux) {

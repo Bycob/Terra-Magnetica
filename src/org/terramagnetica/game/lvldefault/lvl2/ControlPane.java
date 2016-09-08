@@ -26,7 +26,7 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.IGoal;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxPolygon;
@@ -103,7 +103,7 @@ public class ControlPane extends CaseEntity implements BarrierStateListener, IGo
 	}
 	
 	@Override
-	public RenderEntity createRender() {
+	public RenderObject createRender() {
 		return new RenderEntityModel3D(GameRessources.PATH_MODEL_LVL2_CONTROLPANE).withRotation(this.orientation + 180);
 	}
 	

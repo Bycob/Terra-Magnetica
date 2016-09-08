@@ -24,7 +24,7 @@ import org.terramagnetica.opengl.engine.Painter;
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
 
-public abstract class RenderEntity {
+public abstract class RenderObject {
 	
 	protected Color4f color = new Color4f(1f, 1f, 1f, 1f);//blanc
 	

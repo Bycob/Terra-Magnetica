@@ -22,7 +22,7 @@ package org.terramagnetica.game.lvldefault.lvl3;
 import java.awt.Image;
 
 import org.terramagnetica.game.lvldefault.Entity;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
@@ -50,7 +50,7 @@ public class Tree extends Entity {
 	}
 
 	@Override
-	protected RenderEntity createRender() {
+	protected RenderObject createRender() {
 		return new RenderEntityModel3D(this.treeModelID);
 	}
 	
