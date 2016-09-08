@@ -33,7 +33,7 @@ import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
 import net.bynaryscode.util.maths.geometric.Vec2f;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
-public class RenderEntityDefault extends RenderEntity implements Cloneable {
+public class RenderEntityTexture extends RenderEntity implements Cloneable {
 	
 	protected TextureQuad texture;
 	protected double width;
@@ -64,27 +64,27 @@ public class RenderEntityDefault extends RenderEntity implements Cloneable {
 	
 	protected static final float angleDefault = (float) Math.PI * 1f / 4f;
 	
-	public RenderEntityDefault() {
+	public RenderEntityTexture() {
 		this(PATH_COMPOSANTS + TEX_CRYSTAL, angleDefault);
 	}
 	
-	public RenderEntityDefault(String texID) {
+	public RenderEntityTexture(String texID) {
 		this(texID, angleDefault);
 	}
 	
-	public RenderEntityDefault(TextureQuad texture) {
+	public RenderEntityTexture(TextureQuad texture) {
 		this(texture, angleDefault);
 	}
 	
-	public RenderEntityDefault(float radius) {
+	public RenderEntityTexture(float radius) {
 		this(PATH_COMPOSANTS + TEX_CRYSTAL, radius);
 	}
 	
-	public RenderEntityDefault(String texID, float radius) {
+	public RenderEntityTexture(String texID, float radius) {
 		this(TexturesLoader.getQuad(texID), radius);
 	}
 	
-	public RenderEntityDefault(TextureQuad texture, float radius) {
+	public RenderEntityTexture(TextureQuad texture, float radius) {
 		this.angle = MathUtil.valueInRange_f(radius, 0, (float) Math.PI / 2f);
 		setTexture(texture);
 	}
@@ -128,7 +128,7 @@ public class RenderEntityDefault extends RenderEntity implements Cloneable {
 	 * indiquées jusqu'alors (translation, élevation, angle...) sauf l'échelle
 	 * et la rotation.
 	 */
-	public RenderEntityDefault setOnGround(boolean onGround) {
+	public RenderEntityTexture setOnGround(boolean onGround) {
 		this.onGround = onGround;
 		
 		defineDimensions();
@@ -169,7 +169,7 @@ public class RenderEntityDefault extends RenderEntity implements Cloneable {
 		this.rotation = degrees;
 	}
 	
-	public RenderEntityDefault withRotation(int degrees) {
+	public RenderEntityTexture withRotation(int degrees) {
 		setRotation(degrees);
 		return this;
 	}
@@ -191,7 +191,7 @@ public class RenderEntityDefault extends RenderEntity implements Cloneable {
 		this.translationY = y;
 	}
 	
-	public RenderEntityDefault withTranslation(float x, float y) {
+	public RenderEntityTexture withTranslation(float x, float y) {
 		this.setTranslation(x, y);
 		return this;
 	}
@@ -206,7 +206,7 @@ public class RenderEntityDefault extends RenderEntity implements Cloneable {
 		calculVertices();
 	}
 	
-	public RenderEntityDefault withScale(double scaleX, double scaleY) {
+	public RenderEntityTexture withScale(double scaleX, double scaleY) {
 		setScale(scaleX, scaleY);
 		return this;
 	}
@@ -223,7 +223,7 @@ public class RenderEntityDefault extends RenderEntity implements Cloneable {
 		this.calculVertices();
 	}
 	
-	public RenderEntityDefault withRadius(float radius) {
+	public RenderEntityTexture withRadius(float radius) {
 		this.setRadius(radius);
 		return this;
 	}
@@ -231,7 +231,7 @@ public class RenderEntityDefault extends RenderEntity implements Cloneable {
 	
 	//-----COULEUR
 	
-	public RenderEntityDefault withColor(Color4f color) {
+	public RenderEntityTexture withColor(Color4f color) {
 		this.setColor(color);
 		return this;
 	}
@@ -247,7 +247,7 @@ public class RenderEntityDefault extends RenderEntity implements Cloneable {
 		this.elevation = elevation;
 	}
 	
-	public RenderEntityDefault withElevation(float elevation) {
+	public RenderEntityTexture withElevation(float elevation) {
 		this.setElevation(elevation);
 		return this;
 	}
@@ -302,10 +302,10 @@ public class RenderEntityDefault extends RenderEntity implements Cloneable {
 	}
 	
 	@Override
-	public RenderEntityDefault clone() {
-		RenderEntityDefault clone = null;
+	public RenderEntityTexture clone() {
+		RenderEntityTexture clone = null;
 		try {
-			clone = (RenderEntityDefault) super.clone();
+			clone = (RenderEntityTexture) super.clone();
 		} catch (CloneNotSupportedException e) {
 			//n'arrive jamais.
 		}

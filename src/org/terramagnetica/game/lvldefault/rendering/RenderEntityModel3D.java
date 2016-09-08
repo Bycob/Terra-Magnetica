@@ -50,7 +50,7 @@ public class RenderEntityModel3D extends RenderEntity {
 	}
 	
 	public RenderEntityModel3D(String modelID, float rotation) {
-		this.model = ModelLoader.get(modelID);
+		this.model = ModelLoader.getNotNull(modelID);
 		this.rotation = rotation;
 	}
 	

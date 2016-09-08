@@ -921,10 +921,6 @@ public class ModuleLevelDefault extends CreatorModule {
 			
 			if (arg0.getButton() != MouseEvent.BUTTON1)
 				return;
-
-			if (SwingInputData.isKeyPressed(KeyEvent.VK_CONTROL)) {
-				arg0 = toCase(arg0);
-			}
 			
 			if (this.pinceau == null) {
 				this.pinceau = entityPaintButton.getPinceau();
@@ -936,6 +932,10 @@ public class ModuleLevelDefault extends CreatorModule {
 			if (here != null && this.pinceau.getElementPaintedClass().equals(here.getClass())){
 				actualRoom.removeEntity(here);
 				this.dragged = here;
+			}
+			
+			if (SwingInputData.isKeyPressed(KeyEvent.VK_CONTROL)) {
+				arg0 = toCase(arg0);
 			}
 			
 			//mise à jour de la vue

@@ -25,8 +25,8 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
 import org.terramagnetica.opengl.engine.AnimatedTexture;
 import org.terramagnetica.opengl.engine.Texture;
@@ -132,10 +132,10 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	@Override
 	protected RenderEntity createRender() {
 		if (this.texture instanceof TextureQuad) {
-			return new RenderEntityDefault((TextureQuad) this.texture).setOnGround(true);
+			return new RenderEntityTexture((TextureQuad) this.texture).setOnGround(true);
 		}
 		else if (this.texture instanceof AnimatedTexture) {
-			RenderEntityDefaultAnimation render = new RenderEntityDefaultAnimation(this.animater);
+			RenderEntityAnimatedTexture render = new RenderEntityAnimatedTexture(this.animater);
 			render.setOnGround(true);
 			return render;
 		}

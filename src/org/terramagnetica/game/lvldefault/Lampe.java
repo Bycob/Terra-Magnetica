@@ -24,10 +24,10 @@ import static org.terramagnetica.game.GameRessources.*;
 import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.physics.Force;
@@ -63,7 +63,7 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	 * pas. Ce rendu s'ajoute au rendu de la lampe lorsque l'état de la lampe
 	 * est permanent.
 	 * @see LampState#setPermanentState(boolean)*/
-	private RenderEntityDefaultAnimation renderPermanentMode = null;
+	private RenderEntityAnimatedTexture renderPermanentMode = null;
 	
 	public Lampe(){
 		super();
@@ -86,12 +86,12 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	@Override
 	public RenderEntity createRender() {
 		//RENDU DE LA LAMPE
-		RenderEntityDefault renderLamp;
+		RenderEntityTexture renderLamp;
 		if (this.state) {
-			renderLamp =  new RenderEntityDefault(PATH_COMPOSANTS + TEX_LAMP_OUT);
+			renderLamp =  new RenderEntityTexture(PATH_COMPOSANTS + TEX_LAMP_OUT);
 		}
 		else {
-			renderLamp =  new RenderEntityDefault(PATH_COMPOSANTS + TEX_LAMP_IN);
+			renderLamp =  new RenderEntityTexture(PATH_COMPOSANTS + TEX_LAMP_IN);
 		}
 		
 		//Rendu des ondes si la lampe est activée en mode permanent.
@@ -99,7 +99,7 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 			AnimationManager am = new AnimationManager(
 					TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM003_PERMANENT_MODE_LAMP));
 			
-			this.renderPermanentMode = new RenderEntityDefaultAnimation(am);
+			this.renderPermanentMode = new RenderEntityAnimatedTexture(am);
 			this.renderPermanentMode.setScale(1.25, 1.25);
 			this.renderPermanentMode.setOnGround(true);
 			
@@ -107,7 +107,7 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 		}
 		
 		if (this.permanentMode_On) {
-			RenderCompound render = new RenderCompound();
+			RenderEntityCompound render = new RenderEntityCompound();
 			render.addRender(renderLamp);
 			render.addRender(this.renderPermanentMode);
 			return render;

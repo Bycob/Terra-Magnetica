@@ -102,8 +102,8 @@ public class RenderLandscapeMur3D extends RenderLandscape {
 		}
 		
 		int decorTypeID = this.decor.getIndex() + 1;
-		if ((this.modelMur = ModelLoader.get(Util.formatDecimal(modelID, decorTypeID))) == null) {
-			this.modelMur = ModelLoader.get(Util.formatDecimal(GameRessources.SPEC_PATH_MODEL_MUR_DROIT, decorTypeID));
+		if ((this.modelMur = ModelLoader.getNotNull(Util.formatDecimal(modelID, decorTypeID))) == null) {
+			this.modelMur = ModelLoader.getNotNull(Util.formatDecimal(GameRessources.SPEC_PATH_MODEL_MUR_DROIT, decorTypeID));
 		}
 	}
 	

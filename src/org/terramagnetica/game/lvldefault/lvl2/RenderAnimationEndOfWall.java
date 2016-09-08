@@ -19,7 +19,7 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game.lvldefault.lvl2;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.Transform;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
@@ -28,7 +28,7 @@ import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.Vec2f;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
-public class RenderAnimationEndOfWall extends RenderEntityDefaultAnimation {
+public class RenderAnimationEndOfWall extends RenderEntityAnimatedTexture {
 	
 	private boolean left;
 	
@@ -41,7 +41,7 @@ public class RenderAnimationEndOfWall extends RenderEntityDefaultAnimation {
 	 * à l'origine pour le {@link PlasmaticWall}) en fondue.
 	 * @param left - {@code true} si le rendu dessine l'extrémité gauche du
 	 * mur, {@code false} s'il dessine l'extrémité droite.
-	 * @param am - voir {@link RenderEntityDefaultAnimation}.
+	 * @param am - voir {@link RenderEntityAnimatedTexture}.
 	 */
 	public RenderAnimationEndOfWall(boolean left, AnimationManager am) {
 		super(am);

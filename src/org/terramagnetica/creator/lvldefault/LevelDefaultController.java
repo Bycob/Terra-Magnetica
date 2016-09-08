@@ -27,8 +27,8 @@ import org.terramagnetica.game.lvldefault.LandscapeTile;
 import org.terramagnetica.game.lvldefault.OrientableLandscapeTile;
 import org.terramagnetica.game.lvldefault.Room;
 
-import net.bynaryscode.util.maths.geometric.Vec2i;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Vec2i;
 
 /**
  * Cette classe permet de peindre les décors sur la salle définie
@@ -112,10 +112,10 @@ public class LevelDefaultController {
 	}
 	
 	/** 
-	 * ajoute une entité à la salle courante.
+	 * Crée une entité et l'ajoute à la salle.
 	 * @param x - abscisse de l'entité
 	 * @param y - ordonnée de l'entité
-	 * @param entity - le pinceau devant peindre l'entité.
+	 * @param entity - le pinceau qui servira à créer l'entité.
 	 */
 	public boolean paintEntity(int x, int y, PinceauEntity entity){
 		return this.paintEntity(x, y, entity.createInstance(x, y, false));

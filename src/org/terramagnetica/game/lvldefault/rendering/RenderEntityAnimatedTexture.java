@@ -22,22 +22,22 @@ package org.terramagnetica.game.lvldefault.rendering;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 
-public class RenderEntityDefaultAnimation extends RenderEntityDefault {
+public class RenderEntityAnimatedTexture extends RenderEntityTexture {
 	
 	private AnimationManager animation;
 	
 	private int state;
 	private int defaultState;
 	
-	public RenderEntityDefaultAnimation() {
+	public RenderEntityAnimatedTexture() {
 		this(new AnimationManager(), angleDefault);
 	}
 	
-	public RenderEntityDefaultAnimation(AnimationManager animation) {
+	public RenderEntityAnimatedTexture(AnimationManager animation) {
 		this(animation, angleDefault);
 	}
 	
-	public RenderEntityDefaultAnimation(AnimationManager animation, float radius) {
+	public RenderEntityAnimatedTexture(AnimationManager animation, float radius) {
 		super(radius);
 		
 		this.animation = animation;

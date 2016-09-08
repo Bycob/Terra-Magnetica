@@ -241,7 +241,12 @@ public class Model3D {
 				}
 				
 				//Deuxième étape : transformation en triangles et ajout au modèle.
-				parsed.addFace(vertices);
+				try {
+					parsed.addFace(vertices);
+				}
+				catch (NullPointerException e) {
+					throw new FileFormatException(e);
+				}
 			}
 		}
 		
@@ -373,6 +378,10 @@ public class Model3D {
 	
 	public boolean hasTextures() {
 		return this.material.hasTextures();
+	}
+	
+	public boolean isEmpty() {
+		return this.faces.isEmpty();
 	}
 	
 	@Override

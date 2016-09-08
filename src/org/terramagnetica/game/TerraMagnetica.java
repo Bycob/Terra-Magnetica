@@ -49,7 +49,7 @@ public class TerraMagnetica {
 	/** Cette variable indique si le programme est lancé en mode 'operateur' ou non.
 	 * Si oui certaines fonctionalités supplémentaires sont activées, notament dans
 	 * l'éditeur de niveau. */
-	public static final boolean dev = true;
+	public static final boolean dev = false;
 	
 	/** L'instance unique du jeu qui tournera dans le programme */
 	public static TerraMagnetica theGame = new TerraMagnetica();

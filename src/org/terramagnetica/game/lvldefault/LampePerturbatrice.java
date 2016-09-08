@@ -22,8 +22,8 @@ package org.terramagnetica.game.lvldefault;
 import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.physics.Force;
 import org.terramagnetica.physics.Hitbox;
@@ -61,7 +61,7 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	private float normalMoveOffset = 0;
 	
 	//RENDUS
-	private RenderEntityDefault renderMainIndicator;
+	private RenderEntityTexture renderMainIndicator;
 	private float indicatorDirection = 0;
 
 	public LampePerturbatrice() {
@@ -83,17 +83,17 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	}
 	
 	@Override
-	protected RenderCompound createRender() {
-		RenderCompound render = new RenderCompound();
+	protected RenderEntityCompound createRender() {
+		RenderEntityCompound render = new RenderEntityCompound();
 		
 		//image principale
 		String id = this.state ? GameRessources.ID_LAMP_PERTURBATRICE_ON : GameRessources.ID_LAMP_PERTURBATRICE_OFF;
-		render.addRender(new RenderEntityDefault(id));
+		render.addRender(new RenderEntityTexture(id));
 		
 		//indicateurs de polarité
 		Color4f color = this.state ? new Color4f(1f, 0f, 0f) : new Color4f(1f, 1f, 0f);
 		
-		render.addRender(this.renderMainIndicator = new RenderEntityDefault(GameRessources.ID_MAGNETIC_FIELD_INDICATOR)
+		render.addRender(this.renderMainIndicator = new RenderEntityTexture(GameRessources.ID_MAGNETIC_FIELD_INDICATOR)
 				.withElevation(0.25f)
 				.withColor(color));
 		this.updateIndicatorTranslation();

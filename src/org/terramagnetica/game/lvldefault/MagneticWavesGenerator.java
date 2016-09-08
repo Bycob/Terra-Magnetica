@@ -23,9 +23,9 @@ import java.awt.Image;
 import java.util.ArrayList;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
@@ -129,13 +129,13 @@ public class MagneticWavesGenerator extends CaseEntity implements IDirectionnalE
 		return ImagesLoader.get(getTextureID());
 	}
 	
-	private RenderCompound waveRender = new RenderCompound();
+	private RenderEntityCompound waveRender = new RenderEntityCompound();
 	
 	@Override
 	protected RenderEntity createRender() {
-		RenderCompound render = new RenderCompound();
+		RenderEntityCompound render = new RenderEntityCompound();
 		
-		render.addRender(new RenderEntityDefault(getTextureID()));
+		render.addRender(new RenderEntityTexture(getTextureID()));
 		render.addRender(this.waveRender);
 		
 		return render;
@@ -223,7 +223,7 @@ public class MagneticWavesGenerator extends CaseEntity implements IDirectionnalE
 		for (MagneticWave wave : this.waves) {
 			clone.waves.add((MagneticWave) wave.clone());
 		}
-		clone.waveRender = new RenderCompound();
+		clone.waveRender = new RenderEntityCompound();
 		for (MagneticWave wave : clone.waves) {
 			clone.waveRender.addEntityToRender(wave);
 		}

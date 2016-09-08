@@ -37,20 +37,20 @@ import net.bynaryscode.util.maths.geometric.Vec2f;
  * @author Louis JEAN
  *
  */
-public class RenderCompound extends RenderEntity {
+public class RenderEntityCompound extends RenderEntity {
 	
 	private List<Entity> entities = new ArrayList<Entity>();
 	private List<RenderEntity> renders = new ArrayList<RenderEntity>();
 	
-	public RenderCompound() {
+	public RenderEntityCompound() {
 		
 	}
 	
-	public RenderCompound(RenderEntity... renders) {
+	public RenderEntityCompound(RenderEntity... renders) {
 		this.renders = Util.createList(renders);
 	}
 	
-	public RenderCompound(Entity... entities) {
+	public RenderEntityCompound(Entity... entities) {
 		this.entities = Util.createList(entities);
 	}
 	
@@ -112,7 +112,7 @@ public class RenderCompound extends RenderEntity {
 	}
 	
 	/**
-	 * Crée un {@link RenderCompound} composé d'un même rendu d'une case,
+	 * Crée un {@link RenderEntityCompound} composé d'un même rendu d'une case,
 	 * répété un certain nombre de fois. Cela peut servir par exemple pour
 	 * les entités prenant la forme d'un mur à longueur variable.
 	 * <p>L'objet de rendu obtenu sera centré sur les coordonnées de l'entité.
@@ -122,12 +122,12 @@ public class RenderCompound extends RenderEntity {
 	 * @param size - La quantité de rendu à concatener.
 	 * @param horizontal - {@code true} si les rendus sont rangés de gauche à
 	 * droite, {@code false} s'ils sont rangés de haut en bas.
-	 * @return Un {@link RenderCompound} correspondant à la description ci-dessus.
+	 * @return Un {@link RenderEntityCompound} correspondant à la description ci-dessus.
 	 */
-	public static RenderCompound createCaseArrayRender(RenderEntityDefault render,
+	public static RenderEntityCompound createCaseArrayRender(RenderEntityTexture render,
 			int size, boolean horizontal) {
 		
-		RenderCompound r = new RenderCompound();
+		RenderEntityCompound r = new RenderEntityCompound();
 		
 		int startIndex = - (size / 2);
 		

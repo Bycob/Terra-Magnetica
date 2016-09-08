@@ -23,7 +23,7 @@ import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.ressources.ImagesLoader;
 
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
@@ -51,7 +51,7 @@ public class MagneticFieldPerturbateur extends Entity {
 	
 	@Override
 	public RenderEntity createRender() {
-		return new RenderEntityDefault(GameRessources.ID_PERTURBATEUR).setOnGround(true);
+		return new RenderEntityTexture(GameRessources.ID_PERTURBATEUR).setOnGround(true);
 	}
 	
 	@Override

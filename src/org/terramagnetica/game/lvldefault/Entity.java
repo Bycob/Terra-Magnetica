@@ -292,7 +292,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	public int getPriority(){
 		return priority;
 	}
-
+	
 	public void setPriority(int priority){
 		if (priority < 1)
 			throw new IllegalArgumentException("La priorité ne peut être négative ou nulle");

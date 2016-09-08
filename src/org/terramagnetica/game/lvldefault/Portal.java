@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
@@ -100,13 +100,13 @@ public class Portal extends CaseEntity implements IGoal {
 		
 		//Détermination du rendu.
 		if (this.onWall) {
-			return new RenderEntityDefault(skin)
+			return new RenderEntityTexture(skin)
 				.withRotation(this.orientation)
 				.withTranslation(this.translationX, this.translationY)
 				.withScale(this.scaleX, this.scaleY);
 		}
 		else {
-			return new RenderEntityDefault(skin).setOnGround(true);
+			return new RenderEntityTexture(skin).setOnGround(true);
 		}
 	}
 	

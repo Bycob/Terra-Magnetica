@@ -44,8 +44,8 @@ public class RenderEntities extends RenderGameDefaultElement {
 	static {
 		int i = -1;
 		priorityOrder.put(RenderEntityModel3D.class, ++i);
-		priorityOrder.put(RenderEntityDefault.class, ++i);
-		priorityOrder.put(RenderEntityDefaultAnimation.class, i);
+		priorityOrder.put(RenderEntityTexture.class, ++i);
+		priorityOrder.put(RenderEntityAnimatedTexture.class, i);
 	}
 	
 	private static int getPriorityOrder(Class<? extends RenderEntity> clazz) {
@@ -85,18 +85,18 @@ public class RenderEntities extends RenderGameDefaultElement {
 			float thisY = this.y;
 			float oY = o.y;
 			
-			if (this.render instanceof RenderEntityDefault) {
-				thisY = ((RenderEntityDefault) this.render).getRealPositionY(this.x, this.y);
+			if (this.render instanceof RenderEntityTexture) {
+				thisY = ((RenderEntityTexture) this.render).getRealPositionY(this.x, this.y);
 			}
 			
-			if (o.render instanceof RenderEntityDefault) {
-				oY = ((RenderEntityDefault) o.render).getRealPositionY(o.x, o.y);
+			if (o.render instanceof RenderEntityTexture) {
+				oY = ((RenderEntityTexture) o.render).getRealPositionY(o.x, o.y);
 			}
 			
 			//Comparaison des angles
-			if (this.render instanceof RenderEntityDefault && o.render instanceof RenderEntityDefault) {
-				int radDif = (int) Math.signum(((RenderEntityDefault) this.render).getRadius()
-						- ((RenderEntityDefault) o.render).getRadius());
+			if (this.render instanceof RenderEntityTexture && o.render instanceof RenderEntityTexture) {
+				int radDif = (int) Math.signum(((RenderEntityTexture) this.render).getRadius()
+						- ((RenderEntityTexture) o.render).getRadius());
 				if (radDif != 0) return radDif;
 			}
 			
@@ -183,20 +183,20 @@ public class RenderEntities extends RenderGameDefaultElement {
 		Vec2f loc = e.getPositionf();
 		RenderEntity render = e.getRender();
 		
-		if (render instanceof RenderCompound) {
-			addRendersFromCompoundOne((RenderCompound) render, renderList, loc);
+		if (render instanceof RenderEntityCompound) {
+			addRendersFromCompoundOne((RenderEntityCompound) render, renderList, loc);
 		}
 		else {
 			renderList.add(new RenderEntityUnit(render, loc.x, loc.y));
 		}
 	}
 	
-	private void addRendersFromCompoundOne(RenderCompound render,
+	private void addRendersFromCompoundOne(RenderEntityCompound render,
 			List<RenderEntityUnit> renderList, Vec2f loc) {
 		
 		for (RenderEntity r : render.getRenders()) {
-			if (r instanceof RenderCompound) {
-				addRendersFromCompoundOne((RenderCompound) r, renderList, loc);
+			if (r instanceof RenderEntityCompound) {
+				addRendersFromCompoundOne((RenderEntityCompound) r, renderList, loc);
 			}
 			else {
 				renderList.add(new RenderEntityUnit(r, loc.x, loc.y));

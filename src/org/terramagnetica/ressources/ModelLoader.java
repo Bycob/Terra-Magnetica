@@ -42,7 +42,7 @@ public final class ModelLoader {
 	 * Charge une liste de modèles.
 	 * @param set - la liste qui contient les emplacements des fichiers .obj.
 	 * Ces emplacements seront également utilisés comme identifiant du modèle
-	 * dans le programme, lors de l'utilisation de la méthode {@link #get(String)}.
+	 * dans le programme, lors de l'utilisation de la méthode {@link #getNotNull(String)}.
 	 * @param allowChild - voir {@link Model3D#parse(String, String, boolean)}.
 	 */
 	public static void loadModelSet(List<String> set, boolean allowChild) {
@@ -133,9 +133,14 @@ public final class ModelLoader {
 	
 	/** Obtenir le modèle portant l'identifiant passé en paramètre.
 	 * S'il n'existe pas, retourne un modèle vide. */
+	public static Model3D getNotNull(String id) {
+		Model3D m = get(id);
+		if (m == null) m = new Model3D();
+		return m;
+	}
+	
 	public static Model3D get(String id) {
 		Model3D m = models.get(id);
-		if (m == null) m = new Model3D();
 		return m;
 	}
 }

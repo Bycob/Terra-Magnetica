@@ -23,9 +23,9 @@ import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.ressources.ImagesLoader;
@@ -110,7 +110,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 		
 		AnimationManager manager = new AnimationManager(TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM001_PLASMATIC_WALL));
 		
-		RenderEntityDefaultAnimation r = new RenderEntityDefaultAnimation(manager);
+		RenderEntityAnimatedTexture r = new RenderEntityAnimatedTexture(manager);
 		//Des trous apparaissent entre les différentes textures si on ne change pas l'échelle en largeur.
 		r.setScale(1.003, 1);
 		r.setColor(this.color);
@@ -131,7 +131,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 		
 		
 		//Assemblage
-		RenderCompound result = RenderCompound.createCaseArrayRender(r, size, true);
+		RenderEntityCompound result = RenderEntityCompound.createCaseArrayRender(r, size, true);
 		result.addRender(rLeft);
 		result.addRender(rRight);
 		

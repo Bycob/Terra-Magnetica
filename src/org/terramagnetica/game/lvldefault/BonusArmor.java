@@ -23,7 +23,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 
 import org.terramagnetica.game.lvldefault.rendering.RenderEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
 
@@ -52,7 +52,7 @@ public class BonusArmor extends Bonus {
 	
 	@Override
 	protected RenderEntity createRender() {
-		return new RenderEntityDefault();
+		return new RenderEntityTexture();
 	}
 	
 	@Override

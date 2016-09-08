@@ -53,7 +53,7 @@ public class LightModel {
 	}
 	
 	public boolean removeLight(Light light) {
-		if (light.getModel() == this) {
+		if (light.getModel() == this && light.getID() != -1) {
 			notifyBeforeChanges();
 			boolean result = this.lights.remove(light.getID()) != null;
 			

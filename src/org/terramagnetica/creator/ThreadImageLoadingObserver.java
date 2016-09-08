@@ -23,7 +23,7 @@ import org.terramagnetica.ressources.ImagesLoader;
 
 public class ThreadImageLoadingObserver implements Runnable {
 	
-	public static final int NB_IMAGES = 77;
+	public static final int NB_IMAGES = 78;
 	
 	private ProgressionObserver observer;
 	

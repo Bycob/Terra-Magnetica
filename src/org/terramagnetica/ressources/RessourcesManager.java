@@ -127,6 +127,10 @@ public class RessourcesManager {
 		return resLoc;
 	}
 	
+	public static void setRessourcesLocation(String newLocation) {
+		resLoc = newLocation;
+	}
+	
 	/**
 	 * Permet d'obtenir une URL valable pour la ressource
 	 * passée en paramètre. Si aucune URL n'est trouvée, lance

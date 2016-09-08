@@ -25,9 +25,9 @@ import java.awt.Image;
 import java.util.List;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderCompound;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefaultAnimation;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.physics.Hitbox;
@@ -42,7 +42,7 @@ public class Aimant extends EntityMoving {
 	private static final long serialVersionUID = 1L;
 	
 	private transient InfluenceMagnetiqueMajeure influence = null;
-	private RenderEntityDefaultAnimation renderAnimation;
+	private RenderEntityAnimatedTexture renderAnimation;
 	
 	public Aimant() {
 		super();
@@ -64,15 +64,15 @@ public class Aimant extends EntityMoving {
 	}
 	
 	@Override
-	public RenderCompound createRender() {
-		RenderCompound render = new RenderCompound();
-		render.addRender(new RenderEntityDefault(PATH_COMPOSANTS + TEX_CRYSTAL, (float) Math.PI * (45f / 180f))
+	public RenderEntityCompound createRender() {
+		RenderEntityCompound render = new RenderEntityCompound();
+		render.addRender(new RenderEntityTexture(PATH_COMPOSANTS + TEX_CRYSTAL, (float) Math.PI * (45f / 180f))
 				.withTranslation(0, -0.001f));
 		
 		if (this.renderAnimation == null) {
 			AnimationManager am = new AnimationManager();
 			am.addState(TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM000_DANGEROUS_CRYSTAL));
-			this.renderAnimation = new RenderEntityDefaultAnimation(am);
+			this.renderAnimation = new RenderEntityAnimatedTexture(am);
 		}
 		updateRenderingDanger();
 		
@@ -92,7 +92,7 @@ public class Aimant extends EntityMoving {
 	private void updateRenderingDanger() {
 		if (this.render != null) {
 			
-			RenderCompound render = (RenderCompound) this.render;
+			RenderEntityCompound render = (RenderEntityCompound) this.render;
 			if (this.renderAnimation != null) {
 				
 				if (this.lastHitbox.getSpeedLength() > PlayerDefault.CRYSTAL_KILL) {

@@ -61,9 +61,10 @@ public class ImagesLoader {
 	private static Map<String, Image> imgMap = new HashMap<String, Image>();
 	
 	/**
-	 * Lit et retourne une image contenue dans le jar.
-	 * @param path - Le chemin de l'image depuis :
-	 * <blockquote>{@code org/terramagnetica/ressources/}</blockquote>
+	 * Lit une image avec le chemin indiqué.
+	 * @param path Le chemin relatif de la ressource voulue. Cette ressource
+	 * sera recherché dans le dossier racine des ressources défini par le
+	 * {@link RessourcesManager}.
 	 * @return L'image qui a été lue, ou {@code null} si l'image n'a pu
 	 * être lue.
 	 */

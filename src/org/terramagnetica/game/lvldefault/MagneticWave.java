@@ -22,7 +22,7 @@ package org.terramagnetica.game.lvldefault;
 import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxPolygon;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
@@ -69,8 +69,8 @@ public class MagneticWave extends EntityMoving {
 	}
 	
 	@Override
-	protected RenderEntityDefault createRender() {
-		RenderEntityDefault render = new RenderEntityDefault(GameRessources.ID_WAVES).setOnGround(true);
+	protected RenderEntityTexture createRender() {
+		RenderEntityTexture render = new RenderEntityTexture(GameRessources.ID_WAVES).setOnGround(true);
 		render.setRotation((int) Math.toDegrees(Boussole.getPointCardinalPourAngle(this.getDirection() + Math.PI /2).getOrientation()));
 		return render;
 	}

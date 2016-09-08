@@ -22,6 +22,8 @@ package debug;
 import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.Entity;
@@ -29,6 +31,9 @@ import org.terramagnetica.game.lvldefault.lvl2.ControlPane;
 import org.terramagnetica.openal.MusicStreaming;
 import org.terramagnetica.openal.ThreadMusicStreaming;
 import org.terramagnetica.opengl.engine.Camera3D;
+import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
+import org.terramagnetica.opengl.engine.Light;
+import org.terramagnetica.opengl.engine.LightModel;
 import org.terramagnetica.opengl.engine.Model3D;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.Transform;
@@ -49,14 +54,14 @@ public class CodeTest {
 	
 	public static Model3D model;
 	public static Camera3D camera = new Camera3D(
-			3, -3, 3,
+			0, -1, 1,
 			0, 0, 0,
 			0, 0, 1);
 	
 	public static Entity entity = new ControlPane(90f, new Color4f(1f, 0, 0));
 	
 	public static void main(String[] args) {
-		testHitbox();
+		appliGL();
 	}
 	
 	private static void testHitbox() {
@@ -82,6 +87,8 @@ public class CodeTest {
 	
 	//----------- Pour les tests openGL ----------------------------------
 	
+	private static String modelName = "composants/models/lamp.obj";
+	
 	public static void appliGL() {
 		GuiWindow window = GuiWindow.getInstance();
 		try {
@@ -92,7 +99,7 @@ public class CodeTest {
 		GuiTextPainter.init();
 		window.setContentPane(new DrawPanel());
 		
-		ArrayList<String> set = new ArrayList<String>(); set.add(GameRessources.PATH_MODEL_LVL2_CONTROLPANE);
+		ArrayList<String> set = new ArrayList<String>(); set.add(modelName);
 		ModelLoader.loadModelSet(set, true);
 		
 		TexturesLoader.loadTextureSet(GameRessources.gameTextureSet);
@@ -103,11 +110,27 @@ public class CodeTest {
 		}
 	}
 	
+	private static float rotation = 0f;
+	private static float zoom = 1f;
+	
 	public static void toDo() {
-		Painter.instance.addTransform(Transform.newRotation((System.currentTimeMillis() % 3000) / 3000f * 360f, new Vec3d(0, 0, 1)));
-		entity.getRender().renderEntity3D(0, 0, Painter.instance);
+		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+			rotation += 1f;
+		}
+		else if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+			rotation -= 1f;
+		}
 		
-		//DU COUP : Regarde le obj de la jungle ! ça vaut le coup !
+		Painter.instance.addTransform(Transform.newRotation(rotation, new Vec3d(0, 0, 1)));
+		
+		LightModel lightModel = Painter.instance.getLightModel();
+		Light l = lightModel.getLight0();
+		l.setPosition(0, 1, 1);
+		
+		Model3D model = ModelLoader.getNotNull(modelName);
+		model.draw(Painter.instance);
+		
+		Painter.instance.clearTransforms();
 	}
 	
 	public static class DrawPanel extends GuiFrameContainer {
@@ -116,7 +139,12 @@ public class CodeTest {
 		public void drawComponent() {
 			Painter painter = Painter.instance;
 			painter.ensure3D();
+			
+			zoom -= Mouse.getDWheel() / 1000f;
+			camera.setEye(new Vec3d(0, -zoom, zoom));
+			
 			painter.getConfiguration().setCamera(camera);
+			painter.getConfiguration().setPropertieEnabled(GLProperty.LIGHTING, true);
 			
 			toDo();
 		}

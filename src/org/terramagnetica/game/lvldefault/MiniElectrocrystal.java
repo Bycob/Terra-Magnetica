@@ -22,7 +22,7 @@ package org.terramagnetica.game.lvldefault;
 import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityDefault;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
 
@@ -50,8 +50,8 @@ public class MiniElectrocrystal extends Entity {
 	}
 	
 	@Override
-	public RenderEntityDefault createRender() {
-		return new RenderEntityDefault(GameRessources.ID_MINI_ELECTROCRYSTAL);
+	public RenderEntityTexture createRender() {
+		return new RenderEntityTexture(GameRessources.ID_MINI_ELECTROCRYSTAL);
 	}
 	
 	@Override
