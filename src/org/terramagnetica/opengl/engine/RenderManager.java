@@ -95,6 +95,16 @@ public class RenderManager implements Animation {
 	}
 	
 	public Renderable getRender() {
-		return null;
+		if (this.currentEntry == null) return new RenderableNull();
+		
+		Renderable result = null;
+		
+		if (!this.effects.isEmpty()) {
+			
+		}
+		else {
+			result = this.currentEntry.render;
+		}
+		return result;
 	}
 }

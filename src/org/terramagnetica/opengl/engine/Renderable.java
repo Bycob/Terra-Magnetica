@@ -20,6 +20,7 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 package org.terramagnetica.opengl.engine;
 
 import net.bynaryscode.util.Color4f;
+import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public abstract class Renderable {
@@ -41,6 +42,10 @@ public abstract class Renderable {
 	public Renderable withColor(Color4f color) {
 		this.setColor(color);
 		return this;
+	}
+
+	public AxisAlignedBox3D getRenderBoundingBox(float x, float y, float z) {
+		return new AxisAlignedBox3D(x, y, z, 0, 0, 0);
 	}
 	
 	public void setPositionOffset(double x, double y, double z) {

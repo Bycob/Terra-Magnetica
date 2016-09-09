@@ -218,6 +218,10 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		return this.renderManager.getRender();
 	}
 	
+	public RenderManager getRenderManager() {
+		return this.renderManager;
+	}
+	
 	public String getSkin() {
 		return this.skin;
 	}

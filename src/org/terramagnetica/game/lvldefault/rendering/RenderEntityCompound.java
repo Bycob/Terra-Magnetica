@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.terramagnetica.game.lvldefault.Entity;
 import org.terramagnetica.opengl.engine.Painter;
+import org.terramagnetica.opengl.engine.Renderable;
 
 import net.bynaryscode.util.Util;
 import net.bynaryscode.util.maths.geometric.Vec2f;
@@ -40,14 +41,9 @@ import net.bynaryscode.util.maths.geometric.Vec2f;
 public class RenderEntityCompound extends RenderObject {
 	
 	private List<Entity> entities = new ArrayList<Entity>();
-	private List<RenderObject> renders = new ArrayList<RenderObject>();
 	
 	public RenderEntityCompound() {
 		
-	}
-	
-	public RenderEntityCompound(RenderObject... renders) {
-		this.renders = Util.createList(renders);
 	}
 	
 	public RenderEntityCompound(Entity... entities) {
@@ -72,44 +68,22 @@ public class RenderEntityCompound extends RenderObject {
 		return list;
 	}
 	
-	/**
-	 * Ajoute un rendu à dessiner dans cet objet. Si le rendu passé en
-	 * paramètre a déjà été ajouté précedemment, il ne sera pas ajouté
-	 * de nouveau.
-	 * @param r - Le rendu ajouté.
-	 */
-	public void addRender(RenderObject r) {
-		if (r == null) throw new NullPointerException();
-		if (!this.renders.contains(r)) this.renders.add(r);
-	}
-	
-	public void removeRender(RenderObject r) {
-		this.renders.remove(r);
-	}
-	
 	public void removeEntityToRender(Entity toDelete) {
 		this.entities.remove(toDelete);
 	}
 
-	public ArrayList<RenderObject> getRenders() {
-		ArrayList<RenderObject> list = new ArrayList<RenderObject>();
-		list.addAll(renders);
-		return list;
-	}
-	
 	@Override
 	public void renderEntity3D(float x, float y, Painter painter) {
-		for (RenderObject render : this.renders) {
-			render.renderEntity3D(x, y, painter);
-		}
 		for (Entity e : this.entities) {
 			Vec2f c = e.getPositionf();
-			RenderObject r = e.getRender();
+			Renderable r = e.getRender();
 			if (r != null) {
-				r.renderEntity3D(c.x, c.y, painter);
+				r.renderAt(c.x, c.y, 0, painter);
 			}
 		}
 	}
+	
+	//TODO [RENDU]
 	
 	/**
 	 * Crée un {@link RenderEntityCompound} composé d'un même rendu d'une case,
