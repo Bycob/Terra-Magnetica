@@ -24,10 +24,10 @@ import java.awt.Image;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
+import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.opengl.engine.AnimatedTexture;
 import org.terramagnetica.opengl.engine.Texture;
 import org.terramagnetica.opengl.engine.TextureQuad;
@@ -57,8 +57,6 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	 */
 	private boolean updateRender = false;
 	private Texture texture = TexturesLoader.getQuad(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF);
-	
-	private AnimationManager animater = null;
 	
 	public Portal() {
 		this(new Color4f());

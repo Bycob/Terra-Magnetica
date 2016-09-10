@@ -50,8 +50,8 @@ public class MiniElectrocrystal extends Entity {
 	}
 	
 	@Override
-	public RenderEntityTexture createRender() {
-		return new RenderEntityTexture(GameRessources.ID_MINI_ELECTROCRYSTAL);
+	public void createRender() {
+		this.renderManager.putRender("default", new RenderEntityTexture(GameRessources.ID_MINI_ELECTROCRYSTAL));
 	}
 	
 	@Override

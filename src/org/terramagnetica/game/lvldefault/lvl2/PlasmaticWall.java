@@ -23,11 +23,11 @@ import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
-import org.terramagnetica.opengl.miscellaneous.AnimationManager;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
+import org.terramagnetica.opengl.engine.AnimatedTexture;
+import org.terramagnetica.opengl.engine.Renderable;
+import org.terramagnetica.opengl.engine.RenderableCompound;
+import org.terramagnetica.opengl.engine.RenderableFactory;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.TexturesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
@@ -71,7 +71,12 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 		this.state = state;
 		
 		if (oldState != this.state) {
-			this.recreateRender();
+			if (this.state) {
+				this.renderManager.render("nothing");
+			}
+			else {
+				this.renderManager.render("default");
+			}
 			this.hitbox.setSolid(this.state);
 		}
 	}
@@ -103,39 +108,23 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 	}
 	
 	@Override
-	public RenderObject createRender() {
-		if (!this.state) {
-			return new RenderEntityNothing();
-		}
+	public void createRender() {
+		AnimatedTexture texture = TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM001_PLASMATIC_WALL);
 		
-		AnimationManager manager = new AnimationManager(TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM001_PLASMATIC_WALL));
-		
-		RenderEntityAnimatedTexture r = new RenderEntityAnimatedTexture(manager);
-		//Des trous apparaissent entre les différentes textures si on ne change pas l'échelle en largeur.
-		r.setScale(1.003, 1);
-		r.setColor(this.color);
-		
-		
+		Renderable mainRender = new RenderEntityTexture(texture).withScaleOffset(1.003, 0, 1).withColor(this.color);
 		//rendu des extrémités
-		RenderAnimationEndOfWall rLeft = new RenderAnimationEndOfWall(true, manager);
-		RenderAnimationEndOfWall rRight = new RenderAnimationEndOfWall(false, manager);
-		
 		int leftX = - (this.size / 2 + 1);
 		int rightX = leftX + 1 + this.size;
 		
-		rLeft.setTranslation(leftX, 0); rLeft.setColor(this.color);
-		rRight.setTranslation(rightX, 0); rRight.setColor(this.color);
-		
-		
-		manager.start();
-		
+		Renderable rLeft = new RenderAnimationEndOfWall(true, texture).withPositionOffset(leftX, 0, 0).withColor(this.color);
+		Renderable rRight = new RenderAnimationEndOfWall(false, texture).withPositionOffset(rightX, 0, 0).withColor(this.color);
 		
 		//Assemblage
-		RenderEntityCompound result = RenderEntityCompound.createCaseArrayRender(r, size, true);
-		result.addRender(rLeft);
-		result.addRender(rRight);
+		RenderableCompound result = RenderableFactory.createCaseArrayRender(mainRender, size, true);
+		result.addRenders(rLeft);
+		result.addRenders(rRight);
 		
-		return result;
+		this.renderManager.putRender("default", result);
 	}
 	
 	@Override

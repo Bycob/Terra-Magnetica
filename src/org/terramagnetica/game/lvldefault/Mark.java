@@ -21,8 +21,7 @@ package org.terramagnetica.game.lvldefault;
 
 import java.awt.Image;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
+import org.terramagnetica.opengl.engine.RenderableNull;
 import org.terramagnetica.ressources.ImagesLoader;
 
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
@@ -41,8 +40,8 @@ public class Mark extends Entity {
 	}
 
 	@Override
-	protected RenderObject createRender() {
-		return new RenderEntityNothing();
+	protected void createRender() {
+		this.renderManager.putRender("default", new RenderableNull());
 	}
 
 	@Override

@@ -26,7 +26,6 @@ import org.terramagnetica.game.lvldefault.EntityMoving;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.IA.AIMovable;
 import org.terramagnetica.game.lvldefault.lvl2.Level2.CreatureAI;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
@@ -60,8 +59,8 @@ public class TheCreature extends EntityMoving {
 	}
 	
 	@Override
-	protected RenderObject createRender() {
-		return new RenderEntityTexture(GameRessources.PATH_CREATURE).withScale(0.4, 0.4);
+	protected void createRender() {
+		this.renderManager.putRender("default", new RenderEntityTexture(GameRessources.PATH_CREATURE).withScaleOffset(0.4, 0, 0.4));
 	}
 	
 	@Override

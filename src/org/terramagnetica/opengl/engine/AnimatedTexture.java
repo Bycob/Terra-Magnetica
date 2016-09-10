@@ -42,7 +42,7 @@ public class AnimatedTexture implements Animation, Texture, Cloneable {
 	private int speed;
 	
 	//TEXTURE OPENGL
-	private List<TextureQuad> textures;
+	private List<Texture> textures;
 	private boolean isSameImage = true;
 	private int texID = 0;
 
@@ -52,38 +52,38 @@ public class AnimatedTexture implements Animation, Texture, Cloneable {
 	
 	public AnimatedTexture(int fps) {
 		this.setFPS(fps);
-		this.textures = new ArrayList<TextureQuad>();
+		this.textures = new ArrayList<Texture>();
 	}
 	
-	public AnimatedTexture(int fps, Collection<TextureQuad> textures) {
-		this.textures = new ArrayList<TextureQuad>(textures);
+	public <T extends Texture> AnimatedTexture(int fps, Collection<T> textures) {
+		this.textures = new ArrayList<Texture>(textures);
 		this.setFPS(fps);
 	}
 	
-	public AnimatedTexture(int fps, TextureQuad[] textures) {
-		this.textures = new ArrayList<TextureQuad>();
+	public <T extends Texture> AnimatedTexture(int fps, T[] textures) {
+		this.textures = new ArrayList<Texture>();
 		
-		for (TextureQuad tex : textures) {
+		for (T tex : textures) {
 			this.textures.add(tex);
 		}
 		this.setFPS(fps);
 	}
 	
-	public AnimatedTexture(Collection<TextureQuad> textures) {
+	public <T extends Texture> AnimatedTexture(Collection<T> textures) {
 		this(DEFAULT_FPS, textures);
 	}
 	
-	public AnimatedTexture(TextureQuad[] textures) {
+	public <T extends Texture> AnimatedTexture(T[] textures) {
 		this(DEFAULT_FPS, textures);
 	}
 	
-	public void add(TextureQuad texture) {
+	public void add(Texture texture) {
 		if (texture == null) throw new NullPointerException();
 		this.textures.add(texture);
 		checkAddedTextureID(texture);
 	}
 	
-	public void add(int index, TextureQuad texture) {
+	public void add(int index, Texture texture) {
 		this.textures.add(index, texture);
 		checkAddedTextureID(texture);
 	}
@@ -173,7 +173,7 @@ public class AnimatedTexture implements Animation, Texture, Cloneable {
 	private void checkTextureID() {
 		int texID = -1;
 		
-		for (TextureQuad tex : this.textures) {
+		for (Texture tex : this.textures) {
 			if (texID == -1) {
 				texID = tex.getGLTextureID();
 			}
@@ -240,7 +240,7 @@ public class AnimatedTexture implements Animation, Texture, Cloneable {
 	
 	@Override
 	public int getNbSommets() {
-		return 4;
+		return get().getNbSommets();
 	}
 	
 	@Override
@@ -252,8 +252,8 @@ public class AnimatedTexture implements Animation, Texture, Cloneable {
 			//jamais vu, jamais connu
 		}
 		
-		result.textures = new ArrayList<TextureQuad>();
-		for (TextureQuad tex : this.textures) {
+		result.textures = new ArrayList<Texture>();
+		for (Texture tex : this.textures) {
 			result.textures.add(tex.clone());
 		}
 		

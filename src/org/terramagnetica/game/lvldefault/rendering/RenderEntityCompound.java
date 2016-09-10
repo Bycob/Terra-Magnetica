@@ -28,17 +28,9 @@ import org.terramagnetica.opengl.engine.Renderable;
 
 import net.bynaryscode.util.Util;
 import net.bynaryscode.util.maths.geometric.Vec2f;
+import net.bynaryscode.util.maths.geometric.Vec3d;
 
-/**
- * Cette classe représente un objet de rendu composé de plusieurs
- * autres objets de rendu distincts. Il est utilisé dans le cas où
- * une seule entité possède plusieurs éléments qui ont chacuns leur
- * propre rendu : en effet la métode {@link Entity#getRender()} doit
- * retourner un seul et même objet.
- * @author Louis JEAN
- *
- */
-public class RenderEntityCompound extends RenderObject {
+public class RenderEntityCompound extends Renderable {
 	
 	private List<Entity> entities = new ArrayList<Entity>();
 	
@@ -73,7 +65,7 @@ public class RenderEntityCompound extends RenderObject {
 	}
 
 	@Override
-	public void renderEntity3D(float x, float y, Painter painter) {
+	public void renderAt(Vec3d position, double rotation, Vec3d up, Vec3d scale, Painter painter) {
 		for (Entity e : this.entities) {
 			Vec2f c = e.getPositionf();
 			Renderable r = e.getRender();
@@ -81,34 +73,5 @@ public class RenderEntityCompound extends RenderObject {
 				r.renderAt(c.x, c.y, 0, painter);
 			}
 		}
-	}
-	
-	//TODO [RENDU]
-	
-	/**
-	 * Crée un {@link RenderEntityCompound} composé d'un même rendu d'une case,
-	 * répété un certain nombre de fois. Cela peut servir par exemple pour
-	 * les entités prenant la forme d'un mur à longueur variable.
-	 * <p>L'objet de rendu obtenu sera centré sur les coordonnées de l'entité.
-	 * Lorsqu'il sera dessiné, le rendu répété situé au centre du dessin sera
-	 * représenté aux coordonnées de l'entité.
-	 * @param render - Le rendu à répeter.
-	 * @param size - La quantité de rendu à concatener.
-	 * @param horizontal - {@code true} si les rendus sont rangés de gauche à
-	 * droite, {@code false} s'ils sont rangés de haut en bas.
-	 * @return Un {@link RenderEntityCompound} correspondant à la description ci-dessus.
-	 */
-	public static RenderEntityCompound createCaseArrayRender(RenderEntityTexture render,
-			int size, boolean horizontal) {
-		
-		RenderEntityCompound r = new RenderEntityCompound();
-		
-		int startIndex = - (size / 2);
-		
-		for (int i = startIndex ; i < startIndex + size ; i++) {
-			r.addRender(render.clone().withTranslation(horizontal ? i : 0, horizontal ? 0 : i));
-		}
-		
-		return r;
 	}
 }

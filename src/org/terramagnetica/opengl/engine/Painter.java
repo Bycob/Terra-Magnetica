@@ -31,8 +31,8 @@ import org.lwjgl.opengl.GL11;
 import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
 
 import net.bynaryscode.util.Color4f;
-import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Forme;
+import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class Painter {
@@ -339,7 +339,13 @@ public class Painter {
 		if (oldTexture == null || tex == null || oldTexture.getGLTextureID() != tex.getGLTextureID()) {
 			flush();
 		}
-		this.texture = tex;
+		
+		if (tex instanceof AnimatedTexture) {
+			this.texture = ((AnimatedTexture) tex).get();
+		}
+		else {
+			this.texture = tex;
+		}
 		
 		return oldTexture;
 	}

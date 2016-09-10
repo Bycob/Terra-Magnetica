@@ -21,8 +21,6 @@ package org.terramagnetica.game.lvldefault;
 
 import java.awt.Image;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
 import org.terramagnetica.physics.Hitbox;
 
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
@@ -49,9 +47,7 @@ public class FakeEntity extends Entity {
 	}
 
 	@Override
-	protected RenderObject createRender() {
-		return new RenderEntityNothing();
-	}
+	protected void createRender() {}
 	
 	public void setDimensions(DimensionsInt dims) {
 		if (dims == null) throw new NullPointerException();

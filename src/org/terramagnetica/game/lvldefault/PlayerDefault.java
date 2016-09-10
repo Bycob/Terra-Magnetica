@@ -27,10 +27,8 @@ import org.terramagnetica.game.GameInputBuffer;
 import org.terramagnetica.game.GameInputBuffer.InputKey;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.CameraTrackPoint3D;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.opengl.engine.TextureQuad;
-import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
@@ -62,9 +60,6 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	/** La vitesse des aimants pour tuer d'un seul coup. (case/s) */
 	public static final float CRYSTAL_KILL = 8f;
 	
-	
-	
-	private AnimationManager textures;
 	
 	private ArrayList<Bonus> bonus = new ArrayList<Bonus>();
 	
@@ -118,18 +113,8 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	}
 	
 	@Override
-	public RenderObject createRender() {
-		if (this.textures == null) {
-			this.textures = new AnimationManager();
-			this.textures.addState(TexturesLoader.getAnimatedTexture(GameRessources.ID_PLAYER_STANDING));
-		}
-		return new RenderEntityAnimatedTexture(this.textures).withScale(SCALE, SCALE);
-	}
-	
-	@Override
-	public void reloadRender() {
-		this.textures = null;
-		super.reloadRender();
+	public void createRender() {
+		this.renderManager.putRender("default", new RenderEntityTexture(GameRessources.ID_PLAYER_STANDING).withScaleOffset(SCALE, 0, SCALE));
 	}
 	
 	@Override

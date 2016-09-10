@@ -25,11 +25,8 @@ import java.awt.Image;
 import java.util.List;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.opengl.engine.TextureQuad;
-import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
@@ -42,7 +39,6 @@ public class Aimant extends EntityMoving {
 	private static final long serialVersionUID = 1L;
 	
 	private transient InfluenceMagnetiqueMajeure influence = null;
-	private RenderEntityAnimatedTexture renderAnimation;
 	
 	public Aimant() {
 		super();
@@ -64,24 +60,14 @@ public class Aimant extends EntityMoving {
 	}
 	
 	@Override
-	public RenderEntityCompound createRender() {
-		RenderEntityCompound render = new RenderEntityCompound();
-		render.addRender(new RenderEntityTexture(PATH_COMPOSANTS + TEX_CRYSTAL, (float) Math.PI * (45f / 180f))
-				.withTranslation(0, -0.001f));
-		
-		if (this.renderAnimation == null) {
-			AnimationManager am = new AnimationManager();
-			am.addState(TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM000_DANGEROUS_CRYSTAL));
-			this.renderAnimation = new RenderEntityAnimatedTexture(am);
-		}
+	public void createRender() {
+		this.renderManager.putRender("default", new RenderEntityTexture(PATH_COMPOSANTS + TEX_CRYSTAL, (float) Math.PI * (45f / 180f)).withPositionOffset(0, -0.001f, 0));
+		this.renderManager.putRender("dangerous", new RenderEntityTexture(TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM000_DANGEROUS_CRYSTAL)));
 		updateRenderingDanger();
-		
-		return render;
 	}
 	
 	@Override
 	public void reloadRender() {
-		this.renderAnimation = null;
 		super.reloadRender();
 	}
 	
@@ -90,22 +76,15 @@ public class Aimant extends EntityMoving {
 	 * vitesse du cristal.
 	 */
 	private void updateRenderingDanger() {
-		if (this.render != null) {
-			
-			RenderEntityCompound render = (RenderEntityCompound) this.render;
-			if (this.renderAnimation != null) {
-				
-				if (this.lastHitbox.getSpeedLength() > PlayerDefault.CRYSTAL_KILL) {
-					
-					render.addRender(this.renderAnimation);
-					this.renderAnimation.getAnimationManager().start();
-				}
-				else {
-					
-					render.removeRender(this.renderAnimation);
-					this.renderAnimation.getAnimationManager().stop();
-				}
-			}
+		if (!this.createdRenderManager) {
+			return;
+		}
+		
+		if (this.lastHitbox.getSpeedLength() > PlayerDefault.CRYSTAL_KILL) {
+			this.renderManager.setEffect("dangerous", true);
+		}
+		else {
+			this.renderManager.setEffect("dangerous", false);
 		}
 	}
 

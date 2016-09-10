@@ -29,8 +29,12 @@ public class RenderableObject3D extends Renderable {
 	
 	private ArrayList<Vec3d> points = new ArrayList<Vec3d>();
 	
-	private Primitive primitive = Primitive.QUADS;
-	private Texture texture = new TextureQuad();
+	protected Primitive primitive;
+	protected Texture texture = new TextureQuad();
+	
+	public RenderableObject3D() {
+		this(Primitive.QUADS);
+	}
 	
 	public RenderableObject3D(Primitive primitive) {
 		setPrimitive(primitive);
@@ -41,7 +45,11 @@ public class RenderableObject3D extends Renderable {
 		this.points.add(vertex);
 	}
 	
-	public ArrayList<Vec3d> getVertices() {
+	public void removeAllVertice() {
+		this.points.clear();
+	}
+	
+	public ArrayList<Vec3d> getVertice() {
 		ArrayList<Vec3d> result = new ArrayList<Vec3d>();
 		
 		for (Vec3d vec : this.points) {
@@ -52,6 +60,7 @@ public class RenderableObject3D extends Renderable {
 	}
 	
 	public void setPrimitive(Primitive p) {
+		if (p == null) throw new NullPointerException("p == null");
 		this.primitive = p;
 	}
 	
@@ -95,5 +104,38 @@ public class RenderableObject3D extends Renderable {
 		}
 		
 		painter.popTransformState();
+	}
+	
+	@Override
+	public void start() {
+		if (this.texture instanceof AnimatedTexture) {
+			((AnimatedTexture) this.texture).start();
+		}
+	}
+	
+	@Override
+	public void stop() {
+		if (this.texture instanceof AnimatedTexture) {
+			((AnimatedTexture) this.texture).stop();
+		}
+	}
+	
+	@Override
+	public void reset() {
+		if (this.texture instanceof AnimatedTexture) {
+			((AnimatedTexture) this.texture).reset();
+		}
+	}
+	
+	@Override
+	public RenderableObject3D clone() {
+		RenderableObject3D clone = (RenderableObject3D) super.clone();
+		
+		clone.points = new ArrayList<Vec3d>();
+		for (Vec3d point : this.points) {
+			clone.points.add(point.clone());
+		}
+		
+		return clone;
 	}
 }

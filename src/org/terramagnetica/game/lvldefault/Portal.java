@@ -23,12 +23,12 @@ import java.awt.Image;
 import java.util.HashMap;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
+import org.terramagnetica.opengl.engine.RenderableModel3D;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
+import org.terramagnetica.ressources.ModelLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
@@ -80,33 +80,36 @@ public class Portal extends CaseEntity implements IGoal {
 	}
 	
 	@Override
-	public RenderObject createRender() {
-		//RENDU MODELE
-		//Détermination du modèle
-		String key = modelIDMap.get(this.type);
-		if (key != null && this.skin != null) {
-			if (this.onWall) {
-				return new RenderEntityModel3D(key).withRotation(this.orientation);
+	public void createRender() {
+		if (this.type != null) {
+			//RENDU MODELE
+			//Détermination du modèle
+			String key = modelIDMap.get(this.type);
+			if (key != null && this.skin != null) {
+				if (this.onWall) {
+					this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.get(key)).withRotationOffset(0, 0, this.orientation));
+					return;
+				}
 			}
-		}
-		
-		//RENDU NORMAL (TEXTURÉ)
-		//Détermination de la texture du rendu.
-		String skin = this.skin;
-		
-		if ("".equals(skin)) {
-			skin = this.onWall ? GameRessources.ID_EXIT0 : GameRessources.ID_PORTAL;
-		}
-		
-		//Détermination du rendu.
-		if (this.onWall) {
-			return new RenderEntityTexture(skin)
-				.withRotation(this.orientation)
-				.withTranslation(this.translationX, this.translationY)
-				.withScale(this.scaleX, this.scaleY);
-		}
-		else {
-			return new RenderEntityTexture(skin).setOnGround(true);
+			
+			//RENDU NORMAL (TEXTURÉ)
+			//Détermination de la texture du rendu.
+			String skin = this.skin;
+			
+			if ("".equals(skin)) {
+				skin = this.onWall ? GameRessources.ID_EXIT0 : GameRessources.ID_PORTAL;
+			}
+			
+			//Détermination du rendu.
+			if (this.onWall) {
+				this.renderManager.putRender("default", new RenderEntityTexture(skin)
+					.withRotationOffset(0, 0, this.orientation)
+					.withPositionOffset(this.translationX, this.translationY, 0)
+					.withScaleOffset(this.scaleX, 0, this.scaleY));
+			}
+			else {
+				this.renderManager.putRender("default", new RenderEntityTexture(skin).setOnGround(true));
+			}
 		}
 	}
 	
@@ -242,9 +245,9 @@ public class Portal extends CaseEntity implements IGoal {
 		//Mise à jour du rendu
 		if (this.type == null) {
 			this.type = game.getDecorType();
-			this.recreateRender();
+			this.createRender();
 			
-			if (this.getRender() instanceof RenderEntityModel3D) {
+			if (this.renderManager.getRender() instanceof RenderableModel3D) {
 				Vec2i c = this.getCasePosition();
 				game.getLandscapeAt(c.x, c.y).setUnrendered(true);
 			}

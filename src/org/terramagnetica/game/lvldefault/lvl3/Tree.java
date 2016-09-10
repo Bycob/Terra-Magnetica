@@ -22,8 +22,8 @@ package org.terramagnetica.game.lvldefault.lvl3;
 import java.awt.Image;
 
 import org.terramagnetica.game.lvldefault.Entity;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
+import org.terramagnetica.opengl.engine.RenderableModel3D;
+import org.terramagnetica.ressources.ModelLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
@@ -50,8 +50,8 @@ public class Tree extends Entity {
 	}
 
 	@Override
-	protected RenderObject createRender() {
-		return new RenderEntityModel3D(this.treeModelID);
+	protected void createRender() {
+		this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.get(this.treeModelID)));
 	}
 	
 	@Override

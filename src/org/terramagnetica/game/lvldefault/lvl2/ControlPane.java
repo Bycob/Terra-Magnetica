@@ -26,11 +26,11 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.IGoal;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
+import org.terramagnetica.opengl.engine.RenderableModel3D;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxPolygon;
 import org.terramagnetica.ressources.ImagesLoader;
+import org.terramagnetica.ressources.ModelLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
@@ -60,7 +60,7 @@ public class ControlPane extends CaseEntity implements BarrierStateListener, IGo
 	public void setOrientation(float orientation) {
 		this.orientation = orientation;
 		recreateHitbox();
-		recreateRender();
+		this.reloadRender();
 	}
 	
 	@Override
@@ -103,8 +103,9 @@ public class ControlPane extends CaseEntity implements BarrierStateListener, IGo
 	}
 	
 	@Override
-	public RenderObject createRender() {
-		return new RenderEntityModel3D(GameRessources.PATH_MODEL_LVL2_CONTROLPANE).withRotation(this.orientation + 180);
+	public void createRender() {
+		this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.get(GameRessources.PATH_MODEL_LVL2_CONTROLPANE))
+				.withRotationOffset(0, 0, this.orientation + 180));
 	}
 	
 	/** Vaut true si le joueur a pressé la touche "parler" et ne l'a pas

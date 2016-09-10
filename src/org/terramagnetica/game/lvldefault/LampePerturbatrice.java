@@ -22,8 +22,8 @@ package org.terramagnetica.game.lvldefault;
 import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
+import org.terramagnetica.opengl.engine.Renderable;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.physics.Force;
 import org.terramagnetica.physics.Hitbox;
@@ -61,7 +61,6 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	private float normalMoveOffset = 0;
 	
 	//RENDUS
-	private RenderEntityTexture renderMainIndicator;
 	private float indicatorDirection = 0;
 
 	public LampePerturbatrice() {
@@ -83,32 +82,28 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	}
 	
 	@Override
-	protected RenderEntityCompound createRender() {
-		RenderEntityCompound render = new RenderEntityCompound();
-		
+	protected void createRender() {
 		//image principale
-		String id = this.state ? GameRessources.ID_LAMP_PERTURBATRICE_ON : GameRessources.ID_LAMP_PERTURBATRICE_OFF;
-		render.addRender(new RenderEntityTexture(id));
+		this.renderManager.putRender("on", new RenderEntityTexture(GameRessources.ID_LAMP_PERTURBATRICE_ON));
+		this.renderManager.putRender("off", new RenderEntityTexture(GameRessources.ID_LAMP_PERTURBATRICE_OFF));
 		
-		//indicateurs de polarité
-		Color4f color = this.state ? new Color4f(1f, 0f, 0f) : new Color4f(1f, 1f, 0f);
-		
-		render.addRender(this.renderMainIndicator = new RenderEntityTexture(GameRessources.ID_MAGNETIC_FIELD_INDICATOR)
-				.withElevation(0.25f)
-				.withColor(color));
-		this.updateIndicatorTranslation();
-		
-		return render;
+		//indicateur de polarité
+		this.renderManager.putRender("indicator", new RenderEntityTexture(GameRessources.ID_MAGNETIC_FIELD_INDICATOR));
+		this.renderManager.setEffect("indicator", true);
+		this.updateIndicator();
 	}
 	
 	/** Met à jour la position du rendu de l'indicateur de direction
 	 * de la lampe  */
-	private void updateIndicatorTranslation() {
+	private void updateIndicator() {
+		Renderable indicator = this.renderManager.getRender("indicator");
+		
 		float dir = indicatorDirection;
 		float tX = (float) Math.cos(dir) * 0.7f;
 		float tY = (float) Math.sin(dir) * 0.5f;
+		Color4f color = this.state ? new Color4f(1f, 0f, 0f) : new Color4f(1f, 1f, 0f);
 		
-		if (this.renderMainIndicator != null) this.renderMainIndicator.setTranslation(tX, tY);
+		indicator.withColor(color).setPositionOffset(tX, tY, 0.25f);
 	}
 	
 	@Override
@@ -191,8 +186,8 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 		
 		//mise à jour du rendu
 		if (this.didStateChanged) {
-			recreateRender();
+			this.renderManager.render(this.state ? "on" : "off");
 		}
-		updateIndicatorTranslation();
+		updateIndicator();
 	}
 }

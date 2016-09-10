@@ -23,11 +23,11 @@ import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityModel3D;
+import org.terramagnetica.opengl.engine.RenderableModel3D;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.physics.HitboxPolygon;
 import org.terramagnetica.ressources.ImagesLoader;
+import org.terramagnetica.ressources.ModelLoader;
 import org.terramagnetica.ressources.TexturesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
@@ -60,10 +60,10 @@ public class Rock extends CaseEntity {
 	}
 	
 	@Override
-	protected RenderObject createRender() {
-		return new RenderEntityModel3D(GameRessources.PATH_MODEL_LVL2_ROCKS)
-				.withRotation(90)
-				.withTranslation(0, 0, this.elevation);
+	protected void createRender() {
+		this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.get(GameRessources.PATH_MODEL_LVL2_ROCKS))
+				.withRotationOffset(0, 0, 90)
+				.withPositionOffset(0, 0, this.elevation));
 	}
 	
 	// LOGIQUE / PHYSIQUE
@@ -80,9 +80,7 @@ public class Rock extends CaseEntity {
 	
 	public void setElevation(float elevation) {
 		this.elevation = elevation;
-		if (this.render != null) {
-			((RenderEntityModel3D) this.render).setTranslation(0, 0, this.elevation);
-		}
+		this.renderManager.getRender().setPositionOffset(0, 0, this.elevation);
 	}
 	
 	@Override

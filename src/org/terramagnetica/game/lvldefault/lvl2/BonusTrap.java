@@ -25,11 +25,9 @@ import org.terramagnetica.game.GameInputBuffer.InputKey;
 import org.terramagnetica.game.lvldefault.Bonus;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.PlayerDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
 
-import net.bynaryscode.util.maths.geometric.Vec2i;
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
+import net.bynaryscode.util.maths.geometric.Vec2i;
 
 /** Cet objet attaché au joueur contient le nombre de piège que le joueur
  * a ramassé et a à sa disposition. Il hérite de la classe {@link Bonus},
@@ -103,6 +101,6 @@ public class BonusTrap extends Bonus {
 	
 	
 	@Override public Image getImage() {return null;}
-	@Override protected RenderObject createRender() {return new RenderEntityNothing();}
+	@Override protected void createRender() {}
 	@Override public DimensionsInt getDimensions() {return new DimensionsInt();}
 }

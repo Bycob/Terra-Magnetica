@@ -19,16 +19,14 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game.lvldefault.lvl2;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.opengl.engine.Painter;
-import org.terramagnetica.opengl.engine.Transform;
-import org.terramagnetica.opengl.miscellaneous.AnimationManager;
+import org.terramagnetica.opengl.engine.Texture;
 
 import net.bynaryscode.util.Color4f;
-import net.bynaryscode.util.maths.geometric.Vec2f;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
-public class RenderAnimationEndOfWall extends RenderEntityAnimatedTexture {
+public class RenderAnimationEndOfWall extends RenderEntityTexture {
 	
 	private boolean left;
 	
@@ -43,31 +41,25 @@ public class RenderAnimationEndOfWall extends RenderEntityAnimatedTexture {
 	 * mur, {@code false} s'il dessine l'extrémité droite.
 	 * @param am - voir {@link RenderEntityAnimatedTexture}.
 	 */
-	public RenderAnimationEndOfWall(boolean left, AnimationManager am) {
-		super(am);
+	public RenderAnimationEndOfWall(boolean left, Texture texture) {
+		super(texture);
 		
 		this.left = left;
 	}
 	
 	@Override
-	public void renderEntity3D(float x, float y, Painter painter) {
-		updateTexture();
+	public void renderAt(Vec3d position, double rotation, Vec3d up, Vec3d scale, Painter painter) {
+		updateAnimation();
 		
 		painter.setPrimitive(Painter.Primitive.QUADS);
 		painter.setTexture(this.texture);
-		Color4f color = this.getColor() == null ? new Color4f(1f, 1f, 1f, 1f) : this.getColor();
+		Color4f color = this.getColor();
 		
-		//Si la matrice n'est pas modifiée, pas besoin de vider le tampon du Painter
-		Vec2f translation = this.getTranslation();
-		x += translation.x;
-		y += translation.y;
-		
-		if (this.getRotation() != 0) {//rotation du rendu.
-			painter.addTransform(Transform.newRotation(this.getRotation(), new Vec3d(0, 0, 1), new Vec3d(x, -y)));
-		}
+		painter.pushTransformState();
+		applyTransforms(position, rotation, up, scale, painter);
 		
 		int i = 0;
-		for (Vec3d vertex : this.vertices) {
+		for (Vec3d vertex : this.getVertice()) {
 			//application de la couleur.
 			boolean leftSide = i == 0 || i == 3;
 			if ((leftSide && this.left) || (!leftSide && !this.left)) {
@@ -77,11 +69,11 @@ public class RenderAnimationEndOfWall extends RenderEntityAnimatedTexture {
 				painter.setColor(color);
 			}
 			
-			Vec3d v = vertex.clone();
-			v.translate(x, - y, this.getElevation());
-			painter.addVertex(v);
+			painter.addVertex(vertex);
 			
 			i++;
 		}
+		
+		painter.popTransformState();
 	}
 }

@@ -29,10 +29,17 @@ import java.util.List;
  */
 public class GlobalAnimationManager {
 	
+	private boolean state;
 	private List<Animation> list = new ArrayList<Animation>();
 	
 	public void add(Animation animation) {
 		this.list.add(animation);
+		if (state) {
+			animation.start();
+		}
+		else {
+			animation.stop();
+		}
 	}
 	
 	public boolean remove(Animation animation) {

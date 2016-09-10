@@ -29,10 +29,7 @@ import org.terramagnetica.game.lvldefault.CaseEntity;
 import org.terramagnetica.game.lvldefault.Entity;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.PlayerDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
-import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.TexturesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
@@ -75,22 +72,12 @@ public class Trap extends CaseEntity {
 	}
 	
 	@Override
-	protected RenderObject createRender() {
-		if (!this.active) {
-			AnimationManager animation = new AnimationManager(
-					TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM004_TRAP_OFF));
-			
-			RenderEntityAnimatedTexture render = new RenderEntityAnimatedTexture(animation);
-			render.setOnGround(true);
-	
-			animation.start();
-			return render;
-		}
-		else {
-			RenderEntityTexture render = new RenderEntityTexture(GameRessources.PATH_ANIM004_TRAP_OFF + GameRessources.TEX_TRAP_ACTIVE);
-			render.setOnGround(true);
-			return render;
-		}
+	protected void createRender() {
+		this.renderManager.putRender("off", 
+				new RenderEntityTexture(TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM004_TRAP_OFF)).setOnGround(true));
+		
+		this.renderManager.putRender("active",
+				new RenderEntityTexture(GameRessources.PATH_ANIM004_TRAP_OFF + GameRessources.TEX_TRAP_ACTIVE).setOnGround(true));
 	}
 	
 	@Override
@@ -105,7 +92,7 @@ public class Trap extends CaseEntity {
 	
 	protected void setActive(boolean active) {
 		this.active = active;
-		this.recreateRender();
+		this.renderManager.render(active ? "active" : "off");
 	}
 	
 	/** Désactive le piège pour quelques secondes. Le piège ainsi désactivé ne

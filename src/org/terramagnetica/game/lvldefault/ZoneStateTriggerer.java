@@ -21,8 +21,6 @@ package org.terramagnetica.game.lvldefault;
 
 import java.awt.Image;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
@@ -58,9 +56,7 @@ public class ZoneStateTriggerer extends CaseEntity {
 	}
 	
 	@Override
-	public RenderObject createRender() {
-		return new RenderEntityNothing();
-	}
+	public void createRender() {}
 	
 	@Override
 	public boolean isMapVisible() {

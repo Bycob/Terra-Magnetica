@@ -30,6 +30,9 @@ import org.terramagnetica.game.lvldefault.MapLandscape;
 import org.terramagnetica.game.lvldefault.MapUpdater;
 import org.terramagnetica.opengl.engine.CameraFrustum;
 import org.terramagnetica.opengl.engine.Painter;
+import org.terramagnetica.opengl.engine.Renderable;
+import org.terramagnetica.opengl.engine.RenderableCompound;
+import org.terramagnetica.opengl.engine.RenderableModel3D;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.MathUtil;
@@ -38,16 +41,16 @@ import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class RenderEntities extends RenderGameDefaultElement {
 	
-	private static HashMap<Class<? extends RenderObject>, Integer> priorityOrder =
-			new HashMap<Class<? extends RenderObject>, Integer>();
+	private static HashMap<Class<? extends Renderable>, Integer> priorityOrder =
+			new HashMap<Class<? extends Renderable>, Integer>();
 	
 	static {
 		int i = -1;
-		priorityOrder.put(RenderEntityModel3D.class, ++i);
+		priorityOrder.put(RenderableModel3D.class, ++i);
 		priorityOrder.put(RenderEntityTexture.class, ++i);
 	}
 	
-	private static int getPriorityOrder(Class<? extends RenderObject> clazz) {
+	private static int getPriorityOrder(Class<? extends Renderable> clazz) {
 		Integer value = priorityOrder.get(clazz);
 		return value == null ? -1 : value;
 	}
@@ -60,9 +63,9 @@ public class RenderEntities extends RenderGameDefaultElement {
 		private float x;
 		private float y;
 		
-		private RenderObject render;
+		private Renderable render;
 		
-		private RenderEntityUnit(RenderObject render, float x, float y) {
+		private RenderEntityUnit(Renderable render, float x, float y) {
 			this.render = render;
 			this.x = x;
 			this.y = y;
@@ -70,7 +73,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 		
 		public void render(Painter painter) {
 			if (isInFrustum(painter)) {
-				this.render.renderEntity3D(this.x, this.y, painter);
+				this.render.renderAt(this.x, this.y, 0, painter);
 			}
 		}
 
@@ -99,12 +102,12 @@ public class RenderEntities extends RenderGameDefaultElement {
 				if (radDif != 0) return radDif;
 			}
 			
-			return (int) Math.signum(thisY - oY);
+			return (int) Math.signum(oY - thisY);
 		}
 		
 		private boolean isInFrustum(Painter painter) {
 			CameraFrustum camFrustum = RenderEntities.this.frustum;
-			Vec3d[] points = this.render.getRenderBoundingBox(this.x, this.y).getPoints();
+			Vec3d[] points = this.render.getRenderBoundingBox(this.x, this.y, 0).getPoints();
 			for (Vec3d p : points) {
 				if (camFrustum.containsPoint(p)) {
 					return true;
@@ -180,30 +183,31 @@ public class RenderEntities extends RenderGameDefaultElement {
 	
 	private void addRenderFromEntity(Entity e, List<RenderEntityUnit> renderList) {
 		Vec2f loc = e.getPositionf();
-		RenderObject render = e.getRender();
+		Renderable render = e.getRender();
 		
-		if (render instanceof RenderEntityCompound) {
-			addRendersFromCompoundOne((RenderEntityCompound) render, renderList, loc);
+		if (render instanceof RenderableCompound) {
+			addRendersFromCompoundOne((RenderableCompound) render, renderList, loc);
+		}
+		else if (render instanceof RenderEntityCompound) {
+			for (Entity entity : ((RenderEntityCompound) render).getEntitiesToRender()) {
+				addRenderFromEntity(entity, renderList);
+			}
 		}
 		else {
-			renderList.add(new RenderEntityUnit(render, loc.x, loc.y));
+			renderList.add(new RenderEntityUnit(render, loc.x, - loc.y));
 		}
 	}
 	
-	private void addRendersFromCompoundOne(RenderEntityCompound render,
+	private void addRendersFromCompoundOne(RenderableCompound render,
 			List<RenderEntityUnit> renderList, Vec2f loc) {
 		
-		for (RenderObject r : render.getRenders()) {
-			if (r instanceof RenderEntityCompound) {
-				addRendersFromCompoundOne((RenderEntityCompound) r, renderList, loc);
+		for (Renderable r : render.getRenders()) {
+			if (r instanceof RenderableCompound) {
+				addRendersFromCompoundOne((RenderableCompound) r, renderList, loc);
 			}
 			else {
-				renderList.add(new RenderEntityUnit(r, loc.x, loc.y));
+				renderList.add(new RenderEntityUnit(r, loc.x, - loc.y));
 			}
-		}
-
-		for (Entity e0 : render.getEntitiesToRender()) {
-			addRenderFromEntity(e0, renderList);
 		}
 	}
 }

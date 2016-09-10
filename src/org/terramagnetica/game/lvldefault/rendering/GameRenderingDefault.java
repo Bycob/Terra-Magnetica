@@ -136,6 +136,10 @@ public class GameRenderingDefault extends GameRendering {
 		this.trackPoint = null;
 	}
 	
+	public void updateAnimations() {
+		
+	}
+	
 	@Override
 	public void pause() {
 		super.pause();

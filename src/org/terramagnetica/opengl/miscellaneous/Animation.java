@@ -22,11 +22,14 @@ package org.terramagnetica.opengl.miscellaneous;
 public interface Animation {
 	
 	/** Démarre l'animation. C'est à dire, l'animation passe d'un
-	 * état fixe à un état mobile, sans être réinitialisé. */
+	 * état fixe à un état mobile, sans être réinitialisé.<p>
+	 * Si l'animation était déjà lancée, cette méthode n'a aucun effet. */
 	void start();
 	
 	/** Arrête l'animation. Cela consiste tout simplement à la mettre
-	 * en pause. */
+	 * en pause.
+	 * <p>Si l'animation était déjà arrêtée alors cette méthode n'aura aucun
+	 * effet. */
 	void stop();
 	
 	/** Réinitialise l'animation. */

@@ -71,7 +71,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	//RENDU
 	
 	protected RenderManager renderManager = new RenderManager();
-	private boolean createdRenderManager = false;
+	protected boolean createdRenderManager = false;
 	/** Indique l'apparence de l'entité (sa texture). Si c'est une chaine de
 	 * caractère vide, la texture par défaut sera choisie.
 	 * <p>Les skins ne sont pas gérés par la classe {@link Entity}, il
@@ -207,6 +207,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * le rendu, ce qui permet de recharger les textures lorsqu'elles
 	 * ont été supprimées. */
 	public void reloadRender() {
+		this.renderManager = new RenderManager();
 		this.createdRenderManager = false;
 	}
 	
@@ -214,11 +215,14 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * l'écran. Par défaut, cet objet est stocké dans la classe
 	 * Entity sous le non de {@link Entity#render}. */
 	public Renderable getRender() {
-		if (!this.createdRenderManager) createRender();
-		return this.renderManager.getRender();
+		return this.getRenderManager().getRender();
 	}
 	
 	public RenderManager getRenderManager() {
+		if (!this.createdRenderManager) {
+			createRender();
+			this.createdRenderManager = true;
+		}
 		return this.renderManager;
 	}
 	

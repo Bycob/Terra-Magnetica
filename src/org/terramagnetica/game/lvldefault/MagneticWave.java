@@ -69,10 +69,10 @@ public class MagneticWave extends EntityMoving {
 	}
 	
 	@Override
-	protected RenderEntityTexture createRender() {
+	protected void createRender() {
 		RenderEntityTexture render = new RenderEntityTexture(GameRessources.ID_WAVES).setOnGround(true);
-		render.setRotation((int) Math.toDegrees(Boussole.getPointCardinalPourAngle(this.getDirection() + Math.PI /2).getOrientation()));
-		return render;
+		render.setRotationOffset(0, 0, (int) Math.toDegrees(Boussole.getPointCardinalPourAngle(this.getDirection() + Math.PI /2).getOrientation()));
+		this.renderManager.putRender("default", render);
 	}
 
 	@Override

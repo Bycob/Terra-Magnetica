@@ -24,12 +24,8 @@ import static org.terramagnetica.game.GameRessources.*;
 import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityCompound;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
 import org.terramagnetica.opengl.engine.TextureQuad;
-import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.physics.Force;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
@@ -59,11 +55,6 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	 * et "false" sinon. 
 	 * @see LampState#setPermanentState(boolean)*/
 	private boolean permanentMode_On = false;
-	/** Les ondes indiquant que les lampes restent rouges et ne s'éteignent
-	 * pas. Ce rendu s'ajoute au rendu de la lampe lorsque l'état de la lampe
-	 * est permanent.
-	 * @see LampState#setPermanentState(boolean)*/
-	private RenderEntityAnimatedTexture renderPermanentMode = null;
 	
 	public Lampe(){
 		super();
@@ -84,36 +75,15 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	}
 	
 	@Override
-	public RenderObject createRender() {
+	public void createRender() {
 		//RENDU DE LA LAMPE
-		RenderEntityTexture renderLamp;
-		if (this.state) {
-			renderLamp =  new RenderEntityTexture(PATH_COMPOSANTS + TEX_LAMP_OUT);
-		}
-		else {
-			renderLamp =  new RenderEntityTexture(PATH_COMPOSANTS + TEX_LAMP_IN);
-		}
+		this.renderManager.putRender("on", new RenderEntityTexture(PATH_COMPOSANTS + TEX_LAMP_OUT));
+		this.renderManager.putRender("off", new RenderEntityTexture(PATH_COMPOSANTS + TEX_LAMP_IN));
 		
 		//Rendu des ondes si la lampe est activée en mode permanent.
-		if (this.renderPermanentMode == null) {
-			AnimationManager am = new AnimationManager(
-					TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM003_PERMANENT_MODE_LAMP));
-			
-			this.renderPermanentMode = new RenderEntityAnimatedTexture(am);
-			this.renderPermanentMode.setScale(1.25, 1.25);
-			this.renderPermanentMode.setOnGround(true);
-			
-			am.start();
-		}
-		
-		if (this.permanentMode_On) {
-			RenderEntityCompound render = new RenderEntityCompound();
-			render.addRender(renderLamp);
-			render.addRender(this.renderPermanentMode);
-			return render;
-		}
-		
-		return renderLamp;
+		this.renderManager.putRender("permanentMode", 
+				new RenderEntityTexture(TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM003_PERMANENT_MODE_LAMP))
+					.setOnGround(true).withScaleOffset(1.25, 1.25, 0));
 	}
 	
 	@Override
@@ -173,8 +143,10 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 		boolean old_permanentMode_On = this.permanentMode_On;
 		this.permanentMode_On = game.getAspect(LampState.class).isLampStatePermanent();
 		
+		//Mise à jour du rendu.
 		if (this.didStateChanged || old_permanentMode_On != this.permanentMode_On) {
-			recreateRender();
+			this.renderManager.render(this.state ? "on" : "off");
+			this.renderManager.setEffect("permanentMode", this.permanentMode_On);
 		}
 	}
 	

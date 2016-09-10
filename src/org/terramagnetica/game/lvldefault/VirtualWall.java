@@ -24,9 +24,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
-
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
 
 /**
@@ -74,7 +71,5 @@ public class VirtualWall extends CaseEntity {
 	}
 	
 	@Override
-	protected RenderObject createRender() {
-		return new RenderEntityNothing();
-	}
+	protected void createRender() {}
 }
