@@ -26,7 +26,7 @@ public class RenderManager implements Animation {
 	private ArrayList<RenderEntry> effects = new ArrayList<RenderEntry>();
 	
 	//Animations
-	private boolean running;
+	private boolean running = true;
 	
 	public RenderManager() {
 		
@@ -99,7 +99,12 @@ public class RenderManager implements Animation {
 		RenderEntry rendered = getEntryChecked(id);
 		
 		if (rendered != this.currentEntry) {
-			if (!hasEffect(this.currentEntry.ID)) unrender(this.currentEntry);
+			//Désactivation du rendu précédent
+			if (this.currentEntry != null && !hasEffect(this.currentEntry.ID)) {
+				unrender(this.currentEntry);
+			}
+			
+			//Activation du nouveau rendu.
 			this.currentEntry = rendered;
 			render(this.currentEntry);
 		}

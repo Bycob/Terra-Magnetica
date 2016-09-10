@@ -26,7 +26,6 @@ import org.terramagnetica.game.lvldefault.Entity;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.InterruptionPhasesLvlDefault;
 import org.terramagnetica.opengl.engine.AnimatedTexture;
-import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.ressources.TexturesLoader;
 
 import net.bynaryscode.util.Color4f;
@@ -60,30 +59,25 @@ public class InterruptionChangeState extends InterruptionPhasesLvlDefault {
 		ArrayList<Portal> portalList = extractPortals(game, this.handle.getColor());
 		for (Portal p : portalList) {
 			addPhase(new PhaseScrolling(p.getPositionf(), game));
-			
 			addPhase(new PhasePause(500));
 			
 			final Portal param = p;
 			//La phase d'animation du portail.
 			addPhase(new Phase() {
-				
-				private AnimationManager animater;
 				private int duration = 0;
 				
 				@Override
 				public void onStart() {
-					AnimatedTexture portalTex = TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM002_OPENING_PORTAL);
-					
-					this.animater = param.setAnimatedRender(portalTex);
-					this.animater.start();
+					param.getRenderManager().render(Portal.PORTAL_OPENING);
 					
 					//Si on enlève pas une image l'animation boucle...
-					this.duration = portalTex.getDuration() - 1000 / portalTex.getFPS();
+					AnimatedTexture portalTex = TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM002_OPENING_PORTAL);
+					this.duration = portalTex.getDuration();
 				}
 				
 				@Override
 				public void onEnd() {
-					param.setRender(TexturesLoader.getQuad(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_ON));
+					param.getRenderManager().render(Portal.PORTAL_ON);
 				}
 				
 				@Override

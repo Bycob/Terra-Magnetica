@@ -24,14 +24,8 @@ import java.awt.Image;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityAnimatedTexture;
-import org.terramagnetica.game.lvldefault.rendering.RenderEntityNothing;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
-import org.terramagnetica.game.lvldefault.rendering.RenderObject;
-import org.terramagnetica.opengl.engine.AnimatedTexture;
 import org.terramagnetica.opengl.engine.Texture;
-import org.terramagnetica.opengl.engine.TextureQuad;
-import org.terramagnetica.opengl.miscellaneous.AnimationManager;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.TexturesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
@@ -52,10 +46,10 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	
 	private Color4f color;
 	
-	/**
-	 * {@code true} si une mise à jour du rendu est nécessaire.
-	 */
-	private boolean updateRender = false;
+	public static final String PORTAL_OFF = "off";
+	public static final String PORTAL_OPENING = "opening";
+	public static final String PORTAL_ON = "on";
+	
 	private Texture texture = TexturesLoader.getQuad(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF);
 	
 	public Portal() {
@@ -65,8 +59,7 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	public Portal(Color4f color) {
 		this.color = color;
 		if (isColorNeutral()) {
-			this.state = true;
-			this.updateRender = true;
+			this.setState(true);
 		}
 		
 		this.hitbox.setSolid(false);
@@ -74,9 +67,8 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	
 	@Override
 	public void setState(boolean state) {
-		if (this.isColorNeutral()) return;
 		this.state = !state;
-		this.updateRender = true;
+		if (this.createdRenderManager) this.renderManager.render(this.state ? PORTAL_ON : PORTAL_OFF);
 	}
 	
 	@Override
@@ -99,46 +91,11 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 		return ImagesLoader.get(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_ON);
 	}
 	
-	/**
-	 * Définit la texture de cet objet et raffraichi le rendu.
-	 * @param tex - La nouvelle texture de cet objet.
-	 */
-	public void setRender(Texture tex) {
-		if (tex instanceof AnimatedTexture) {
-			System.err.println("Portal.setAnimatedRender(...) est conseillé avec les animations.");
-			setAnimatedRender((AnimatedTexture) tex);
-			return;
-		}
-		this.texture = tex;
-		recreateRender();
-	}
-	
-	/**
-	 * Définit une animation comme texture du portail.
-	 * @param tex
-	 * @return L'objet {@link AnimationManager} qui executera
-	 * l'animation.
-	 * <p>Attention, l'animation n'est pas démarrée automatiquement.
-	 */
-	public AnimationManager setAnimatedRender(AnimatedTexture tex) {
-		this.texture = tex;
-		this.animater = new AnimationManager(tex);
-		recreateRender();
-		return this.animater;
-	}
-	
 	@Override
-	protected RenderObject createRender() {
-		if (this.texture instanceof TextureQuad) {
-			return new RenderEntityTexture((TextureQuad) this.texture).setOnGround(true);
-		}
-		else if (this.texture instanceof AnimatedTexture) {
-			RenderEntityAnimatedTexture render = new RenderEntityAnimatedTexture(this.animater);
-			render.setOnGround(true);
-			return render;
-		}
-		
-		return new RenderEntityNothing();
+	protected void createRender() {
+		this.renderManager.putRender(PORTAL_OFF, new RenderEntityTexture(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF).setOnGround(true));
+		this.renderManager.putRender(PORTAL_ON, new RenderEntityTexture(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_ON).setOnGround(true));
+		this.renderManager.putRender(PORTAL_OPENING, new RenderEntityTexture(GameRessources.PATH_ANIM002_OPENING_PORTAL).setOnGround(true));
 	}
 
 	@Override
@@ -148,22 +105,10 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	
 	@Override
 	public void updateLogic(long dT, GamePlayingDefault game) {
-		updateRender();
-		
 		if (this.state && getDistancef(game.getPlayer()) < 0.25f) {
 			Vec2i c = game.getAspect(ControlPaneSystemManager.class).getCenterOfRoom1();
 			game.getPlayer().setCasePosition(c.x, c.y);
 		}
-	}
-	
-	private void updateRender() {
-		if (!this.updateRender) return;
-		
-		String id = this.state ? GameRessources.TEX_PORTAL_ON : GameRessources.TEX_PORTAL_OFF;
-		this.texture = TexturesLoader.getQuad(GameRessources.PATH_LVL2_TEXTURES + id);
-		this.recreateRender();
-		
-		this.updateRender = false;
 	}
 	
 	@Override

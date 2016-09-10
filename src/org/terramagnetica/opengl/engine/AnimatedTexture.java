@@ -108,9 +108,9 @@ public class AnimatedTexture implements Animation, Texture, Cloneable {
 		return 1000 / this.speed;
 	}
 	
-	/** Donne la durée d'un tour complet de l'animation en ms. */
+	/** Donne la durée qui s'écoule de la première image à la dernière image, en ms. */
 	public int getDuration() {
-		return this.speed * this.textures.size();
+		return this.speed * (this.textures.size() - 1);
 	}
 	
 	
