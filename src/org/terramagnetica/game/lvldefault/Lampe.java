@@ -84,6 +84,8 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 		this.renderManager.putRender("permanentMode", 
 				new RenderEntityTexture(TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM003_PERMANENT_MODE_LAMP))
 					.setOnGround(true).withScaleOffset(1.25, 1.25, 0));
+		
+		this.renderManager.render(this.state ? "on" : "off");
 	}
 	
 	@Override

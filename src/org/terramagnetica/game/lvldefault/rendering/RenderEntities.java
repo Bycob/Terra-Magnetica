@@ -174,7 +174,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 		} catch (IllegalArgumentException e) {
 			/* Problème de contrat de comparaison : provient de la méthode RenderEntityUnit.compareTo().
 			 * Voir la javadoc de compareTo() pour plus de détail.
-			 * Il est possible que l'animation du joueur bugge. */
+			 * Il est possible que l'animation du joueur bug. */
 			e.printStackTrace();
 		}
 		
