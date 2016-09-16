@@ -117,7 +117,7 @@ public class ModuleLevelDefault extends CreatorModule {
 		this.properties.getProperty(VirtualWall.class).setName("Mur virtuel").setPaintingListener(new PaintEntityListener());
 		this.properties.getProperty(Portal.class).setName("Portail").setPaintingListener(new PaintPortalEntityListener()).setPropertyPanel(new PanelPortalProperties());
 		this.properties.getProperty(Trap.class).setName("Piège").setFilter(new PinceauFilterLevelDefault(null, 2)).setPaintingListener(new PaintEntityListener());
-		this.properties.getProperty(Rock.class).setName("Rocher").setFilter(new PinceauFilterLevelDefault(null, 2)).setPaintingListener(new PaintEntityListener());
+		this.properties.getProperty(Rock.class).setName("Rocher").setFilter(new PinceauFilterLevelDefault(DecorType.GROTTE, 0)).setPaintingListener(new PaintEntityListener());
 		this.properties.getProperty(TheCreature.class).setName("Créature").setFilter(new PinceauFilterLevelDefault(null, 2)).setPaintingListener(new PaintEntityListener()).setPropertyPanel(new PanelCreatureProperties());
 		this.properties.getProperty(Triggerer.class).setName("Déclencheur").setPaintingListener(new PaintTriggererListener());
 		this.properties.getProperty(Mark.class).setName("Marqueur").setPaintingListener(new PaintEntityListener());
@@ -381,7 +381,10 @@ public class ModuleLevelDefault extends CreatorModule {
 		this.actualRoom = room;
 		this.paint.setRoom(this.actualRoom);
 		this.view.setRoom(this.actualRoom);
-
+		
+		//Mise à jour des ressources
+		ImagesLoader.loadTextureSet(GameRessources.getTextureSetByLandscape(this.actualRoom.getDecorType()));
+		
 		//Mise à jour des filtres
 		if (this.theLevel != null) {
 			this.entityMenu.setFilter(new PinceauFilterLevelDefault(this.actualRoom.getDecorType(), this.theLevel.levelID));

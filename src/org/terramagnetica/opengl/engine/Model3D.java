@@ -27,6 +27,7 @@ import org.terramagnetica.opengl.engine.Painter.Primitive;
 
 import net.bynaryscode.util.FileFormatException;
 import net.bynaryscode.util.Util;
+import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
 import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
@@ -339,7 +340,7 @@ public class Model3D {
 			this.facesCount++;
 		}
 		
-		this.shouldRecompile = true;
+		onModelEdit();
 	}
 	
 	/** vérifie si le sommet de face indiqué est valide */
@@ -358,6 +359,8 @@ public class Model3D {
 	public void addChild(Model3D child) {
 		if (child == null) return;
 		this.children.add(child);
+		
+		onModelEdit();
 	}
 	
 	public List<Model3D> getChildren() {
@@ -370,6 +373,8 @@ public class Model3D {
 	
 	public void setTextureID(int id) {
 		this.material.setTextureID(id);
+		
+		this.onModelEdit();
 	}
 	
 	public int getTextureID() {
@@ -382,6 +387,32 @@ public class Model3D {
 	
 	public boolean isEmpty() {
 		return this.faces.isEmpty();
+	}
+	
+	private AxisAlignedBox3D boundingBox;
+	public AxisAlignedBox3D getBoundingBox() {
+		if (boundingBox == null) {
+			this.boundingBox = AxisAlignedBox3D.createBoxFromList(this.vertices);
+			
+			//Ajout des boundingbox des enfants
+			if (!this.children.isEmpty()) {
+				ArrayList<AxisAlignedBox3D> boxes = new ArrayList<AxisAlignedBox3D>(this.children.size() + 1);
+				if (!isEmpty()) boxes.add(this.boundingBox);
+				
+				for (int i = 0 ; i < this.children.size() ; i++) {
+					if (!this.children.get(i).isEmpty()) 
+						boxes.add(this.children.get(i).getBoundingBox());
+				}
+				
+				this.boundingBox = AxisAlignedBox3D.merge(boxes.toArray(new AxisAlignedBox3D[0]));
+			}
+		}
+		return this.boundingBox.clone();
+	}
+	
+	private void onModelEdit() {
+		this.shouldRecompile = true;
+		this.boundingBox = null;
 	}
 	
 	@Override

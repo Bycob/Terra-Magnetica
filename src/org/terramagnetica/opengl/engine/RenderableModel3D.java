@@ -2,6 +2,7 @@ package org.terramagnetica.opengl.engine;
 
 import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
 
+import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class RenderableModel3D extends Renderable {
@@ -23,6 +24,13 @@ public class RenderableModel3D extends Renderable {
 	
 	public Model3D getModel() {
 		return this.model;
+	}
+	
+	@Override
+	public AxisAlignedBox3D getRenderBoundingBox(float x, float y, float z) {
+		AxisAlignedBox3D box = this.model.getBoundingBox();
+		box.translate(x, y, z);
+		return box;
 	}
 	
 	@Override

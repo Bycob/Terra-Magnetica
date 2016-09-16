@@ -116,6 +116,10 @@ public class ImagesLoader {
 	}
 	
 	public static void loadTextureSet(TextureSet texSet) {
+		if (texSet == null) {
+			return;
+		}
+		
 		TextureSheet sheets[] = texSet.getAll();
 		
 		for (TextureSheet sheet : sheets) {

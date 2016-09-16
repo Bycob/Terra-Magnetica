@@ -125,6 +125,10 @@ public final class TexturesLoader {
 		loaded.add(set);
 	}
 	
+	public static boolean isLoaded(TextureSet set) {
+		return loaded.contains(set);
+	}
+	
 	/**
 	 * Charge une texture animée à partir de la texture indiquée.
 	 * <br>La lecture se fait de gauche à droite, de haut en bas.

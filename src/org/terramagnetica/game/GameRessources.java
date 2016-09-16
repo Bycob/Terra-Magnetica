@@ -174,6 +174,9 @@ public class GameRessources {
 	/** set de textures - décor 2 de grotte */
 	public static final TextureSet decorGROTTETextureSet = new TextureSet();
 	
+	public static final String 
+	TEX_MAP_ROCK = ".map.lvl2.rock";
+	
 	/** set de textures - décor bonus des enfers */
 	public static final TextureSet decorENFERSTextureSet = new TextureSet();
 	
@@ -206,7 +209,6 @@ public class GameRessources {
 	PATH_CREATURE = "niveaux/niveau2/creature.png",
 	PATH_LVL2_TEXTURES = "niveaux/niveau2/decoration1.png",
 	
-	TEX_MAP_ROCK = ".map.lvl2.rock",
 	TEX_PENTAGRAM = ".pentagram",
 	TEX_PLASMATIC_WALL = ".plasmaticWall",
 	TEX_PORTAL_OFF = ".portal.off",
@@ -232,6 +234,9 @@ public class GameRessources {
 	public static final List<String> decorMONTSModelSet = new ArrayList<String>();
 	/** set de modèles - décor 2 de grotte */
 	public static final List<String> decorGROTTEModelSet = new ArrayList<String>();
+
+	public static final String 
+	PATH_MODEL_LVL2_ROCKS = "niveaux/niveau2/rocks.obj";
 	
 	/** set de modèles - décor bonus des enfers */
 	public static final List<String> decorENFERSModelSet = new ArrayList<String>();
@@ -247,8 +252,7 @@ public class GameRessources {
 	public static final ArrayList<String> level2ModelSet = new ArrayList<String>();
 	
 	public static final String
-	PATH_MODEL_LVL2_CONTROLPANE = "niveaux/niveau2/controlPane.obj",
-	PATH_MODEL_LVL2_ROCKS = "niveaux/niveau2/rocks.obj";
+	PATH_MODEL_LVL2_CONTROLPANE = "niveaux/niveau2/controlPane.obj";
 	
 	
 	
@@ -405,6 +409,10 @@ public class GameRessources {
 		//Textures du décor MONTS
 		//pour l'instant rien de plus.
 		
+		//Textures du décor GROTTE
+		decorGROTTETextureSet.createImage(PATH_MAP); width = 512; height = 512;
+		decorGROTTETextureSet.addTextureModel(TEX_MAP_ROCK, new TextureQuad(384, 0, 416, 32, width, height, 0));
+		
 		
 		
 		//Textures du niveau 1
@@ -440,9 +448,6 @@ public class GameRessources {
 		level2TextureSet.createImage(PATH_CREATURE); width = 678; height = 240;
 		level2TextureSet.addTextureModel(PATH_CREATURE, new TextureQuad(0, 0, 678, 240, width, height, 0));
 		
-		level2TextureSet.createImage(PATH_MAP); width = 512; height = 512;
-		level2TextureSet.addTextureModel(TEX_MAP_ROCK, new TextureQuad(384, 0, 416, 32, width, height, 0));
-		
 		
 		
 		//Modèles de tous les décors
@@ -455,9 +460,14 @@ public class GameRessources {
 		
 		
 		
+		
+		//Modèles du décor grotte
+		decorGROTTEModelSet.add(PATH_MODEL_LVL2_ROCKS);
+		
+		
+		
 		//Modèles du niveau 2
 		level2ModelSet.add(PATH_MODEL_LVL2_CONTROLPANE);
-		level2ModelSet.add(PATH_MODEL_LVL2_ROCKS);
 		
 		
 		

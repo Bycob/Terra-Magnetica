@@ -24,10 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.terramagnetica.opengl.engine.Texture;
-
-import java.util.Set;
 
 public class TextureSet {
 	
@@ -64,6 +63,48 @@ public class TextureSet {
 		
 		void setID(int id) {
 			this.id = id;
+		}
+		
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + id;
+			result = prime * result + ((map == null) ? 0 : map.hashCode());
+			result = prime * result + ((path == null) ? 0 : path.hashCode());
+			return result;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (!(obj instanceof TextureSheet)) {
+				return false;
+			}
+			TextureSheet other = (TextureSheet) obj;
+			if (id != other.id) {
+				return false;
+			}
+			if (map == null) {
+				if (other.map != null) {
+					return false;
+				}
+			} else if (!map.equals(other.map)) {
+				return false;
+			}
+			if (path == null) {
+				if (other.path != null) {
+					return false;
+				}
+			} else if (!path.equals(other.path)) {
+				return false;
+			}
+			return true;
 		}
 	}
 	
@@ -167,5 +208,39 @@ public class TextureSet {
 	public TextureSheet[] getAll() {
 		TextureSheet result[] = new TextureSheet[this.theTextureList.size()];
 		return this.theTextureList.toArray(result);
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + currentIndex;
+		result = prime * result + ((theTextureList == null) ? 0 : theTextureList.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof TextureSet)) {
+			return false;
+		}
+		TextureSet other = (TextureSet) obj;
+		if (currentIndex != other.currentIndex) {
+			return false;
+		}
+		if (theTextureList == null) {
+			if (other.theTextureList != null) {
+				return false;
+			}
+		} else if (!theTextureList.equals(other.theTextureList)) {
+			return false;
+		}
+		return true;
 	}
 }

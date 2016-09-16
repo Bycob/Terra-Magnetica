@@ -30,6 +30,9 @@ public class PinceauFilterLevelDefault extends PinceauFilter {
 		super();
 	}
 	
+	/** Construit un filtre de pinceau.
+	 * @param levelFilter Le niveau dans lequel ce pinceau est utilisable. 0 si le
+	 * pinceau est utilisable dans tous les niveaux. */
 	public PinceauFilterLevelDefault(DecorType decorFilter, int levelFilter) {
 		super(levelFilter);
 		setDecorFilter(decorFilter);
