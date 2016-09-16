@@ -140,7 +140,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 				boolean found = false;
 				
 				for (MapLandscape ml : limVisionCaseArray) {
-					if (Math.abs(ml.getCaseX() - Math.floor(r.x)) <= 1 && Math.abs(ml.getCaseY() - Math.floor(r.y)) <= 1) {
+					if (Math.abs(ml.getCaseX() - Math.floor(r.x)) <= 1 && Math.abs(ml.getCaseY() - Math.floor(- r.y)) <= 1) {
 						found = true;
 						break;
 					}
@@ -149,7 +149,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 				if (!found) continue;
 				else {
 					if (initColor != null) {
-						double distance = MathUtil.getDistance(game.getPlayer().getPositionf(), new Vec2f(r.x, r.y)) -1;
+						double distance = MathUtil.getDistance(game.getPlayer().getPositionf(), new Vec2f(r.x, -r.y)) -1;
 						float coef = miniMapRenderer.getCaseColor(distance).getAlphaf() / MapRenderer.CASE_MAX_ALPHA;
 						
 						r.render.setColor(initColor.multiply(coef, coef, coef, 1));
@@ -185,6 +185,11 @@ public class RenderEntities extends RenderGameDefaultElement {
 		Vec2f loc = e.getPositionf();
 		Renderable render = e.getRender();
 		
+		addRenderToRenderList(render, renderList, loc);
+	}
+
+	private void addRenderToRenderList(Renderable render, List<RenderEntityUnit> renderList, Vec2f loc) {
+		
 		if (render instanceof RenderableCompound) {
 			addRendersFromCompoundOne((RenderableCompound) render, renderList, loc);
 		}
@@ -202,12 +207,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 			List<RenderEntityUnit> renderList, Vec2f loc) {
 		
 		for (Renderable r : render.getRenders()) {
-			if (r instanceof RenderableCompound) {
-				addRendersFromCompoundOne((RenderableCompound) r, renderList, loc);
-			}
-			else {
-				renderList.add(new RenderEntityUnit(r, loc.x, - loc.y));
-			}
+			addRenderToRenderList(r, renderList, loc);
 		}
 	}
 }

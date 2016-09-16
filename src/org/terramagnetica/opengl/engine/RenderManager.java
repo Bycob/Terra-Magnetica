@@ -170,6 +170,10 @@ public class RenderManager implements Animation {
 		return this.effects.contains(getEntryChecked(id));
 	}
 	
+	public boolean isEmpty() {
+		return this.renderMap.isEmpty();
+	}
+	
 	@Override
 	public void start() {
 		this.running = true;

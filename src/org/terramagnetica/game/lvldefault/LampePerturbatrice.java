@@ -86,6 +86,8 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 		//image principale
 		this.renderManager.putRender("on", new RenderEntityTexture(GameRessources.ID_LAMP_PERTURBATRICE_ON));
 		this.renderManager.putRender("off", new RenderEntityTexture(GameRessources.ID_LAMP_PERTURBATRICE_OFF));
+
+		this.renderManager.render(this.state ? "on" : "off");
 		
 		//indicateur de polarité
 		this.renderManager.putRender("indicator", new RenderEntityTexture(GameRessources.ID_MAGNETIC_FIELD_INDICATOR));

@@ -111,7 +111,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 	public void createRender() {
 		AnimatedTexture texture = TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM001_PLASMATIC_WALL);
 		
-		Renderable mainRender = new RenderEntityTexture(texture).withScaleOffset(1.003, 0, 1).withColor(this.color);
+		Renderable mainRender = new RenderEntityTexture(texture).withScaleOffset(1.003, 1, 1).withColor(this.color);
 		//rendu des extrémités
 		int leftX = - (this.size / 2 + 1);
 		int rightX = leftX + 1 + this.size;

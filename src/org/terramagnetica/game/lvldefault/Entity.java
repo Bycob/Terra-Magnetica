@@ -513,6 +513,9 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		
 		clearCollisions();
 		
+		//création du rendu si ce n'est pas déjà fait.
+		getRenderManager();
+		
 		this.updated = true;
 	}
 	

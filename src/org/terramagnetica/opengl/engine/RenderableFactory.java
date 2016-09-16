@@ -24,7 +24,7 @@ public final class RenderableFactory {
 			Renderable unit = render.clone();
 			unit.setPositionOffset(horizontal ? i : 0, horizontal ? 0 : i, 0);
 			
-			r.addRenders(render);
+			r.addRenders(unit);
 		}
 		
 		return r;

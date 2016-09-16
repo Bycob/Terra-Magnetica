@@ -105,7 +105,7 @@ public class Portal extends CaseEntity implements IGoal {
 				this.renderManager.putRender("default", new RenderEntityTexture(skin)
 					.withRotationOffset(0, 0, this.orientation)
 					.withPositionOffset(this.translationX, this.translationY, 0)
-					.withScaleOffset(this.scaleX, 0, this.scaleY));
+					.withScaleOffset(this.scaleX, 1, this.scaleY));
 			}
 			else {
 				this.renderManager.putRender("default", new RenderEntityTexture(skin).setOnGround(true));
@@ -187,7 +187,7 @@ public class Portal extends CaseEntity implements IGoal {
 			break;
 		case WallTile.HAUT :
 			this.orientation = 0;
-			this.translationY = unit;
+			this.translationY = - unit;
 			break;
 		case WallTile.GAUCHE :
 			this.orientation = 90;
@@ -195,7 +195,7 @@ public class Portal extends CaseEntity implements IGoal {
 			break;
 		case WallTile.BAS :
 			this.orientation = 180;
-			this.translationY = - unit;
+			this.translationY = unit;
 			break;
 		default :
 			this.onWall = false;
@@ -247,9 +247,15 @@ public class Portal extends CaseEntity implements IGoal {
 			this.type = game.getDecorType();
 			this.createRender();
 			
+			Vec2i c = this.getCasePosition();
+			
 			if (this.renderManager.getRender() instanceof RenderableModel3D) {
-				Vec2i c = this.getCasePosition();
 				game.getLandscapeAt(c.x, c.y).setUnrendered(true);
+			}
+			
+			if (this.onWall) {
+				LandscapeTile tile = game.getLandscapeAt(c.x, c.y);
+				if (tile instanceof OrientableLandscapeTile) this.setOnWall(((OrientableLandscapeTile) tile).getOrientation());
 			}
 		}
 		
@@ -285,6 +291,13 @@ public class Portal extends CaseEntity implements IGoal {
 		else {
 			return getDistancef(player) < 0.25;
 		}
+	}
+	
+	@Override
+	public Portal clone() {
+		Portal clone = (Portal) super.clone();
+		clone.type = null;
+		return clone;
 	}
 	
 	@Override

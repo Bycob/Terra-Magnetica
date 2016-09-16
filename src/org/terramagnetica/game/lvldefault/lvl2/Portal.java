@@ -59,7 +59,7 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	public Portal(Color4f color) {
 		this.color = color;
 		if (isColorNeutral()) {
-			this.setState(true);
+			this.setState(false);
 		}
 		
 		this.hitbox.setSolid(false);
@@ -68,7 +68,6 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	@Override
 	public void setState(boolean state) {
 		this.state = !state;
-		if (this.createdRenderManager) this.renderManager.render(this.state ? PORTAL_ON : PORTAL_OFF);
 	}
 	
 	@Override
@@ -96,6 +95,8 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 		this.renderManager.putRender(PORTAL_OFF, new RenderEntityTexture(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF).setOnGround(true));
 		this.renderManager.putRender(PORTAL_ON, new RenderEntityTexture(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_ON).setOnGround(true));
 		this.renderManager.putRender(PORTAL_OPENING, new RenderEntityTexture(GameRessources.PATH_ANIM002_OPENING_PORTAL).setOnGround(true));
+		
+		this.renderManager.render(this.state ? PORTAL_ON : PORTAL_OFF);
 	}
 
 	@Override

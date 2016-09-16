@@ -57,7 +57,7 @@ public class GameWindow {
 	
 	
 	protected boolean gameRunning;
-	private int FPS = 50;
+	private int FPS = 60;
 	private long time;
 	
 	private GuiDialog dialog = null;

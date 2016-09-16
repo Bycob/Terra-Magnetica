@@ -33,4 +33,25 @@ public class RenderableCompound extends Renderable {
 			render.renderAt(position, rotation, up, scale, painter);
 		}
 	}
+	
+	@Override
+	public void start() {
+		for (Renderable render : renders) {
+			render.start();
+		}
+	}
+	
+	@Override
+	public void stop() {
+		for (Renderable render : renders) {
+			render.stop();
+		}
+	}
+	
+	@Override
+	public void reset() {
+		for (Renderable render : renders) {
+			render.reset();
+		}
+	}
 }

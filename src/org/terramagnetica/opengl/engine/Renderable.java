@@ -94,6 +94,14 @@ public abstract class Renderable implements Cloneable, Animation {
 	 * offsets de position, de rotation et d'échelle. */
 	protected void applyTransforms(Vec3d position, double rotation, Vec3d up, Vec3d scale, Painter painter) {
 		
+		//POSITION
+		if (!this.posOffset.isNull()) {
+			painter.addTransform(Transform.newTranslation(this.posOffset));
+		}
+		if (!position.isNull()) {
+			painter.addTransform(Transform.newTranslation(position));
+		}
+		
 		//ROTATION
 		if (this.rotOffset.z != 0) {
 			painter.addTransform(Transform.newRotation((float) this.rotOffset.z, new Vec3d(0, 0, 1)));
@@ -101,14 +109,6 @@ public abstract class Renderable implements Cloneable, Animation {
 		if (rotation != 0) {
 			if (up.isNull()) throw new IllegalArgumentException("cant rotate around a null vector");
 			painter.addTransform(Transform.newRotation((float) rotation, up));
-		}
-		
-		//POSITION
-		if (!this.posOffset.isNull()) {
-			painter.addTransform(Transform.newTranslation(this.posOffset));
-		}
-		if (!position.isNull()) {
-			painter.addTransform(Transform.newTranslation(position));
 		}
 		
 		//SCALE
