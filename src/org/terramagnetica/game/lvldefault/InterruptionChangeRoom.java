@@ -88,11 +88,18 @@ public class InterruptionChangeRoom extends GameInterruption {
 			return;
 		}
 		
+	}
+	
+	@Override
+	public void draw() {
+		if (this.finished) return;
+		
+		long time = this.chrono.getTime();
+
 		Painter painter = Painter.instance;
 		GuiTextPainter textPainter = new GuiTextPainter(painter);
 		
 		painter.ensure2D();
-		
 		if (time >= 0 && time < TIME_1_STAGE) {
 			if (this.hide) {
 				drawSideAnimation((double) (TIME_1_STAGE) / (double) (TIME_1_STAGE), painter);
@@ -101,7 +108,7 @@ public class InterruptionChangeRoom extends GameInterruption {
 				drawSideAnimation((double) (time) / (double) (TIME_1_STAGE), painter);
 			}
 		}
-		if (time >= TIME_1_STAGE && time < TIME_2_STAGE) {
+		else if (time >= TIME_1_STAGE && time < TIME_2_STAGE) {
 			if (this.game.getRoomID() != this.roomToGoID) {
 				Room r = this.game.getLevel().getRoom(this.roomToGoID);
 				if (r != null && this.game.getRoomID() != r.getID()) {
@@ -130,7 +137,7 @@ public class InterruptionChangeRoom extends GameInterruption {
 			textPainter.setColor(textColor);
 			textPainter.drawCenteredString2D(this.game.getRoomName(this.roomToGoID), 0, 0, 32);
 		}
-		if (time >= TIME_2_STAGE && time < TIME_3_STAGE) {
+		else if (time >= TIME_2_STAGE && time < TIME_3_STAGE) {
 			drawSideAnimation(1d - (double) (time - TIME_2_STAGE) / (double) (TIME_3_STAGE - TIME_2_STAGE), painter);
 		}
 	}

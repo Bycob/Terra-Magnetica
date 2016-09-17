@@ -48,6 +48,7 @@ public class GuiWindow {
 	private ByteBuffer[] icons = new ByteBuffer[0];
 	
 	private GuiComponent contentPane;
+	private GuiComponent nextContentPane;
 	
 	private GLOrtho ortho2D = new GLOrtho();
 	private float scale = 1;
@@ -106,7 +107,7 @@ public class GuiWindow {
 		this.closeRequested = false;
 		
 		DisplayMode displayMode = new DisplayMode(800, 600);
-		PixelFormat format = new PixelFormat(8, 8, 8);
+		PixelFormat format = new PixelFormat(8, 8, 8, 4);
 		
 		Display.setDisplayMode(displayMode);
 		Display.setTitle(this.title);
@@ -141,12 +142,13 @@ public class GuiWindow {
 		GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		Painter.instance.clearScreen();
 		
-		this.contentPane.draw();
-		
 		sendEvents();
 		this.contentPane.processLogic();
-		//TODO mettre le dessin de l'interruption dans la méthode #draw() et pas dans listen c'est sale.
+		
+		this.contentPane.draw();
 		Painter.instance.flush();
+		
+		this.flushContentPane();
 		
 		if (Display.isCloseRequested()) {
 			this.closeRequested = true;
@@ -178,11 +180,23 @@ public class GuiWindow {
 	}
 	
 	public void setContentPane(GuiComponent contentPane) {
-		this.contentPane = contentPane;
+		if (this.contentPane == null) {
+			this.contentPane = contentPane;
+		}
+		else {
+			this.nextContentPane = contentPane;
+		}
 	}
 	
 	public GuiComponent getContentPane() {
 		return this.contentPane;
+	}
+	
+	private void flushContentPane() {
+		if (this.nextContentPane != null) {
+			this.contentPane = this.nextContentPane;
+			this.nextContentPane = null;
+		}
 	}
 	
 	/** place le repère openGL par défaut. */

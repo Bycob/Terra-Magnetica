@@ -87,7 +87,7 @@ public class CodeTest {
 	
 	//----------- Pour les tests openGL ----------------------------------
 	
-	private static String modelName = "decor/terrain3/mur.obj";
+	private static String modelName = "composants/models/lamp.obj";
 	
 	public static void appliGL() {
 		GuiWindow window = GuiWindow.getInstance();
@@ -125,7 +125,7 @@ public class CodeTest {
 		
 		LightModel lightModel = Painter.instance.getLightModel();
 		Light l = lightModel.getLight0();
-		l.setPosition(0, 0, 1);
+		l.setPosition(0, -1, 1);
 		
 		Model3D model = ModelLoader.getNotNull(modelName);
 		model.draw(Painter.instance);

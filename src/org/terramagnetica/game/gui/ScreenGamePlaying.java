@@ -22,11 +22,11 @@ package org.terramagnetica.game.gui;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.GameBuffer;
+import org.terramagnetica.game.GameEngine;
 import org.terramagnetica.game.GameInputBuffer.InputKey;
 import org.terramagnetica.game.GameInterruption;
-import org.terramagnetica.game.GameEngine;
+import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.openal.MusicStreaming;
 import org.terramagnetica.opengl.gui.GuiActionEvent;
@@ -124,6 +124,12 @@ public class ScreenGamePlaying extends GameScreen {
 			return super.processLogic();
 		}
 		
+		if (!this.interrupted) {
+			if (!this.game.isRunning()) {
+				this.runGame();
+			}
+		}
+		
 		GameInterruption i;
 		if ((i = this.renderGame.nextInterruption()) != null) {
 			this.interruptGame(i);
@@ -133,15 +139,12 @@ public class ScreenGamePlaying extends GameScreen {
 		this.game.getInput().listenInput();
 		
 		if (!this.interrupted) {//Si le jeu n'est pas interrompu.
-			if (!this.game.isRunning()) {//Au démarrage
-				this.runGame();
-			}
-			else {//Mise à jour du moteur de jeu
-				if (!this.modeAuto) {
-					this.game.update();
-				}
+			//Mise à jour du moteur de jeu
+			if (!this.modeAuto) {
+				this.game.update();
 			}
 			
+			//Interruptions de victoire / game over / pause
 			if (this.game.isGameOver()) {
 				this.interruptGame(new GameOver());
 			}
@@ -183,6 +186,15 @@ public class ScreenGamePlaying extends GameScreen {
 		}
 		
 		return GuiActionEvent.NULL_EVENT;
+	}
+	
+	@Override
+	public void draw() {
+		super.draw();
+		
+		if (this.interrupted) {
+			this.interruption.draw();
+		}
 	}
 	
 	/**

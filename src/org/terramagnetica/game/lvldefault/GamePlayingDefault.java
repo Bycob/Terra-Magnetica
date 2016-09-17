@@ -485,11 +485,6 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	protected void update(long delta) {
 		this.time += delta;
 		
-		if (this.hasntYetStarted) {
-			this.hasntYetStarted = false;
-			this.render.interruptGame(new InterruptionChangeRoom(this, this.currentRoom, true));
-		}
-		
 		//Préparation des entités pour le tour de mise à jour
 		for (Entity entity : this.entities) {
 			entity.updateLastHitbox();
@@ -586,6 +581,12 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		super.startGame();
 		
 		this.applyTags();
+		
+		//Redémarrage du niveau.
+		if (this.hasntYetStarted) {
+			this.hasntYetStarted = false;
+			this.render.interruptGame(new InterruptionChangeRoom(this, this.currentRoom, true));
+		}
 	}
 	
 	protected void applyTags() {

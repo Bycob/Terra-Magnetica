@@ -178,7 +178,7 @@ public class Model3D {
 				try {
 					parsed.texCoords.add(new Vec2d(
 							Double.parseDouble(fragments[1]),
-							-Double.parseDouble(fragments[2])));
+							1 - Double.parseDouble(fragments[2])));// 1 - value car le TextureLoader charge les textures à l'envers dans openGL
 				} catch (NumberFormatException e) {
 					throw new FileFormatException("fichier .obj : texture UV -> nombres attendus", e);
 				}

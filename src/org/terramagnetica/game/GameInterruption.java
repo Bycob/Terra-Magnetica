@@ -42,6 +42,13 @@ public abstract class GameInterruption {
 	 * (terminée ou non-terminée).
 	 */
 	public abstract void update();
+	
+	/** Si l'interruption doit dessiner quelque chose à l'écran, c'est
+	 * dans cette méthode. */
+	public void draw() {
+		
+	}
+	
 	/**
 	 * Est apellée pour connaitre l'état de l'interruption de jeu
 	 * (terminée ou non-terminée).

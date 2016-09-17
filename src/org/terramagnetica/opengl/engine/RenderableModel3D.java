@@ -30,6 +30,7 @@ public class RenderableModel3D extends Renderable {
 	public AxisAlignedBox3D getRenderBoundingBox(float x, float y, float z) {
 		AxisAlignedBox3D box = this.model.getBoundingBox();
 		box.translate(x, y, z);
+		applyTransformsToBoundingBox(box);
 		return box;
 	}
 	

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import org.terramagnetica.opengl.engine.Painter.Primitive;
 
+import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class RenderableObject3D extends Renderable {
@@ -40,13 +41,19 @@ public class RenderableObject3D extends Renderable {
 		setPrimitive(primitive);
 	}
 	
+	private void onStructuralChanges() {
+		this.boundingBox = null;
+	}
+	
 	public void addVertex(Vec3d vertex) {
 		if (vertex == null) throw new NullPointerException("vertex == null");
 		this.points.add(vertex);
+		onStructuralChanges();
 	}
 	
 	public void removeAllVertice() {
 		this.points.clear();
+		onStructuralChanges();
 	}
 	
 	public ArrayList<Vec3d> getVertice() {
@@ -84,6 +91,18 @@ public class RenderableObject3D extends Renderable {
 	public RenderableObject3D withTexture(Texture texture) {
 		this.setTexture(texture);
 		return this;
+	}
+	
+	protected AxisAlignedBox3D boundingBox;
+	@Override
+	public AxisAlignedBox3D getRenderBoundingBox(float x, float y, float z) {
+		if (this.boundingBox == null) {
+			this.boundingBox = AxisAlignedBox3D.createBoxFromList(this.points);
+		}
+		AxisAlignedBox3D box = this.boundingBox.clone();
+		box.translate(x, y, z);
+		applyTransformsToBoundingBox(box);
+		return box;
 	}
 	
 	@Override

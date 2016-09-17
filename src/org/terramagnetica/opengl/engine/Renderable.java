@@ -47,7 +47,9 @@ public abstract class Renderable implements Cloneable, Animation {
 	}
 
 	public AxisAlignedBox3D getRenderBoundingBox(float x, float y, float z) {
-		return new AxisAlignedBox3D(x, y, z, 0, 0, 0);
+		AxisAlignedBox3D result = new AxisAlignedBox3D(x, y, z, 0, 0, 0);
+		applyTransformsToBoundingBox(result);
+		return result;
 	}
 	
 	public void setPositionOffset(double x, double y, double z) {
@@ -118,6 +120,10 @@ public abstract class Renderable implements Cloneable, Animation {
 		if (!scale.isNull()) {
 			painter.addTransform(Transform.newScale((float) scale.x, (float) scale.y, (float) scale.z));
 		}
+	}
+	
+	protected void applyTransformsToBoundingBox(AxisAlignedBox3D box) {
+		box.translate(this.posOffset.x, this.posOffset.y, this.posOffset.z);
 	}
 	
 	public void renderAt(double x, double y, double z, Painter painter) {

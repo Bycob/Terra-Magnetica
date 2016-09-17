@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 public class GLConfiguration implements Cloneable {
 	
@@ -52,7 +53,8 @@ public class GLConfiguration implements Cloneable {
 		STENCIL_TEST(GL11.GL_STENCIL_TEST, true),
 		BLEND(GL11.GL_BLEND, true),
 		TEXTURE(GL11.GL_TEXTURE_2D, true),
-		LIGHTING(GL11.GL_LIGHTING, false);
+		LIGHTING(GL11.GL_LIGHTING, false),
+		MULTISAMPLE(GL13.GL_MULTISAMPLE, false);
 		
 		public final int glConst;
 		public final boolean defaultValue;
