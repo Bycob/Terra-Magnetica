@@ -28,6 +28,7 @@ import org.terramagnetica.opengl.engine.AnimatedTexture;
 import org.terramagnetica.opengl.engine.Renderable;
 import org.terramagnetica.opengl.engine.RenderableCompound;
 import org.terramagnetica.opengl.engine.RenderableFactory;
+import org.terramagnetica.opengl.engine.RenderableNull;
 import org.terramagnetica.ressources.ImagesLoader;
 import org.terramagnetica.ressources.TexturesLoader;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
@@ -72,10 +73,10 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 		
 		if (oldState != this.state) {
 			if (this.state) {
-				this.renderManager.render("nothing");
+				this.renderManager.render("default");
 			}
 			else {
-				this.renderManager.render("default");
+				this.renderManager.render("nothing");
 			}
 			this.hitbox.setSolid(this.state);
 		}
@@ -125,6 +126,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 		result.addRenders(rRight);
 		
 		this.renderManager.putRender("default", result);
+		this.renderManager.putRender("nothing", new RenderableNull());
 	}
 	
 	@Override

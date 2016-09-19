@@ -60,7 +60,7 @@ public class TheCreature extends EntityMoving {
 	
 	@Override
 	protected void createRender() {
-		this.renderManager.putRender("default", new RenderEntityTexture(GameRessources.PATH_CREATURE).withScaleOffset(0.4, 0, 0.4));
+		this.renderManager.putRender("default", new RenderEntityTexture(GameRessources.PATH_CREATURE).withScaleOffset(0.4, 1, 0.4));
 	}
 	
 	@Override

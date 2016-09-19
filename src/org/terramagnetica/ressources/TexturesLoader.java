@@ -35,6 +35,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.terramagnetica.opengl.engine.AnimatedTexture;
 import org.terramagnetica.opengl.engine.Texture;
+import org.terramagnetica.opengl.engine.TextureImpl;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.ressources.TextureSet.TextureSheet;
 import org.terramagnetica.utile.ImgUtil;
@@ -114,7 +115,7 @@ public final class TexturesLoader {
 			}
 			
 			//Définition de l'id de la texture.
-			int id = sheetExists ? id0 : loadTexture(sheet.getPath());
+			int id = sheetExists ? id0 : loadTexture0(sheet.getPath());
 			sheet.setID(id);
 			
 			//Ajout.
@@ -209,10 +210,21 @@ public final class TexturesLoader {
 		return createAnimatedTextureFromImage(spriteSizeX, spriteSizeY, imgWidth, imgHeight, 0, row, nbSprite - 1, row, true, 0);
 	}
 	
-	/** charge une texture contenue dans le jar
+	/** charge une texture contenue dans le jar et l'ajoute à l'index des 
+	 * textures.
 	 * @return L'identifiant de la texture openGL, où 0 si la texture
 	 * n'existe pas. */
-	public static int loadTexture(String fileName){
+	public static int loadTexture(String fileName) {
+		if (textureMap.containsKey(fileName)) return get(fileName).getGLTextureID();
+		
+		int result = loadTexture0(fileName);
+		if (result != 0) {
+			textureMap.put(fileName, new TextureImpl(result));
+		}
+		return result;
+	}
+	
+	private static int loadTexture0(String fileName) {
 		try {
 			return loadTexture(RessourcesManager.getURL(fileName));
 		} catch (FileNotFoundException e) {

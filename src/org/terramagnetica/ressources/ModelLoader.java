@@ -19,10 +19,8 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.ressources;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,14 +115,9 @@ public final class ModelLoader {
 		models.add(ret);
 		
 		for (Model3D model : models) {
-			URL texURL = null;
-			try {
-				texURL = RessourcesManager.getURL(dirPath + model.getTexturePath());
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			if (texURL != null && model.hasTextures()) {
-				model.setTextureID(TexturesLoader.loadTexture(texURL));
+			if (model.hasTextures()) {
+				String texPath = dirPath + model.getTexturePath();
+				model.setTextureID(TexturesLoader.loadTexture(texPath));
 			}
 		}
 		
