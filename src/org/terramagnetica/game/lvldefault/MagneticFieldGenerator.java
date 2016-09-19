@@ -194,7 +194,7 @@ public class MagneticFieldGenerator extends CaseEntity {
 	
 	@Override
 	public void createRender() {
-		this.renderManager.putRender("default", new RenderEntityTexture(GameRessources.ID_GENERATOR, (float) (Math.PI / 6)).withPositionOffset(0, - 0.6f, 0));
+		this.renderManager.putRender("default", new RenderEntityTexture(GameRessources.ID_GENERATOR, (float) (Math.PI / 3)).withPositionOffset(0, - 0.6f, 0));
 		
 		//Cristaux
 		RenderEntityCompound crystalsRender = new RenderEntityCompound();

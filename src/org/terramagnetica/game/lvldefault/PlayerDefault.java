@@ -50,7 +50,7 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	private static final int IMG_WIDTH = 192;
 	private static final int IMG_HEIGHT = 288;
 	
-	private static final double SCALE = 0.8;
+	private static final double SCALE = 0.6;
 	
 	//AUTRE
 	static final boolean DBG_INVINCIBLE = false;

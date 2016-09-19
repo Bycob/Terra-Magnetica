@@ -96,11 +96,11 @@ public class RenderEntities extends RenderGameDefaultElement {
 			}
 			
 			//Comparaison des angles
-			if (this.render instanceof RenderEntityTexture && o.render instanceof RenderEntityTexture) {
-				int radDif = (int) Math.signum(((RenderEntityTexture) this.render).getRadius()
-						- ((RenderEntityTexture) o.render).getRadius());
+			/*if (this.render instanceof RenderEntityTexture && o.render instanceof RenderEntityTexture) {
+				int radDif = (int) Math.signum(((RenderEntityTexture) o.render).getRadius()
+						- ((RenderEntityTexture) this.render).getRadius());
 				if (radDif != 0) return radDif;
-			}
+			}*/
 			
 			return (int) Math.signum(oY - thisY);
 		}

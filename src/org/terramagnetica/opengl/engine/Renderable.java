@@ -108,6 +108,9 @@ public abstract class Renderable implements Cloneable, Animation {
 		if (this.rotOffset.z != 0) {
 			painter.addTransform(Transform.newRotation((float) this.rotOffset.z, new Vec3d(0, 0, 1)));
 		}
+		if (this.rotOffset.x != 0) {
+			painter.addTransform(Transform.newRotation((float) this.rotOffset.x, new Vec3d(1, 0, 0))); 
+		}
 		if (rotation != 0) {
 			if (up.isNull()) throw new IllegalArgumentException("cant rotate around a null vector");
 			painter.addTransform(Transform.newRotation((float) rotation, up));

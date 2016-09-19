@@ -27,7 +27,7 @@ import org.terramagnetica.opengl.engine.Texture;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.ressources.TexturesLoader;
 
-import net.bynaryscode.util.maths.MathUtil;
+import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class RenderEntityTexture extends RenderableObject3D implements Cloneable {
@@ -71,7 +71,7 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 	}
 	
 	public RenderEntityTexture(Texture texture, float radius) {
-		this.angle = MathUtil.valueInRange_f(radius, 0, (float) Math.PI / 2f);
+		setRadius(radius);
 		setTexture(texture);
 	}
 	
@@ -79,8 +79,8 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 		removeAllVertice();
 		
 		if (!this.onGround) {
-			double hightY = Math.cos(this.angle) * this.height;
-			double hightZ = Math.sin(this.angle) * this.height;
+			double hightY = 0;
+			double hightZ = this.height;
 			double x1 = - (this.width / 2.0);
 			double x2 = this.width / 2.0;
 			
@@ -118,6 +118,9 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 	 */
 	public RenderEntityTexture setOnGround(boolean onGround) {
 		this.onGround = onGround;
+		if (this.onGround) {
+			this.setRadius(0);
+		}
 		
 		calculVertices();
 		
@@ -164,13 +167,15 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 	
 	//-----ANGLE PAR RAPPORT A L'HORIZONTALE
 	
+	/** Donne l'angle de rotation de la texture par rapport à la verticale, en radians. */
 	public float getRadius() {
-		return this.angle;
+		return (float) - Math.toRadians(this.getRotationOffset().x);
 	}
 	
+	/** Définit l'angle de rotation de la texture par rapport à la verticale, en radians. */
 	public void setRadius(float radius) {
-		this.angle = MathUtil.valueInRange_f(radius, 0, (float) Math.PI / 2f);
-		this.calculVertices();
+		Vec3d rot = this.getRotationOffset();
+		this.setRotationOffset(- Math.toDegrees(radius), rot.y, rot.z);
 	}
 	
 	public RenderEntityTexture withRadius(float radius) {
@@ -191,6 +196,14 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 		float difElev = (float) - (this.posOffset.z / Math.tan(this.getRadius()));
 		
 		return (float) (y + this.posOffset.y + difElev);
+	}
+	
+	@Override
+	public AxisAlignedBox3D getRenderBoundingBox(float x, float y, float z) {
+		AxisAlignedBox3D result = super.getRenderBoundingBox(x, y, z);
+		
+		result.sizeY = Math.sin(this.getRadius());
+		return result;
 	}
 	
 	@Override
