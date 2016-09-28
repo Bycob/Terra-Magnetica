@@ -81,7 +81,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 		public int compareTo(RenderEntityUnit o) {
 			if (this.render.getClass() != o.render.getClass()) {
 				int compareClass = getPriorityOrder(this.render.getClass()) - getPriorityOrder(o.render.getClass());
-				if (compareClass != 0) return compareClass;
+				if (compareClass != 0) return (int) Math.signum(compareClass);
 			}
 			
 			float thisY = this.y;
