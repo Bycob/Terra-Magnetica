@@ -76,7 +76,7 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 	}
 	
 	protected void calculVertices() {
-		removeAllVertice();
+		removeAllVertices();
 		
 		if (!this.onGround) {
 			double hightY = 0;

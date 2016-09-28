@@ -59,7 +59,7 @@ public class RenderAnimationEndOfWall extends RenderEntityTexture {
 		applyTransforms(position, rotation, up, scale, painter);
 		
 		int i = 0;
-		for (Vec3d vertex : this.getVertice()) {
+		for (Vec3d vertex : this.getVertices()) {
 			//application de la couleur.
 			boolean leftSide = i == 0 || i == 3;
 			if ((leftSide && this.left) || (!leftSide && !this.left)) {
