@@ -23,12 +23,27 @@ import java.util.ArrayList;
 
 import org.terramagnetica.opengl.engine.Painter.Primitive;
 
+import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
+import net.bynaryscode.util.maths.geometric.Vec2f;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class RenderableObject3D extends Renderable {
 	
+	private class VertexData {
+		Color4f color;
+		Vec2f texCoord;
+		Vec3d normal;
+		
+		VertexData(Vec3d normal, Vec2f texCoord, Color4f color) {
+			this.color = color;
+			this.texCoord = texCoord;
+			this.normal = normal;
+		}
+	}
+	
 	private ArrayList<Vec3d> points = new ArrayList<Vec3d>();
+	private ArrayList<VertexData> pointsData = new ArrayList<VertexData>();
 	
 	protected Primitive primitive;
 	protected Texture texture = new TextureQuad();
@@ -46,17 +61,35 @@ public class RenderableObject3D extends Renderable {
 	}
 	
 	public void addVertex(Vec3d vertex) {
+		addVertex(vertex, null, null, null);
+	}
+	
+	public void addVertex(Vec3d vertex, Color4f color) {
+		addVertex(vertex, null, null, color);
+	}
+	
+	public void addVertex(Vec3d vertex, Vec3d normal) {
+		addVertex(vertex, normal, null, null);
+	}
+	
+	public void addVertex(Vec3d vertex, Vec2f texCoord) {
+		addVertex(vertex, null, texCoord, null);
+	}
+	
+	public void addVertex(Vec3d vertex, Vec3d normal, Vec2f texCoord, Color4f color) {
 		if (vertex == null) throw new NullPointerException("vertex == null");
 		this.points.add(vertex);
+		this.pointsData.add(new VertexData(normal, texCoord, color));
 		onStructuralChanges();
 	}
 	
-	public void removeAllVertice() {
+	public void removeAllVertices() {
 		this.points.clear();
+		this.pointsData.clear();
 		onStructuralChanges();
 	}
 	
-	public ArrayList<Vec3d> getVertice() {
+	public ArrayList<Vec3d> getVertices() {
 		ArrayList<Vec3d> result = new ArrayList<Vec3d>();
 		
 		for (Vec3d vec : this.points) {
@@ -107,9 +140,9 @@ public class RenderableObject3D extends Renderable {
 	
 	@Override
 	public void renderAt(Vec3d position, double rotation, Vec3d up, Vec3d scale, Painter painter) {
-		if (this.points.size() < primitive.getVerticeCount()) return;
+		if (this.points.size() < primitive.getVerticeCount() || this.points.size() == 0) return;
 		
-		painter.setPrimitive(Painter.Primitive.QUADS);
+		painter.setPrimitive(this.primitive);
 		painter.setTexture(this.texture);
 		painter.setColor(this.color);
 		
@@ -118,8 +151,31 @@ public class RenderableObject3D extends Renderable {
 		applyTransforms(position, rotation, up, scale, painter);
 		
 		//DESSIN
-		for (Vec3d vertex : this.points) {
-			painter.addVertex(vertex);
+		for (int i = 0 ; i < this.points.size() ; i++) {
+			Vec3d vertex = this.points.get(i);
+			VertexData data = this.pointsData.get(i);
+			
+			//couleur
+			if (data.color != null) {
+				painter.setColor(data.color);
+			}
+			else {
+				painter.setColor(this.color);
+			}
+			
+			//normale et texcoord
+			if (data.normal != null && data.texCoord != null) {
+				painter.addVertex(vertex, data.normal, data.texCoord.x, data.texCoord.y);
+			}
+			else if (data.normal == null && data.texCoord != null) {
+				painter.addVertex(vertex, data.texCoord.x, data.texCoord.y);
+			}
+			else if (data.normal != null && data.texCoord == null) {
+				painter.addVertex(vertex, data.normal);
+			}
+			else {
+				painter.addVertex(vertex);
+			}
 		}
 		
 		painter.popTransformState();

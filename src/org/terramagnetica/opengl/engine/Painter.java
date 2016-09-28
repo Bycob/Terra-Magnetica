@@ -41,8 +41,11 @@ public class Painter {
 	
 	public static enum Primitive {
 		QUADS(GL11.GL_QUADS, 4),
+		LINES(GL11.GL_LINES, 2),
+		LINE_STRIP(GL11.GL_LINE_STRIP, -1),
 		TRIANGLES(GL11.GL_TRIANGLES, 3),
-		LINES(GL11.GL_LINES, 2);
+		TRIANGLES_FAN(GL11.GL_TRIANGLE_FAN, -1),
+		TRIANGLES_STRIP(GL11.GL_TRIANGLE_STRIP, -1);
 		
 		private int glDrawMode;
 		private int verticeCount;
@@ -59,9 +62,13 @@ public class Painter {
 		public int getVerticeCount() {
 			return verticeCount;
 		}
+		
+		public boolean supportsAutoTexturing() {
+			return this.verticeCount != -1;
+		}
 	}
 	
-	private static final Vec3d DEFAULT_NORMAL = new Vec3d(0, 0, 1);
+	public static final Vec3d DEFAULT_NORMAL = new Vec3d(0, 0, 1);
 	private static final int VERTICES_MAX = 1024;
 	
 	private GLConfiguration configuration = GLConfiguration.default2DConfiguration();
