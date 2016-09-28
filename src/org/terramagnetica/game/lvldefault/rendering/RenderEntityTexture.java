@@ -193,9 +193,7 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 	 */
 	public float getRealPositionY(float x, float y) {
 		//calcul du différentiel causé par l'élévation.
-		float difElev = (float) - (this.posOffset.z / Math.tan(this.getRadius()));
-		
-		return (float) (y + this.posOffset.y + difElev);
+		return (float) (y + this.posOffset.y);
 	}
 	
 	@Override

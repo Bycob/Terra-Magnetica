@@ -21,16 +21,16 @@ package org.terramagnetica.opengl.engine;
 
 import org.terramagnetica.opengl.gui.GuiComponent;
 
-import net.bynaryscode.util.maths.geometric.Forme;
+import net.bynaryscode.util.maths.geometric.Shape;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
 
 public class Viewport {
 
 	DisplayList list;
 	
-	private Forme viewport;
+	private Shape viewport;
 	
-	public Viewport(Forme viewport) {
+	public Viewport(Shape viewport) {
 		this.viewport = viewport;
 	}
 	
@@ -46,7 +46,7 @@ public class Viewport {
 		this(new RectangleDouble(xmin, ymin, xmax, ymax));
 	}
 	
-	public Forme getViewport() {
+	public Shape getViewport() {
 		return viewport;
 	}
 }

@@ -43,9 +43,9 @@ public class RenderClipping extends RenderGameDefaultElement {
 		inClip.xmin += 1; inClip.ymin += 1; inClip.xmax -= 1; inClip.ymax -= 1;
 		outClip.xmin -= 1; outClip.ymin -= 1; outClip.xmax += 1; outClip.ymax += 1;
 		
-		Vec2d[] inSommets = inClip.getSommets();
-		Vec2d[] sommets = clip.getSommets();
-		Vec2d[] outSommets = outClip.getSommets();
+		Vec2d[] inSommets = inClip.getVertices();
+		Vec2d[] sommets = clip.getVertices();
+		Vec2d[] outSommets = outClip.getVertices();
 		
 		for (int i = 0 ; i < 4 ; i++) {
 			int next = i == 3 ? 0 : i + 1;

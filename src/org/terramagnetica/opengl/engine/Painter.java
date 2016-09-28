@@ -31,7 +31,7 @@ import org.lwjgl.opengl.GL11;
 import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
 
 import net.bynaryscode.util.Color4f;
-import net.bynaryscode.util.maths.geometric.Forme;
+import net.bynaryscode.util.maths.geometric.Shape;
 import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
@@ -381,10 +381,10 @@ public class Painter {
 			GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFFFFFFFF);
 			GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_REPLACE, GL11.GL_REPLACE);
 			GL11.glColorMask(false, false, false, false);
-			Forme f = viewport.getViewport();
+			Shape f = viewport.getViewport();
 			
 			//dessin
-			Vec2d[] s = f.getSommets();
+			Vec2d[] s = f.getVertices();
 			
 			if (s.length >= 1) {
 				//TODO à remplacer par des VBO

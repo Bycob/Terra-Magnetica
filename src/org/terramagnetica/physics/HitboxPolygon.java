@@ -22,7 +22,7 @@ package org.terramagnetica.physics;
 import java.util.ArrayList;
 
 import net.bynaryscode.util.maths.MathUtil;
-import net.bynaryscode.util.maths.geometric.Forme;
+import net.bynaryscode.util.maths.geometric.Shape;
 import net.bynaryscode.util.maths.geometric.Line2D;
 import net.bynaryscode.util.maths.geometric.Vec2;
 import net.bynaryscode.util.maths.geometric.Vec2d;
@@ -40,7 +40,7 @@ public class HitboxPolygon extends Hitbox {
 	private ArrayList<Vec2f> realPositions = new ArrayList<Vec2f>();
 	private ArrayList<Line2D> edgeList = new ArrayList<Line2D>();
 	
-	public HitboxPolygon(Forme hitbox) {
+	public HitboxPolygon(Shape hitbox) {
 		setForme(hitbox);
 	}
 	
@@ -56,9 +56,9 @@ public class HitboxPolygon extends Hitbox {
 		this.precalculated = false;
 	}
 	
-	public void setForme(Forme forme) {
+	public void setForme(Shape forme) {
 		this.points.clear();
-		for (Vec2d c : forme.getSommets()) {
+		for (Vec2d c : forme.getVertices()) {
 			this.points.add(c.asFloat());
 		}
 		

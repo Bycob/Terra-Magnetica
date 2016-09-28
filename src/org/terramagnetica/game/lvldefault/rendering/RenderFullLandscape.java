@@ -126,7 +126,7 @@ public class RenderFullLandscape extends RenderGameDefaultElement {
 	
 	private boolean isInFrustum(LandscapeTile terrain) {
 		CameraFrustum cf = this.frustum;
-		for (Vec2d c : terrain.getBoundsf().getSommets()) {
+		for (Vec2d c : terrain.getBoundsf().getVertices()) {
 			if (cf.containsPoint(new Vec3d(c.x, - c.y, 0))) {
 				return true;
 			}

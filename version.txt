@@ -98,4 +98,12 @@ Editeur de niveaux
 	
 Général :
 	- Corrections de bugs
+	
+***** VERSION 0.4.3 ******
 
+Terra Magnetica
+	- Correction de plusieurs bugs d'affichage
+	- Ajout de modèles pour les lampes
+	- Ajout du décor jungle, utilisé pour le niveau 3
+	- Modification du comportement des lampes pour les rendre plus fiables et plus cool
+	- Ajout des rochers flottants et des arbres

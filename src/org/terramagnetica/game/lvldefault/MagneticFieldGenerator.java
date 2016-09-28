@@ -100,7 +100,7 @@ public class MagneticFieldGenerator extends CaseEntity {
 		
 		Circle c = new Circle(centre.x, centre.y, rayon);
 		c.setNbSommets(count);
-		Vec2d[] sommets = c.getSommets();
+		Vec2d[] sommets = c.getVertices();
 		for (Vec2d c0 : sommets) {
 			this.cristaux.add(new MiniElectrocrystal((float) c0.x, (float) c0.y));
 			this.rayons.add(rayon);

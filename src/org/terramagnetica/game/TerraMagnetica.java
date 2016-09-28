@@ -45,7 +45,7 @@ import net.bynaryscode.util.Log;
  */
 public class TerraMagnetica {
 	
-	public static final String VERSION = "0.4.2";
+	public static final String VERSION = "0.4.3";
 	/** Cette variable indique si le programme est lancé en mode 'operateur' ou non.
 	 * Si oui certaines fonctionalités supplémentaires sont activées, notament dans
 	 * l'éditeur de niveau. */
