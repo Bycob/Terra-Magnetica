@@ -27,7 +27,7 @@ import net.bynaryscode.util.maths.geometric.Shape;
 import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
-public class RenderableShapedShadow extends RenderableObject3D {
+public class RenderableShapedShadow extends RenderableObject3D implements IShadowObject {
 	/** L'ombre, toujours au dessus :-) */
 	public static final float Z_INDEX = 0.001f;
 	

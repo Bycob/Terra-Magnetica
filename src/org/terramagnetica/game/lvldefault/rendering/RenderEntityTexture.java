@@ -23,11 +23,14 @@ import org.terramagnetica.game.lvldefault.Entity;
 import org.terramagnetica.opengl.engine.AnimatedTexture;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.RenderableObject3D;
+import org.terramagnetica.opengl.engine.RenderableShapedShadow;
 import org.terramagnetica.opengl.engine.Texture;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.ressources.TexturesLoader;
 
+import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
+import net.bynaryscode.util.maths.geometric.Circle;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class RenderEntityTexture extends RenderableObject3D implements Cloneable {
@@ -99,11 +102,28 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 			addVertex(new Vec3d(hWidth, - hHeight, z));
 			addVertex(new Vec3d(- hWidth, - hHeight, z));
 		}
+		
+		updateShadow();
 	}
 	
 	protected void defineDimensions() {
 		this.width = (double) (this.texture.getWidth()) / SIZEREF;
 		this.height = (double) (this.texture.getHeight()) / SIZEREF;
+	}
+	
+	protected void updateShadow() {
+		if (this.onGround) {
+			this.setShadowObject(null);
+		}
+		else {
+			float shadowSize = (float) (0.01f);
+			final float fadeout = (float) (this.width * 0.3f);
+			RenderableShapedShadow shadow = new RenderableShapedShadow(new Circle(0, 0, shadowSize));
+			shadow.setFadeout(fadeout);
+			shadow.setColor(new Color4f(0, 0, 0, 0.5f));
+			
+			this.setShadowObject(shadow);
+		}
 	}
 	
 	

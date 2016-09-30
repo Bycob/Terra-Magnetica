@@ -32,6 +32,8 @@ public abstract class Renderable implements Cloneable, Animation {
 	protected Vec3d rotOffset = new Vec3d(0, 0, 0);
 	protected Vec3d scaleOffset = new Vec3d(1, 1, 1);
 	
+	private Renderable shadow;
+	
 	public void setColor(Color4f color) {
 		if (color == null) throw new NullPointerException("color == null");
 		this.color = color.clone();
@@ -141,6 +143,28 @@ public abstract class Renderable implements Cloneable, Animation {
 	public void stop() {}
 	@Override
 	public void reset() {}
+	
+	public Renderable withShadowObject(Renderable shadow) {
+		setShadowObject(shadow);
+		return this;
+	}
+	
+	/** Définit le {@link Renderable} qui dessinera l'ombre de ce
+	 * {@link Renderable}. Si le parametre {@code shadow} vaut
+	 * {@code null} alors aucune ombre ne sera dessinée. */
+	public void setShadowObject(Renderable shadow) {
+		if (shadow != null && !(shadow instanceof IShadowObject)) {
+			throw new IllegalArgumentException("the parameter shadow is not a shadow renderable");
+		}
+		this.shadow = shadow;
+	}
+	
+	/** Retourne un {@link Renderable} qui permet de dessiner 
+	 * l'ombre de ce {@link Renderable}.
+	 * <p>Par défaut cette méthode retourne {@code null}. */
+	public Renderable getShadowObject() {
+		return this.shadow;
+	}
 	
 	@Override
 	public Renderable clone() {

@@ -238,21 +238,28 @@ public class RenderManager implements Animation {
 	public Renderable getRender() {
 		if (this.currentEntry == null) return new RenderableNull();
 		
-		Renderable result = null;
+		Renderable result = this.currentEntry.render;
 		
+		//Ajout de l'ombre
+		Renderable shadowObject = result.getShadowObject();
+		if (shadowObject != null) {
+			RenderableCompound render = new RenderableCompound();
+			render.addRenders(result, shadowObject);
+			result = render;
+		}
+		
+		//Ajout des effets
 		if (!this.effects.isEmpty()) {
 			RenderableCompound render = new RenderableCompound();
 			
-			render.addRenders(this.currentEntry.render);
+			render.addRenders(result);
 			for (RenderEntry entry : this.effects) {
 				render.addRenders(entry.render);
 			}
 			
 			result = render;
 		}
-		else {
-			result = this.currentEntry.render;
-		}
+		
 		return result;
 	}
 }
