@@ -28,6 +28,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
@@ -222,6 +223,22 @@ public final class TexturesLoader {
 			textureMap.put(fileName, new TextureImpl(result));
 		}
 		return result;
+	}
+	
+	public static void unloadTexturesWithGLID(int textureID) {
+		ArrayList<String> deleted = new ArrayList<String>();
+		
+		for (Entry<String, Texture> tex : textureMap.entrySet()) {
+			if (tex.getValue().getGLTextureID() == textureID) {
+				GL11.glDeleteTextures(tex.getValue().getGLTextureID());
+				
+				deleted.add(tex.getKey());
+			}
+		}
+		
+		for (String key : deleted) {
+			textureMap.remove(key);
+		}
 	}
 	
 	private static int loadTexture0(String fileName) {

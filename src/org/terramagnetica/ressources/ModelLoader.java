@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.lwjgl.opengl.GL11;
 import org.terramagnetica.opengl.engine.Model3D;
 
 import net.bynaryscode.util.FileFormatException;
@@ -56,7 +55,7 @@ public final class ModelLoader {
 	public static void unloadAll() {
 		for (Entry<String, Model3D> e : models.entrySet()) {
 			Model3D m = e.getValue();
-			GL11.glDeleteTextures(m.getTextureID());
+			TexturesLoader.unloadTexturesWithGLID(m.getTextureID());
 		}
 		models.clear();
 	}

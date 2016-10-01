@@ -41,7 +41,7 @@ public class TestWindow extends GameWindow {
 	public Creator pointer;
 	
 	public TestWindow(Level lvl) {
-		this.theLevel = lvl;
+		this.theLevel = lvl.clone();
 		
 		setInstance(this);
 	}
@@ -97,6 +97,5 @@ public class TestWindow extends GameWindow {
 		if (this.game.hasWon()) {
 			JOptionPane.showMessageDialog(pointer, "Vous avez gagné !", "Victoire", JOptionPane.INFORMATION_MESSAGE);
 		}
-		this.game.recreateRenders();
 	}
 }
