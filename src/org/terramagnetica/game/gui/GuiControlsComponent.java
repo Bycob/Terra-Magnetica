@@ -38,8 +38,8 @@ import org.terramagnetica.opengl.gui.MouseEvent;
 import org.terramagnetica.opengl.gui.MouseListener;
 
 import net.bynaryscode.util.Color4f;
-import net.bynaryscode.util.maths.geometric.Vec2i;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Vec2i;
 
 public class GuiControlsComponent extends GuiComponent implements
 		KeyboardListener, MouseListener {
@@ -186,10 +186,10 @@ public class GuiControlsComponent extends GuiComponent implements
 	}
 	
 	@Override
-	public void drawComponent() {
+	public void drawComponent(Painter p) {
 		updateSlotsPosition();
 		for (int i = 0 ; i < this.slots.size() ; i++) {
-			this.slots.get(i).drawSlot(getSlotBounds(i));
+			this.slots.get(i).drawSlot(getSlotBounds(i), p);
 		}
 	}
 	
@@ -207,8 +207,7 @@ public class GuiControlsComponent extends GuiComponent implements
 			this.key = Keyboard.getKeyName(this.key_value);
 		}
 		
-		public void drawSlot(RectangleDouble bounds) {
-			Painter painter = Painter.instance;
+		public void drawSlot(RectangleDouble bounds, Painter painter) {
 			painter.ensure2D();
 			painter.setPrimitive(Primitive.QUADS);
 			painter.setTexture(null);

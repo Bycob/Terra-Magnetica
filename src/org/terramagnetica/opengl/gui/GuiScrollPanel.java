@@ -29,8 +29,8 @@ import org.terramagnetica.opengl.engine.Viewport;
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.Util;
 import net.bynaryscode.util.maths.MathUtil;
-import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Vec2d;
 
 public class GuiScrollPanel extends GuiComponent implements MouseListener {
 	
@@ -96,13 +96,12 @@ public class GuiScrollPanel extends GuiComponent implements MouseListener {
 	}
 	
 	@Override
-	public void drawComponent() {
+	public void drawComponent(Painter p) {
 		
 		int wheel = Mouse.getDWheel();
 		double glWheel = theWindow.getHeightOnGLOrtho(Math.abs(wheel)) * Math.signum(wheel) * 0.1;
 		this.setBarLocation(ScrollBar.VERTICAL, this.yVBar + glWheel);
 		
-		Painter p = Painter.instance;
 		p.ensure2D();
 		p.setTexture(null);
 		Color4f color = this.getColor().clone();
@@ -163,7 +162,7 @@ public class GuiScrollPanel extends GuiComponent implements MouseListener {
 		Viewport oldViewport = p.getViewport();
 		
 		p.setViewport(new Viewport(this.viewport.clone()));
-		this.content.draw();
+		this.content.draw(p);
 		p.setViewport(oldViewport);
 	}
 	

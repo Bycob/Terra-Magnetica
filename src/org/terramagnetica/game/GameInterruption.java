@@ -19,6 +19,8 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game;
 
+import org.terramagnetica.opengl.engine.Painter;
+
 /**
  * Une interruption de jeu. Cela se traduit par un arrêt des
  * mises à jour du moteur de jeu, dans le cas d'une cinématique
@@ -45,7 +47,7 @@ public abstract class GameInterruption {
 	
 	/** Si l'interruption doit dessiner quelque chose à l'écran, c'est
 	 * dans cette méthode. */
-	public void draw() {
+	public void draw(Painter painter) {
 		
 	}
 	

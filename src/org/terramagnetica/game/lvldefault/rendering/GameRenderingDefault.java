@@ -37,8 +37,6 @@ public class GameRenderingDefault extends GameRendering {
 	
 	public static final float DEFAULT_FOV = 90;
 	
-	public final Painter painter = Painter.instance;
-	
 	private GamePlayingDefault game;
 	private GameBufferDefault gameBuf;
 	private GlobalAnimationManager animationManager = new GlobalAnimationManager();
@@ -83,7 +81,7 @@ public class GameRenderingDefault extends GameRendering {
 	}
 	
 	@Override
-	protected void drawComponent() {
+	protected void drawComponent(Painter painter) {
 		GamePlayingDefault toDraw = null;
 		
 		if (!modeAuto) {
@@ -93,13 +91,13 @@ public class GameRenderingDefault extends GameRendering {
 			toDraw = gameBuf.read();
 		}
 		
-		render(toDraw);
+		render(toDraw, painter);
 	}
 	
-	public void render(GamePlayingDefault toDraw) {
+	public void render(GamePlayingDefault toDraw, Painter painter) {
 		
 		if (toDraw != null) {
-			this.painter.flush();
+			painter.flush();
 			
 			//placement de la caméra
 			if (this.trackPoint == null && toDraw.getPlayer() != null) {
@@ -110,7 +108,7 @@ public class GameRenderingDefault extends GameRendering {
 			this.camera.setFOV(DEFAULT_FOV);
 			
 			for (RenderGameDefaultElement render : this.renderingList) {
-				render.render(toDraw, this.painter);
+				render.render(toDraw, painter);
 			}
 		}
 	}

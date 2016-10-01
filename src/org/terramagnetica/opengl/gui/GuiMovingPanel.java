@@ -21,11 +21,11 @@ package org.terramagnetica.opengl.gui;
 
 import java.util.ArrayList;
 
-import org.terramagnetica.opengl.engine.Viewport;
 import org.terramagnetica.opengl.engine.Painter;
+import org.terramagnetica.opengl.engine.Viewport;
 
-import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Vec2d;
 
 /**
  * Panneau flottant, déplaçable à la souris, sur lequel des éléments peuvent
@@ -114,13 +114,11 @@ public class GuiMovingPanel extends GuiComponent implements MouseListener {
 	}
 	
 	@Override
-	public void draw() {
-		Painter p = Painter.instance;
-		
+	public void draw(Painter p) {
 		Viewport oldViewport = p.getViewport();
 		p.setViewport(new Viewport(this.getBoundsGL()));
 		
-		super.draw();
+		super.draw(p);
 		
 		p.setViewport(oldViewport);
 	}

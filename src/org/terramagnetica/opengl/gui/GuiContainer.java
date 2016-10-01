@@ -24,8 +24,8 @@ import org.terramagnetica.opengl.engine.GLUtil;
 import org.terramagnetica.opengl.engine.Painter;
 
 import net.bynaryscode.util.Color4f;
-import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Vec2d;
 
 public class GuiContainer extends GuiComponent {
 	
@@ -56,8 +56,7 @@ public class GuiContainer extends GuiComponent {
 	}
 	
 	@Override
-	public void drawComponent() {
-		Painter p = Painter.instance;
+	public void drawComponent(Painter p) {
 		p.ensure2D();
 		p.setPrimitive(Painter.Primitive.QUADS);
 		p.setTexture(null);

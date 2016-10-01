@@ -51,10 +51,9 @@ public class GuiPage extends GuiContainer {
 	}
 	
 	@Override
-	public void drawComponent() {
+	public void drawComponent(Painter p) {
 		checkBounds();
 		
-		Painter p = Painter.instance;
 		p.ensure2D();
 		p.flush();
 		RectangleDouble bounds = getBoundsGL();
@@ -102,7 +101,7 @@ public class GuiPage extends GuiContainer {
 						double texX = withOffsets.center().x - texWidth / 2d;
 						double texY = bounds.ymin - sizeGL;
 						p.setColor(new Color4f(255, 255, 255, 255));
-						tex.drawQuad2D(texX, texY, texX + texWidth, texY - texHeight, true);
+						tex.drawQuad2D(texX, texY, texX + texWidth, texY - texHeight, true, p);
 						sizeGL += texHeight;
 					}
 					else if (content instanceof Legende) {

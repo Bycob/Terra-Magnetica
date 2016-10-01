@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 import org.terramagnetica.game.gui.GameWindow;
+import org.terramagnetica.opengl.engine.Painter;
 
 import net.bynaryscode.util.Util;
 
@@ -176,6 +177,6 @@ public abstract class GuiAbstractTextField extends GuiComponent implements Write
 			if (place > 0) place --;
 		}
 		
-		public abstract void drawCursor();
+		public abstract void drawCursor(Painter painter);
 	}
 }

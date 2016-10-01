@@ -27,9 +27,9 @@ import org.terramagnetica.opengl.engine.Viewport;
 import org.terramagnetica.ressources.TexturesLoader;
 
 import net.bynaryscode.util.Color4f;
+import net.bynaryscode.util.maths.geometric.RectangleDouble;
 import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec2i;
-import net.bynaryscode.util.maths.geometric.RectangleDouble;
 
 public class GuiTextField1 extends GuiAbstractTextField {
 	
@@ -97,8 +97,7 @@ public class GuiTextField1 extends GuiAbstractTextField {
 	}
 
 	@Override
-	protected void drawComponent() {
-		Painter painter = Painter.instance;
+	protected void drawComponent(Painter painter) {
 		painter.ensure2D();
 		painter.setTexture(null);
 		
@@ -107,7 +106,7 @@ public class GuiTextField1 extends GuiAbstractTextField {
 		//le champ de texte
 		TextureQuad tex = TexturesLoader.getQuad(GameRessources.ID_TEXTFIELD1);
 		painter.setColor(this.color);
-		tex.drawQuad2D(coordGL.xmin, coordGL.ymin, coordGL.xmax, coordGL.ymax, true);
+		tex.drawQuad2D(coordGL.xmin, coordGL.ymin, coordGL.xmax, coordGL.ymax, true, painter);
 		
 		double marge = 0.03 * coordGL.getWidth();
 		
@@ -126,7 +125,7 @@ public class GuiTextField1 extends GuiAbstractTextField {
 		
 		//le curseur
 		if (isFocused()) {
-			this.cursor.drawCursor();
+			this.cursor.drawCursor(painter);
 		}
 	}
 	
@@ -161,7 +160,7 @@ public class GuiTextField1 extends GuiAbstractTextField {
 	private class Cursor extends GuiAbstractTextField.GuiCursor {
 		
 		@Override
-		public void drawCursor() {
+		public void drawCursor(Painter painter) {
 			long time = GameWindow.getInstance().getTime();
 			
 			if ((time / 500) % 2 == 1 && time - getLastInput() > 500) {
@@ -175,7 +174,6 @@ public class GuiTextField1 extends GuiAbstractTextField {
 				cursorY1 = coordGL.ymin - 0.1* height,
 				cursorY2 = coordGL.ymax + 0.1* height;
 			
-			Painter painter = Painter.instance;
 			painter.setTexture(null);
 			
 			painter.setColor(textColor);

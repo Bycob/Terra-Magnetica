@@ -65,23 +65,23 @@ public abstract class GuiComponent implements Cloneable {
 	
 	/** dessine le composant, puis appelle  la méthode {@link #draw()}
 	 * des sous-composants. */
-	public void draw(){
+	public void draw(Painter painter) {
 		for (Behavior b : this.behavior) {
 			b.update();
 		}
 		
 		if (isVisible()) {
-			drawComponent();
-			drawChildren();
+			drawComponent(painter);
+			drawChildren(painter);
 		}
 	}
 	
 	/** Dessine le composant. */
-	protected void drawComponent() {}
+	protected void drawComponent(Painter painter) {}
 	
-	protected void drawChildren() {
+	protected void drawChildren(Painter painter) {
 		for (GuiComponent child : children) {
-			child.draw();
+			child.draw(painter);
 		}
 	}
 	

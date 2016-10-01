@@ -21,10 +21,10 @@ package org.terramagnetica.opengl.engine;
 
 import org.terramagnetica.opengl.gui.GuiWindow;
 
-import net.bynaryscode.util.maths.geometric.Vec2d;
-import net.bynaryscode.util.maths.geometric.Vec2i;
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Vec2d;
+import net.bynaryscode.util.maths.geometric.Vec2i;
 
 /**
  * Cette classe permet de gérer des textures rectangulaire.
@@ -203,9 +203,7 @@ public class TextureQuad implements Cloneable, Texture {
 				(double) ((y + 1) * 256) / (double) dims.getHeight());
 	}
 	
-	public void drawQuad2D(double x1, double y1, double x2, double y2, boolean binding){
-		
-		Painter painter = Painter.instance;
+	public void drawQuad2D(double x1, double y1, double x2, double y2, boolean binding, Painter painter){
 		
 		if (binding)
 			painter.setTexture(this);
@@ -217,12 +215,12 @@ public class TextureQuad implements Cloneable, Texture {
 		painter.addVertex(x1, y2);
 	}
 	
-	public void fillScreen2D(double scaleX, double scaleY, boolean binding){
+	public void fillScreen2D(double scaleX, double scaleY, boolean binding, Painter p) {
 		if (scaleX <= 0 || scaleY <= 0)
 			throw new IllegalArgumentException();
 		
 		if (binding)
-			Painter.instance.setTexture(this);
+			p.setTexture(this);
 		
 		GLOrtho r = GuiWindow.getInstance().getOrtho();
 		
@@ -235,7 +233,7 @@ public class TextureQuad implements Cloneable, Texture {
 			for (int x = left ; x <= right ; x++){
 				for (int y = bottom ; y <= top ; y++){
 					this.drawQuad2D(x * scaleX, (y + 1) * scaleY, 
-							(x + 1) * scaleX, y * scaleY, false);
+							(x + 1) * scaleX, y * scaleY, false, p);
 				}
 			}
 		}

@@ -22,6 +22,7 @@ package org.terramagnetica.game.gui;
 import java.util.ArrayList;
 
 import org.terramagnetica.game.TerraMagnetica;
+import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.gui.GuiActionEvent;
 import org.terramagnetica.opengl.gui.GuiBorderLayout;
 import org.terramagnetica.opengl.gui.GuiButtonText1;
@@ -149,8 +150,8 @@ public class ScreenLoadMenu extends GameScreen {
 	}
 	
 	@Override
-	protected void drawComponent() {
-		drawDefaultBackground();
+	protected void drawComponent(Painter painter) {
+		drawDefaultBackground(painter);
 	}
 	
 	@Override

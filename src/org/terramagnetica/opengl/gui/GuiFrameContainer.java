@@ -20,6 +20,7 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 package org.terramagnetica.opengl.gui;
 
 import org.terramagnetica.opengl.engine.GLOrtho;
+import org.terramagnetica.opengl.engine.Painter;
 
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
 
@@ -31,7 +32,7 @@ public class GuiFrameContainer extends GuiContainer {
 	}
 	
 	@Override
-	public void drawComponent() {
+	public void drawComponent(Painter painter) {
 		RectangleDouble oldBounds = this.getAbsoluteBoundsGL();
 		GLOrtho ortho = theWindow.getOrtho();
 		if (ortho != null) {
@@ -40,7 +41,7 @@ public class GuiFrameContainer extends GuiContainer {
 				this.setBoundsGL(orthoBounds);
 			}
 		}
-		super.drawComponent();
+		super.drawComponent(painter);
 	}
 	
 	@Override

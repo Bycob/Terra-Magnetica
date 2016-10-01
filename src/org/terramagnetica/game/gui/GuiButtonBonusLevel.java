@@ -26,8 +26,8 @@ import org.terramagnetica.opengl.gui.GuiAbstractButton;
 import org.terramagnetica.ressources.TexturesLoader;
 
 import net.bynaryscode.util.Color4f;
-import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Vec2d;
 
 public class GuiButtonBonusLevel extends GuiAbstractButton {
 	
@@ -46,7 +46,7 @@ public class GuiButtonBonusLevel extends GuiAbstractButton {
 	}
 	
 	@Override
-	public void drawComponent() {
+	public void drawComponent(Painter p) {
 		Color4f componentColor = new Color4f(196, 196, 196);
 		
 		switch (this.getState()) {
@@ -60,7 +60,6 @@ public class GuiButtonBonusLevel extends GuiAbstractButton {
 			break;
 		}
 		
-		Painter p = Painter.instance;
 		p.ensure2D();
 		p.setPrimitive(Primitive.QUADS);
 		p.setColor(componentColor);

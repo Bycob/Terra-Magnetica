@@ -29,6 +29,7 @@ import org.terramagnetica.game.GameInterruption;
 import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.openal.MusicStreaming;
+import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.gui.GuiActionEvent;
 import org.terramagnetica.opengl.gui.GuiButtonText1;
 import org.terramagnetica.opengl.gui.GuiLabel;
@@ -189,11 +190,11 @@ public class ScreenGamePlaying extends GameScreen {
 	}
 	
 	@Override
-	public void draw() {
-		super.draw();
+	public void draw(Painter painter) {
+		super.draw(painter);
 		
 		if (this.interrupted) {
-			this.interruption.draw();
+			this.interruption.draw(painter);
 		}
 	}
 	

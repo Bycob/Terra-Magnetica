@@ -79,11 +79,11 @@ public final class ScreenMainMenu extends GameScreen {
 	public int timeToDestroy(){return 280;}
 	
 	@Override
-	protected void drawComponent(){
+	protected void drawComponent(Painter painter){
 		if (appearSelector != NORMAL_APPEARING) appearSelector = NORMAL_APPEARING;
 		
-		drawDefaultBackground();
-		drawTitleImage(Painter.instance, new Color4f(1f, 1f, 1f));
+		drawDefaultBackground(painter);
+		drawTitleImage(painter, new Color4f(1f, 1f, 1f));
 	}
 	
 	private void drawTitleImage(Painter p, Color4f color) {
@@ -102,7 +102,7 @@ public final class ScreenMainMenu extends GameScreen {
 	}
 	
 	@Override
-	protected void drawComponentAppearing(){
+	protected void drawComponentAppearing(Painter painter){
 		switch (appearSelector) {
 		case FIRST_APPEARING :
 			
@@ -111,17 +111,17 @@ public final class ScreenMainMenu extends GameScreen {
 			Color4f color = new Color4f(colorUnit, colorUnit, colorUnit);
 			Color4f buttonColor = new Color4f(colorUnit * 2, colorUnit * 2, colorUnit * 2);
 			
-			Painter.instance.setColor(color);
-			tex1.fillScreen2D(0.5, 0.5, true);
+			painter.setColor(color);
+			tex1.fillScreen2D(0.5, 0.5, true, painter);
 			
-			drawTitleImage(Painter.instance, buttonColor);
+			drawTitleImage(painter, buttonColor);
 			
 			newPart.setColor(buttonColor);
 			loadPart.setColor(buttonColor);
 			break;
 		
 		default :
-			super.drawComponentAppearing();
+			super.drawComponentAppearing(painter);
 		}
 	}
 	

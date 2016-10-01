@@ -40,11 +40,11 @@ public abstract class GameScreen extends GuiComponent implements Cloneable, GuiC
 	
 	/** Dessin du fond d'écran : texture de sol sombre en décor
 	 * de montagnes */
-	protected void drawDefaultBackground() {
-		Painter.instance.ensure2D();
+	protected void drawDefaultBackground(Painter painter) {
+		painter.ensure2D();
 		TextureQuad tex = TexturesLoader.getQuad(Util.formatDecimal(GameRessources.SPEC_PATH_TERRAIN, 1) + GameRessources.TEX_SOL);
-		Painter.instance.setColor(new Color4f(0.5f, 0.5f, 0.5f));
-		tex.fillScreen2D(0.5, 0.5, true);
+		painter.setColor(new Color4f(0.5f, 0.5f, 0.5f));
+		tex.fillScreen2D(0.5, 0.5, true, painter);
 	}
 	
 	public GameWindow window = GameWindow.getInstance();
@@ -74,26 +74,26 @@ public abstract class GameScreen extends GuiComponent implements Cloneable, GuiC
 	}
 	
 	@Override
-	public void draw(){
-		Painter.instance.ensure2D();
-		selectDrawingMode();
-		drawChildren();
+	public void draw(Painter painter){
+		painter.ensure2D();
+		selectDrawingMode(painter);
+		drawChildren(painter);
 	}
 	
 	/** Permet de définir le mode de dessin du {@link GameScreen}, selon
 	 * son état. */
-	protected void selectDrawingMode(){
+	protected void selectDrawingMode(Painter painter) {
 		
-		switch (getState()){
+		switch (getState()) {
 		case VISIBLE :
-			drawComponent();
+			drawComponent(painter);
 			break;
 		case APPEARING :
 			appearChronoTime = (int) appearChrono.getTime();
 			
-			drawComponentAppearing();
+			drawComponentAppearing(painter);
 			
-			if (appearChronoTime >= timeToAppear()){
+			if (appearChronoTime >= timeToAppear()) {
 				setState(VISIBLE);
 				appearChrono.stop();
 			}
@@ -101,7 +101,7 @@ public abstract class GameScreen extends GuiComponent implements Cloneable, GuiC
 		case DESTROYING :
 			destroyChronoTime = (int) destroyChrono.getTime();
 			
-			drawComponentDestroying();
+			drawComponentDestroying(painter);
 			
 			if (destroyChronoTime >= timeToDestroy()){
 				setState(NULL);
@@ -120,8 +120,8 @@ public abstract class GameScreen extends GuiComponent implements Cloneable, GuiC
 	 * {@link GameScreen#selectDrawingMode()}. Par défaut, elle appelle
 	 * la méthode {@link GuiComponent#drawComponent()} puis joue la 
 	 * transition, s'il y en a une. */
-	protected void drawComponentAppearing(){
-		drawComponent();
+	protected void drawComponentAppearing(Painter painter) {
+		drawComponent(painter);
 		if (transition != null) {
 			transition.appear(appearChronoTime);
 		}
@@ -136,8 +136,8 @@ public abstract class GameScreen extends GuiComponent implements Cloneable, GuiC
 	 * {@link GameScreen#selectDrawingMode()}. Par défaut, elle appelle
 	 * la méthode {@link GuiComponent#drawComponent()} puis joue la 
 	 * transition, s'il y en a une. */
-	protected void drawComponentDestroying(){
-		drawComponent();
+	protected void drawComponentDestroying(Painter painter) {
+		drawComponent(painter);
 		if (transition != null) {
 			transition.destroy(destroyChronoTime);
 		}

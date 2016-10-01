@@ -145,7 +145,7 @@ public class GuiWindow {
 		sendEvents();
 		this.contentPane.processLogic();
 		
-		this.contentPane.draw();
+		this.contentPane.draw(Painter.instance);
 		Painter.instance.flush();
 		
 		this.flushContentPane();

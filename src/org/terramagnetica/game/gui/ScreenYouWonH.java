@@ -19,8 +19,9 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game.gui;
 
-import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.NullDescriptionException;
+import org.terramagnetica.game.TerraMagnetica;
+import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.gui.GuiActionEvent;
 import org.terramagnetica.opengl.gui.GuiButtonText1;
 import org.terramagnetica.opengl.gui.GuiLabel;
@@ -63,8 +64,8 @@ public class ScreenYouWonH extends GameScreen {
 	}
 	
 	@Override
-	public void drawComponent() {
-		this.drawDefaultBackground();
+	public void drawComponent(Painter painter) {
+		this.drawDefaultBackground(painter);
 	}
 	
 	@Override

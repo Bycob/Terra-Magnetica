@@ -30,8 +30,7 @@ import net.bynaryscode.util.Color4f;
 public class TransluscentScreen extends GuiComponent {
 	
 	@Override
-	protected void drawComponent() {
-		Painter painter = Painter.instance;
+	protected void drawComponent(Painter painter) {
 		painter.ensure2D();
 		painter.setColor(new Color4f(0f, 0f, 0f, 0.5f));
 		painter.setTexture(null);

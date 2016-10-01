@@ -136,8 +136,7 @@ public class CodeTest {
 	public static class DrawPanel extends GuiFrameContainer {
 		
 		@Override
-		public void drawComponent() {
-			Painter painter = Painter.instance;
+		public void drawComponent(Painter painter) {
 			painter.ensure3D();
 			
 			zoom -= Mouse.getDWheel() / 1000f;

@@ -67,7 +67,7 @@ public class PortalNameDisplayer extends GuiComponent implements Animation {
 	}
 	
 	@Override
-	public void drawComponent() {
+	public void drawComponent(Painter painter) {
 		if (this.name == null && (!isChanging() || this.oldName == null)) return;
 		
 		//Détermination des limites
@@ -75,7 +75,6 @@ public class PortalNameDisplayer extends GuiComponent implements Animation {
 		bounds.scaleFromCenter(0.4, 1);
 		bounds.translate(0, 0.2);
 		
-		Painter painter = Painter.instance;
 		Color4f color = new Color4f(0.25f, 0.25f, 0.25f, 0.75f);
 		Color4f textColor = new Color4f(234, 255, 0);
 		

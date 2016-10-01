@@ -29,8 +29,8 @@ import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.ressources.TexturesLoader;
 
 import net.bynaryscode.util.Color4f;
-import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Vec2d;
 
 /**
  * Un bouton contenant du texte. Si le bouton est cliqué
@@ -98,15 +98,15 @@ public class GuiButtonText1 extends GuiAbstractButton {
 	}
 	
 	@Override
-	protected void drawComponent() {
-		Painter.instance.setTexture(null);
+	protected void drawComponent(Painter painter) {
+		painter.setTexture(null);
 		
 		RectangleDouble coordGL = this.getBoundsGL();
 		
 		//dessin du bouton
 		TextureQuad tex = TexturesLoader.getQuad(texturesMap.get(getState()));
-		Painter.instance.setColor(this.getColor());
-		tex.drawQuad2D(coordGL.xmin, coordGL.ymin, coordGL.xmax, coordGL.ymax, true);
+		painter.setColor(this.getColor());
+		tex.drawQuad2D(coordGL.xmin, coordGL.ymin, coordGL.xmax, coordGL.ymax, true, painter);
 		
 		//ajout du texte
 		drawText();

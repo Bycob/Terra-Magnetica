@@ -23,8 +23,8 @@ import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.TextureQuad;
 
 import net.bynaryscode.util.Color4f;
-import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Vec2d;
 
 public class GuiLabel extends GuiComponent {
 	
@@ -61,9 +61,7 @@ public class GuiLabel extends GuiComponent {
 	}
 	
 	@Override
-	public void drawComponent() {
-		Painter.instance.ensure2D();
-		
+	public void drawComponent(Painter painter) {
 		switch (this.mode) {
 		case TEXT :
 			if (this.textInitialized) {

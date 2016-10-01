@@ -42,7 +42,7 @@ public abstract class GuiDialog extends GuiComponent {
 	}
 	
 	@Override
-	public void draw() {
+	public void draw(Painter painter) {
 		if ((this.appearing || this.destroying) && !this.animationChrono.isTiming()) {
 			this.animationChrono.restart();
 		}
@@ -59,21 +59,20 @@ public abstract class GuiDialog extends GuiComponent {
 		}
 		
 		if (!this.appearing && !this.destroying) {
-			super.draw();
+			super.draw(painter);
 		}
 		else {
-			this.drawComponent();
+			this.drawComponent(painter);
 		}
 	}
 	
 	@Override
-	public void drawComponent() {
-		drawDecorations();
+	public void drawComponent(Painter painter) {
+		drawDecorations(painter);
 	}
 	
-	protected void drawDecorations() {
+	protected void drawDecorations(Painter painter) {
 		//Initialisation
-		Painter painter = Painter.instance;
 		GuiWindow window = GuiWindow.getInstance();
 		
 		painter.ensure2D();

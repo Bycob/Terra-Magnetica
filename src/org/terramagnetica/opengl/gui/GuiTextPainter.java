@@ -83,7 +83,7 @@ public final class GuiTextPainter {
 		double height = theWindow.getHeightOnGLOrtho(fontSize) * this.getRealScale();
 		
 		this.painter.setColor(color.clone());
-		tex.drawQuad2D(x, y + height, x + width, y, true);
+		tex.drawQuad2D(x, y + height, x + width, y, true, this.painter);
 	}
 
 	/**

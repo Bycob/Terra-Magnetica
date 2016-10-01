@@ -49,9 +49,8 @@ public class GuiButtonLoadGame extends GuiAbstractButton {
 	}
 	
 	@Override
-	public void drawComponent() {
+	public void drawComponent(Painter p) {
 		//initialisation.
-		Painter p = Painter.instance;
 		p.ensure2D();
 		p.setPrimitive(Painter.Primitive.QUADS);
 		

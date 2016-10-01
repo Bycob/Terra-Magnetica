@@ -19,6 +19,7 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game.gui;
 
+import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.gui.GuiActionEvent;
 import org.terramagnetica.opengl.miscellaneous.Timer;
 
@@ -41,7 +42,7 @@ public class TitleScreen extends GameScreen {
 	}
 	
 	@Override
-	protected void drawComponent() {
+	protected void drawComponent(Painter painter) {
 		if (!this.chrono.isRunning()) {
 			this.chrono.start();
 		}

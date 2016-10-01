@@ -19,6 +19,7 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game.gui;
 
+import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.gui.GuiActionEvent;
 
 public class TransitionGameScreen extends GameScreen {
@@ -44,13 +45,13 @@ public class TransitionGameScreen extends GameScreen {
 	}
 	
 	@Override
-	public void draw() {
-		this.selectDrawingMode();
-		this.drawChildren();
+	public void draw(Painter painter) {
+		this.selectDrawingMode(painter);
+		this.drawChildren(painter);
 	}
 	
 	@Override
-	public void drawComponent() {}
+	public void drawComponent(Painter painter) {}
 	@Override
 	public GuiActionEvent processLogic() {return GuiActionEvent.NULL_EVENT;}
 }

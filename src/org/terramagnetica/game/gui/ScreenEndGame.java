@@ -19,8 +19,8 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game.gui;
 
-import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.Sauvegarde_Histoire;
+import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.opengl.gui.GuiActionEvent;
@@ -57,12 +57,11 @@ public class ScreenEndGame extends GameScreen {
 	}
 	
 	@Override
-	public void drawComponent() {
+	public void drawComponent(Painter p) {
 		TextureQuad tex = TexturesLoader.getQuad("decor/terrain1.png.sol");
-		Painter p = Painter.instance;
 		p.ensure2D();
 		p.setColor(new Color4f(0.5f, 0.5f, 0.5f));
-		tex.fillScreen2D(0.5, 0.5, true);
+		tex.fillScreen2D(0.5, 0.5, true, p);
 	}
 	
 	@Override

@@ -27,9 +27,10 @@ import java.util.List;
 import javax.swing.JFileChooser;
 
 import org.terramagnetica.creator.ExtensionFileFilter;
-import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.Level;
+import org.terramagnetica.game.TerraMagnetica;
+import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.gui.Bounds;
 import org.terramagnetica.opengl.gui.GuiActionEvent;
 import org.terramagnetica.opengl.gui.GuiBorderLayout;
@@ -267,8 +268,8 @@ public class ScreenFreeGame extends GameScreen {
 	}
 	
 	@Override
-	protected void drawComponent(){
-		this.drawDefaultBackground();
+	protected void drawComponent(Painter painter){
+		this.drawDefaultBackground(painter);
 	}
 
 	@Override

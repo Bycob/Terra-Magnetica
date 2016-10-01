@@ -91,12 +91,11 @@ public class InterruptionChangeRoom extends GameInterruption {
 	}
 	
 	@Override
-	public void draw() {
+	public void draw(Painter painter) {
 		if (this.finished) return;
 		
 		long time = this.chrono.getTime();
-
-		Painter painter = Painter.instance;
+		
 		GuiTextPainter textPainter = new GuiTextPainter(painter);
 		
 		painter.ensure2D();

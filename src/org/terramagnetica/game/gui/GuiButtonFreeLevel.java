@@ -99,8 +99,7 @@ public class GuiButtonFreeLevel extends GuiAbstractButton {
 	}
 	
 	@Override
-	public void drawComponent() {
-		Painter p = Painter.instance;
+	public void drawComponent(Painter p) {
 		p.ensure2D();
 		p.setPrimitive(Painter.Primitive.QUADS);
 		
