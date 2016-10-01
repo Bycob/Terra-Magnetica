@@ -44,6 +44,7 @@ public class ScreenGamePlaying extends GameScreen {
 	private boolean modeAuto = false;
 	private boolean isTest = false;
 	private boolean interrupted = false;
+	private boolean gameLaunched = false;
 	private GameInterruption interruption;
 	
 	private GameRendering renderGame;
@@ -125,6 +126,11 @@ public class ScreenGamePlaying extends GameScreen {
 			return super.processLogic();
 		}
 		
+		if (!this.gameLaunched) {
+			this.runGame();
+			this.gameLaunched = true;
+		}
+		
 		if (!this.interrupted) {
 			if (!this.game.isRunning()) {
 				this.runGame();
@@ -191,6 +197,8 @@ public class ScreenGamePlaying extends GameScreen {
 	
 	@Override
 	public void draw(Painter painter) {
+		this.renderGame.setVisible(this.gameLaunched);
+		
 		super.draw(painter);
 		
 		if (this.interrupted) {
