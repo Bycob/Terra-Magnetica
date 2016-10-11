@@ -41,7 +41,7 @@ public class TestWindow extends GameWindow {
 	public Creator pointer;
 	
 	public TestWindow(Level lvl) {
-		this.theLevel = lvl.clone();
+		this.theLevel = lvl;
 		
 		setInstance(this);
 	}
@@ -93,6 +93,8 @@ public class TestWindow extends GameWindow {
 	@Override
 	protected void destroyApp() {
 		super.destroyApp();
+		
+		this.game.destroyRenders();
 		
 		if (this.game.hasWon()) {
 			JOptionPane.showMessageDialog(pointer, "Vous avez gagné !", "Victoire", JOptionPane.INFORMATION_MESSAGE);

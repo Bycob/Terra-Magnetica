@@ -206,7 +206,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * cette méthode libère toutes les ressources avant de recréer
 	 * le rendu, ce qui permet de recharger les textures lorsqu'elles
 	 * ont été supprimées. */
-	public void reloadRender() {
+	public void destroyRender() {
 		this.renderManager = new RenderManager();
 		this.createdRenderManager = false;
 	}
@@ -218,6 +218,9 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		return this.getRenderManager().getRender();
 	}
 	
+	/** Donne le {@link RenderManager} qui gère les rendus de cette
+	 * entité. Si le {@link RenderManager} n'a pas encore été initialisé,
+	 * la méthode {@link #createRender()} est appelée pour l'initialiser. */
 	public RenderManager getRenderManager() {
 		if (!this.createdRenderManager) {
 			createRender();

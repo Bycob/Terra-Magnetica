@@ -33,6 +33,7 @@ import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.Renderable;
 import org.terramagnetica.opengl.engine.RenderableCompound;
 import org.terramagnetica.opengl.engine.RenderableModel3D;
+import org.terramagnetica.opengl.engine.RenderableShapedShadow;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.MathUtil;
@@ -41,11 +42,14 @@ import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class RenderEntities extends RenderGameDefaultElement {
 	
+	/** Ordre de priorité des rendus, par classes. Plus un rendu possède un
+	 * ordre de priorité élevé, plus il sera rendu tard. */
 	private static HashMap<Class<? extends Renderable>, Integer> priorityOrder =
 			new HashMap<Class<? extends Renderable>, Integer>();
 	
 	static {
 		int i = -1;
+		priorityOrder.put(RenderableShapedShadow.class, ++i);
 		priorityOrder.put(RenderableModel3D.class, ++i);
 		priorityOrder.put(RenderEntityTexture.class, ++i);
 	}

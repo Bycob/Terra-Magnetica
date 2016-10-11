@@ -531,7 +531,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	}
 	
 	@Override
-	public void recreateRenders() {
+	public void destroyRenders() {
 		for (LandscapeTile[] array1 : this.landscape) {
 			for (LandscapeTile land : array1) {
 				land.removeAllRenders();
@@ -539,10 +539,19 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		}
 		
 		for (Entity e : this.entities) {
-			e.reloadRender();
+			e.destroyRender();
 		}
 		
 		RenderLandscape.destroyAllLists();
+	}
+	
+	@Override
+	public void recreateRenders() {
+		destroyRenders();
+		
+		for (Entity e : this.entities) {
+			e.getRenderManager();
+		}
 	}
 	
 	@Override
@@ -580,6 +589,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	public void startGame() {
 		super.startGame();
 		
+		this.recreateRenders();
 		this.applyTags();
 		
 		//Redémarrage du niveau.

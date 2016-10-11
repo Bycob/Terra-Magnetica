@@ -131,12 +131,6 @@ public class ScreenGamePlaying extends GameScreen {
 			this.gameLaunched = true;
 		}
 		
-		if (!this.interrupted) {
-			if (!this.game.isRunning()) {
-				this.runGame();
-			}
-		}
-		
 		GameInterruption i;
 		if ((i = this.renderGame.nextInterruption()) != null) {
 			this.interruptGame(i);
@@ -215,7 +209,7 @@ public class ScreenGamePlaying extends GameScreen {
 		Mouse.setGrabbed(flag && GameWindow.getSystemNanos() - Mouse.getEventNanoseconds() > 1000000000l);// 1s
 	}
 	
-	/** Démarre le jeu et la musique. */
+	/** Lance le jeu à la création du Panel. Lance également la musique. */
 	public void runGame() {
 		this.game.startGame();
 		
@@ -297,6 +291,7 @@ public class ScreenGamePlaying extends GameScreen {
 			TerraMagnetica.theGame.exitGamePlaying();
 		}
 		
+		this.game.destroyRenders();
 		SoundManager.stopMusic();
 		
 		updateMouseGrabbing(false);

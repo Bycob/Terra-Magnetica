@@ -28,9 +28,12 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
+import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.opengl.engine.GLOrtho;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.miscellaneous.Timer;
+
+import net.bynaryscode.util.Log;
 
 public class GuiWindow {
 	
@@ -114,7 +117,15 @@ public class GuiWindow {
 		Display.setIcon(this.icons);
 		Display.setResizable(true);
 		
-		Display.create(format);
+		try {
+			Display.create(format);
+		}
+		catch (LWJGLException e) {
+			TerraMagnetica.theGame.log.addMessage(
+					"Impossible de lancer la configuration optimale. Lancement de la configuration minimale", Log.WARNING_OBJET);
+			
+			Display.create();
+		}
 		Keyboard.create();
 		Mouse.create();
 		

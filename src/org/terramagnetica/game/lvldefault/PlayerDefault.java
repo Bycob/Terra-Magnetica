@@ -43,14 +43,11 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	private static final long serialVersionUID = 1L;
 	
 	//Hitbox
-	private static final int HEIGHT = 128;
-	private static final int WIDTH = 128;
+	private static final int HB_HEIGHT = 128;
+	private static final int HB_WIDTH = 128;
 	
 	//Image
-	private static final int IMG_WIDTH = 192;
-	private static final int IMG_HEIGHT = 288;
-	
-	private static final double SCALE = 0.7;
+	private static final double SCALE = 0.8;
 	
 	//AUTRE
 	static final boolean DBG_INVINCIBLE = false;
@@ -126,7 +123,7 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	
 	@Override
 	public DimensionsInt getDimensions() {
-		return new DimensionsInt(WIDTH, HEIGHT);
+		return new DimensionsInt(HB_WIDTH, HB_HEIGHT);
 	}
 	
 	@Override
@@ -136,7 +133,7 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	
 	@Override
 	public DimensionsInt getImgDimensions(){
-		return new DimensionsInt(IMG_WIDTH, IMG_HEIGHT);
+		return new DimensionsInt(SPRITE_WIDTH, SPRITE_HEIGHT);
 	}
 	
 	@Override

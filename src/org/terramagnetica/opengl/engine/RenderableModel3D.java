@@ -22,6 +22,8 @@ package org.terramagnetica.opengl.engine;
 import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
 
 import net.bynaryscode.util.maths.geometric.AxisAlignedBox3D;
+import net.bynaryscode.util.maths.geometric.Circle;
+import net.bynaryscode.util.maths.geometric.RectangleDouble;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class RenderableModel3D extends Renderable {
@@ -51,6 +53,25 @@ public class RenderableModel3D extends Renderable {
 		box.translate(x, y, z);
 		applyTransformsToBoundingBox(box);
 		return box;
+	}
+	
+	public RenderableModel3D setCircleShadow(double scale) {
+		AxisAlignedBox3D aabb = getRenderBoundingBox(0, 0, 0);
+		double radius = (aabb.sizeX + aabb.sizeY) / 2;
+		Circle circle = new Circle(0, 0, radius * 0.25 * scale);
+		
+		RenderableShapedShadow shadow = new RenderableShapedShadow(circle);
+		shadow.setFadeout((float) (radius * 0.25 * scale));
+		return (RenderableModel3D) withShadowObject(shadow);
+	}
+	
+	public RenderableModel3D setAxisAlignedRectangleShadow() {
+		AxisAlignedBox3D aabb = getRenderBoundingBox(0, 0, 0);
+		RectangleDouble rectangle = RectangleDouble.createRectangleFromCenter(0, 0, aabb.sizeX * 0.5f, aabb.sizeY * 0.5f);
+		
+		RenderableShapedShadow shadow = new RenderableShapedShadow(rectangle);
+		shadow.setFadeout((float) ((aabb.sizeX + aabb.sizeY) / 4));
+		return (RenderableModel3D) withShadowObject(shadow);
 	}
 	
 	@Override

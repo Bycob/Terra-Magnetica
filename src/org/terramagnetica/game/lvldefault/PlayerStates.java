@@ -31,6 +31,6 @@ public interface PlayerStates {
 	
 	public static final int NB_STATES = 5;
 	public static final int NB_FRAMES = 1;
-	public static final int SPRITE_WIDTH = 192;
-	public static final int SPRITE_HEIGHT = 288;
+	public static final int SPRITE_WIDTH = 128;
+	public static final int SPRITE_HEIGHT = 256;
 }

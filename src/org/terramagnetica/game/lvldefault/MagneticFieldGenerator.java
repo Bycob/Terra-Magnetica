@@ -206,10 +206,10 @@ public class MagneticFieldGenerator extends CaseEntity {
 	}
 	
 	@Override
-	public void reloadRender() {
-		super.reloadRender();
+	public void destroyRender() {
+		super.destroyRender();
 		for (MiniElectrocrystal crystal : this.cristaux) {
-			crystal.reloadRender();
+			crystal.destroyRender();
 		}
 	}
 	

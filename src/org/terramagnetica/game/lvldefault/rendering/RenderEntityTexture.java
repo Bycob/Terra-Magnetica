@@ -117,8 +117,9 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 		}
 		else {
 			float shadowSize = (float) (0.01f);
-			final float fadeout = (float) (this.width * 0.3f);
+			final float fadeout = (float) (this.width * 0.5f);
 			RenderableShapedShadow shadow = new RenderableShapedShadow(new Circle(0, 0, shadowSize));
+			shadow.setPositionOffset(0, 0, -0.0005);
 			shadow.setFadeout(fadeout);
 			shadow.setColor(new Color4f(0, 0, 0, 0.5f));
 			
@@ -220,7 +221,7 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 	public AxisAlignedBox3D getRenderBoundingBox(float x, float y, float z) {
 		AxisAlignedBox3D result = super.getRenderBoundingBox(x, y, z);
 		
-		result.sizeY = Math.sin(this.getRadius());
+		if (!this.onGround) result.sizeY = Math.sin(this.getRadius());
 		return result;
 	}
 	

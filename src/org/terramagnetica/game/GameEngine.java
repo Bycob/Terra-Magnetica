@@ -242,8 +242,14 @@ public abstract class GameEngine implements Runnable, Codable, Cloneable, Serial
 	}
 	
 	/**
-	 * Recrée tous les objets de rendus des différentes composantes du
+	 * Détruit tous les objets de rendus des différentes composantes du
 	 * moteur de jeu (éléments de décors, entités...)
 	 */
-	public void recreateRenders() {}
+	public void destroyRenders() {}
+	
+	/** recrée tous les objets de rendus des différentes composantes du
+	 * moteur de jeu (éléments de décors, entités...) */
+	public void recreateRenders() {
+		destroyRenders();
+	}
 }

@@ -137,7 +137,8 @@ public class GameWindow {
 			RessourcesManager.loadGameStartScreen();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Error("Impossible de lancer le jeu");
+			TerraMagnetica.theGame.log.addErrorMessage("Impossible de lancer le jeu", e);
+			throw new Error("Arrêt de l'application");
 		}
 		
 		TitleScreen title = new TitleScreen();

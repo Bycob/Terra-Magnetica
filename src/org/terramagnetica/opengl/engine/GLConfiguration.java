@@ -74,7 +74,7 @@ public class GLConfiguration implements Cloneable {
 	private int blendDFactor = GL11.GL_ONE_MINUS_SRC_ALPHA;
 	private int alphaFunc = GL11.GL_GREATER;
 	private float alphaRef = 0f;
-	private int depthFunc = GL11.GL_LEQUAL;
+	private int depthFunc = GL11.GL_LESS;
 	
 	public GLConfiguration() {
 		for (GLProperty prop : GLProperty.values()) {

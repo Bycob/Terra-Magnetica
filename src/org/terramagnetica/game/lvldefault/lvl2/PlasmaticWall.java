@@ -23,6 +23,7 @@ import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.CaseEntity;
+import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.opengl.engine.AnimatedTexture;
 import org.terramagnetica.opengl.engine.Renderable;
@@ -56,6 +57,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 	/** Indique l'activation du mur : {@code true} si le mur bloque le passage,
 	 * {@code false} sinon. */
 	private transient boolean state = true;
+	private transient boolean triggerStateChanged = false;
 	
 	public PlasmaticWall() {
 		this(5, ControlPaneSystemManager.GREEN);
@@ -72,13 +74,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 		this.state = state;
 		
 		if (oldState != this.state) {
-			if (this.state) {
-				this.renderManager.render("default");
-			}
-			else {
-				this.renderManager.render("nothing");
-			}
-			this.hitbox.setSolid(this.state);
+			this.triggerStateChanged = true;
 		}
 	}
 	
@@ -127,6 +123,19 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 		
 		this.renderManager.putRender("default", result);
 		this.renderManager.putRender("nothing", new RenderableNull());
+	}
+	
+	@Override
+	public void updateLogic(long dT, GamePlayingDefault game) {
+		if (this.triggerStateChanged) {
+			if (this.state) {
+				this.renderManager.render("default");
+			}
+			else {
+				this.renderManager.render("nothing");
+			}
+			this.hitbox.setSolid(this.state);
+		}
 	}
 	
 	@Override

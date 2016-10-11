@@ -45,7 +45,7 @@ public class RenderableShapedShadow extends RenderableObject3D implements IShado
 		
 		this.setShape(shape);
 		
-		this.setColor(new Color4f(0, 0, 0));
+		this.setColor(new Color4f(0, 0, 0, 0.5f));
 		this.setTexture(null);
 	}
 	

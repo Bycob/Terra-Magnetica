@@ -169,9 +169,6 @@ public class TerraMagnetica {
 			}
 			ModelLoader.loadModelSet(this.engine.getModels(), true);
 		}
-		
-		//Maintenant toutes les textures sont chargées.
-		this.engine.recreateRenders();
 	}
 	
 	/**

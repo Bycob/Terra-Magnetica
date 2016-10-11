@@ -66,11 +66,6 @@ public class Aimant extends EntityMoving {
 		updateRenderingDanger();
 	}
 	
-	@Override
-	public void reloadRender() {
-		super.reloadRender();
-	}
-	
 	/**
 	 * Active ou desactive l'animation du "cristal dangereux", selon la
 	 * vitesse du cristal.

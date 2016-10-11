@@ -381,6 +381,9 @@ public class GameRessources {
 		gameTextureSet.addTextureModel(PATH_DIRECTION_ARROW, new TextureQuad(0, 0, width, height, width, height, 0));
 		
 		//Textures de l'interface graphique
+		guiTextureSet.createImage(PATH_BONUS_LEVEL_BUTTONS); width = 512; height = 512;
+		guiTextureSet.addTextureModel(TEX_BONUS_BUTTON_0_ENFERS, new TextureQuad(0, 0, 256, 256, width, height, 0));
+		
 		guiTextureSet.createImage(PATH_GUI); width = 1024; height = 1024;
 		guiTextureSet.addTextureModel(ID_BUTTON, new TextureQuad(0, 0, 255, 63, width, height, 0));
 		guiTextureSet.addTextureModel(ID_BUTTON_OVER, new TextureQuad(0, 64, 255, 127, width, height, 0));
@@ -392,9 +395,6 @@ public class GameRessources {
 		
 		guiTextureSet.createImage(PATH_TITLE_SCREEN); width = 896; height = 640;
 		guiTextureSet.addTextureModel(PATH_TITLE_SCREEN, new TextureQuad(0, 0, width, height, width, height, 0));
-		
-		guiTextureSet.createImage(PATH_BONUS_LEVEL_BUTTONS); width = 512; height = 512;
-		guiTextureSet.addTextureModel(TEX_BONUS_BUTTON_0_ENFERS, new TextureQuad(0, 0, 256, 256, width, height, 0));
 		
 		//Textures du menu "Jeu libre"
 		for (DecorType decor : DecorType.values()) {

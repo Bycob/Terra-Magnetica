@@ -60,7 +60,7 @@ public class ControlPane extends CaseEntity implements BarrierStateListener, IGo
 	public void setOrientation(float orientation) {
 		this.orientation = orientation;
 		recreateHitbox();
-		this.reloadRender();
+		this.destroyRender();
 	}
 	
 	@Override

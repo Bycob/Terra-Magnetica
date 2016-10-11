@@ -188,6 +188,7 @@ public final class SoundManager implements Runnable {
 	
 	public static void initialize() {
 		Thread t = new Thread(instance, "SoundThread");
+		t.setDaemon(true);
 		t.start();
 	}
 	

@@ -62,6 +62,7 @@ public class Rock extends CaseEntity {
 	@Override
 	protected void createRender() {
 		this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.getNotNull(GameRessources.PATH_MODEL_LVL2_ROCKS))
+				.setCircleShadow(1.6)
 				.withRotationOffset(0, 0, 270)
 				.withPositionOffset(0, 0, this.elevation));
 	}
