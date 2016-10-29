@@ -77,7 +77,6 @@ public class RenderableModel3D extends Renderable {
 	@Override
 	public void renderAt(Vec3d position, double rotation, Vec3d up, Vec3d scale, Painter painter) {
 		//Si la matrice n'est pas modifiée, pas besoin de vider le tampon du Painter
-		painter.pushTransformState();
 		applyTransforms(position, rotation, up, scale, painter);
 		
 		//TODO temporaire
@@ -91,6 +90,6 @@ public class RenderableModel3D extends Renderable {
 		
 		config.setPropertieEnabled(GLProperty.LIGHTING, false);
 		
-		painter.popTransformState();
+		painter.clearTransforms();
 	}
 }

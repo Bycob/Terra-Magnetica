@@ -111,7 +111,7 @@ public class RenderLandscapeMur3D extends RenderLandscape {
 	public void renderLandscape3D(int x, int y, Painter painter) {
 		Light light = painter.getLightModel().getLight0();
 		
-		painter.pushTransformState();
+		painter.clearTransforms();
 		
 		painter.addTransform(Transform.newTranslation(x + 0.5f, -y - 0.5f, 0));
 		painter.addTransform(Transform.newRotation(this.rotation, new Vec3d(0, 0, 1)));
@@ -120,6 +120,6 @@ public class RenderLandscapeMur3D extends RenderLandscape {
 		
 		this.modelMur.draw(painter);
 		
-		painter.popTransformState();
+		painter.clearTransforms();
 	}
 }

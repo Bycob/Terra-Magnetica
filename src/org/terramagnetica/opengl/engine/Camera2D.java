@@ -29,7 +29,7 @@ public class Camera2D implements Camera {
 	}
 	
 	@Override
-	public void pushCamera() {
+	public void pushCamera(Painter painter) {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 		

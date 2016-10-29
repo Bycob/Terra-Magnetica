@@ -138,7 +138,7 @@ public class GLConfiguration implements Cloneable {
 		}
 		
 		//Caméra
-		this.camera.pushCamera();
+		this.camera.pushCamera(this.painter);
 	}
 	
 	public void clearConfig() {

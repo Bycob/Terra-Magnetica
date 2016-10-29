@@ -28,7 +28,6 @@ import java.util.LinkedList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.Shape;
@@ -101,6 +100,7 @@ public class Painter {
 	private Painter() {
 		initBuffers();
 		
+		this.configuration.painter = this;
 		this.lightModel.painter = this;
 	}
 	
@@ -187,21 +187,12 @@ public class Painter {
 			for (Transform t : this.transforms) {
 				t.applyTransform();
 			}
-			
-			if (this.configuration.isPropertyEnabled(GLProperty.LIGHTING)) {
-				this.lightModel.activate();
-			}
 		}
 	}
 	
 	private void unsetupEnvironment() {
 		
 		if (this.recordedList == null) {
-			
-			if (this.configuration.isPropertyEnabled(GLProperty.LIGHTING)) {
-				this.lightModel.desactivate();
-			}
-			
 			this.configuration.clearConfig();
 		}
 	}
@@ -427,6 +418,11 @@ public class Painter {
 		this.transforms.add(transform);
 	}
 	
+	public void setTransform(Transform transform) {
+		this.clearTransforms();
+		this.addTransform(transform);
+	}
+	
 	public void clearTransforms() {
 		if (this.transforms.size() != 0) {
 			flush();
@@ -519,13 +515,13 @@ public class Painter {
 	}
 	
 	public void drawListAt(DisplayList list, Vec3d position, Vec3d rotAxis, float rotAngle) {
-		pushTransformState();
+		clearTransforms();
 
 		addTransform(Transform.newRotation(rotAngle, rotAxis));
 		addTransform(Transform.newTranslation((float) position.x, (float) position.y, (float) position.z));
 		
 		drawList(list);
 		
-		popTransformState();
+		clearTransforms();
 	}
 }

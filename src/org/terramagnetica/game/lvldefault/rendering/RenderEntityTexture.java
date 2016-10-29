@@ -228,6 +228,8 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 	@Override
 	public void renderAt(Vec3d position, double rotation, Vec3d up, Vec3d scale, Painter painter) {
 		updateAnimation();
+	
+		painter.getLightModel().removeAllLights();
 		super.renderAt(position, rotation, up, scale, painter);
 	}
 	

@@ -147,7 +147,6 @@ public class RenderableObject3D extends Renderable {
 		painter.setColor(this.color);
 		
 		//Si la matrice n'est pas modifiée, pas besoin de vider le tampon du Painter
-		painter.pushTransformState();
 		applyTransforms(position, rotation, up, scale, painter);
 		
 		//DESSIN
@@ -177,8 +176,6 @@ public class RenderableObject3D extends Renderable {
 				painter.addVertex(vertex);
 			}
 		}
-		
-		painter.popTransformState();
 	}
 	
 	@Override
