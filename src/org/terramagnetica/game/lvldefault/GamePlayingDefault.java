@@ -29,7 +29,6 @@ import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.Room.RoomTag;
 import org.terramagnetica.game.lvldefault.lvl2.ControlPaneSystemManager;
 import org.terramagnetica.game.lvldefault.rendering.GameRenderingDefault;
-import org.terramagnetica.game.lvldefault.rendering.RenderLandscape;
 import org.terramagnetica.opengl.miscellaneous.Timer;
 import org.terramagnetica.ressources.TextureSet;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
@@ -541,8 +540,6 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		for (Entity e : this.entities) {
 			e.destroyRender();
 		}
-		
-		RenderLandscape.destroyAllLists();
 	}
 	
 	@Override

@@ -23,12 +23,14 @@ import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.LandscapeTile;
 import org.terramagnetica.game.lvldefault.MapLandscape;
 import org.terramagnetica.game.lvldefault.MapUpdater;
+import org.terramagnetica.game.lvldefault.RenderRegistry;
 import org.terramagnetica.opengl.engine.CameraFrustum;
 import org.terramagnetica.opengl.engine.GLConfiguration;
 import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
 import org.terramagnetica.opengl.engine.Light;
 import org.terramagnetica.opengl.engine.Light.LightColor;
 import org.terramagnetica.opengl.engine.Painter;
+import org.terramagnetica.opengl.engine.Renderable;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.RectangleInt;
@@ -41,6 +43,8 @@ import net.bynaryscode.util.maths.geometric.Vec3d;
  * @author Louis JEAN
  */
 public class RenderFullLandscape extends RenderGameDefaultElement {
+	
+	private RenderRegistry renderRegistry = new RenderRegistry();
 	
 	private CameraFrustum frustum;
 	
@@ -59,7 +63,7 @@ public class RenderFullLandscape extends RenderGameDefaultElement {
 		
 		//Initialisation des variables
 		Vec2i location = null;
-		RenderLandscape landRender = null;
+		Renderable landRender = null;
 		
 		MapUpdater miniMapManager = game.getAspect(MapUpdater.class);
 		MapRenderer miniMapRenderer = miniMapManager.getRenderer();
@@ -115,9 +119,9 @@ public class RenderFullLandscape extends RenderGameDefaultElement {
 					}
 				}
 				
-				landRender = l.getRender(game.getDecorType());
+				landRender = l.getRender(game.getDecorType(), this.renderRegistry);
 				location = l.getCoordonnéesCase();
-				landRender.renderLandscape3D(location.x, location.y, painter);
+				landRender.renderAt(location.x + 0.5, - location.y - 0.5, 0, painter);
 			}
 		}
 		

@@ -19,6 +19,9 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game.lvldefault;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxNull;
 import org.terramagnetica.physics.HitboxPolygon;
@@ -50,6 +53,34 @@ public abstract class OrientableLandscapeTile extends LandscapeTile {
 	public static final int ANGLE_GAUCHE_HAUT = 10;
 	public static final int ANGLE_GAUCHE_BAS = 11;
 
+	
+	//CALCUL DE LA ROTATION DU MODELE EN FONCTION DE L'ORIENTATION
+
+	/** angle de rotation (en degrés) en fonction du type de mur. */
+	private static final Map<Integer, Float> rotationMap = new HashMap<Integer, Float>();
+	/** transformation du {@link Float} en {@code float} */
+	protected static float getRotation(int orientation) {
+		Float f = rotationMap.get(orientation);
+		return f == null ? 0f : f;
+	}
+	
+	static {
+		rotationMap.put(WallTile.GAUCHE, 0f);
+		rotationMap.put(WallTile.BAS, 90f);
+		rotationMap.put(WallTile.DROITE, 180f);
+		rotationMap.put(WallTile.HAUT, 270f);
+		rotationMap.put(WallTile.COIN_GAUCHE_HAUT, 0f);
+		rotationMap.put(WallTile.COIN_GAUCHE_BAS, 90f);
+		rotationMap.put(WallTile.COIN_DROIT_BAS, 180f);
+		rotationMap.put(WallTile.COIN_DROIT_HAUT, 270f);
+		rotationMap.put(WallTile.ANGLE_DROIT_BAS, 0f);
+		rotationMap.put(WallTile.ANGLE_DROIT_HAUT, 90f);
+		rotationMap.put(WallTile.ANGLE_GAUCHE_HAUT, 180f);
+		rotationMap.put(WallTile.ANGLE_GAUCHE_BAS, 270f);
+	}
+	
+	
+	
 	
 	protected int orientation;
 	protected float margin = DEFAULT_MARGIN;

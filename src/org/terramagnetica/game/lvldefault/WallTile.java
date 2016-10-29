@@ -23,9 +23,13 @@ import static org.terramagnetica.game.GameRessources.*;
 
 import java.awt.Image;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderLandscape;
-import org.terramagnetica.game.lvldefault.rendering.RenderLandscapeMur3D;
+import org.terramagnetica.game.GameRessources;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
+import org.terramagnetica.opengl.engine.Model3D;
+import org.terramagnetica.opengl.engine.Renderable;
+import org.terramagnetica.opengl.engine.RenderableModel3D;
 import org.terramagnetica.ressources.ImagesLoader;
+import org.terramagnetica.ressources.ModelLoader;
 
 import net.bynaryscode.util.Util;
 
@@ -71,7 +75,7 @@ public class WallTile extends OrientableLandscapeTile {
 	}
 	
 	@Override
-	public RenderLandscape createRender(DecorType type) {
+	public Renderable createRender(DecorType type, RenderRegistry renders) {
 		float height;
 		boolean orientationChanges;//Indique si le mur est différent suivant son orientation.
 		
@@ -89,13 +93,54 @@ public class WallTile extends OrientableLandscapeTile {
 			height = 0.5f;
 			orientationChanges = true;
 		}
-		
-		
-		if (this.orientation == PLANE) {//Rendu du mur central
-			return new RenderLandscape(pathTerrainArray[type.ordinal()] + TEX_INACCESSIBLE, height);
+
+		//Rendu du mur central
+		if (this.orientation == PLANE) {
+
+			String id = pathTerrainArray[type.ordinal()] + TEX_INACCESSIBLE;
+
+			Renderable render = renders.getRender(id);
+			if (render == null) {
+				render = new RenderEntityTexture(id).setOnGround(true).withPositionOffset(0, 0, height);
+				renders.registerRender(id, render);
+			}
+			
+			return render;
 		}
 		
-		return new RenderLandscapeMur3D(orientationChanges ? this.orientation : WallTile.GAUCHE, type);
+		//Détermination du modèle :
+		float rotation = getRotation(this.orientation);
+		String modelID = "";
+		
+		switch (this.orientation) {
+		
+		case WallTile.DROITE :
+		case WallTile.HAUT :
+		case WallTile.GAUCHE :
+		case WallTile.BAS :
+			modelID = GameRessources.SPEC_PATH_MODEL_MUR_DROIT;
+			break;
+		case WallTile.COIN_GAUCHE_HAUT :
+		case WallTile.COIN_DROIT_HAUT :
+		case WallTile.COIN_DROIT_BAS :
+		case WallTile.COIN_GAUCHE_BAS :
+			modelID = GameRessources.SPEC_PATH_MODEL_MUR_COIN;
+			break;
+		case WallTile.ANGLE_DROIT_BAS :
+		case WallTile.ANGLE_DROIT_HAUT :
+		case WallTile.ANGLE_GAUCHE_BAS :
+		case WallTile.ANGLE_GAUCHE_HAUT :
+			modelID = GameRessources.SPEC_PATH_MODEL_MUR_ANGLE;
+			break;
+		}
+		
+		int decorTypeID = type.getIndex() + 1;
+		Model3D modelMur;
+		if ((modelMur = ModelLoader.getNotNull(Util.formatDecimal(modelID, decorTypeID))) == null) {
+			modelMur = ModelLoader.getNotNull(Util.formatDecimal(GameRessources.SPEC_PATH_MODEL_MUR_DROIT, decorTypeID));
+		}
+		
+		return new RenderableModel3D(modelMur).withRotationOffset(0, 0, orientationChanges ? rotation : 0f);
 	}
 	
 	@Override

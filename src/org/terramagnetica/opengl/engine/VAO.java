@@ -5,6 +5,4 @@ public class VAO {
 	public VAO() {
 		
 	}
-	
-	
 }

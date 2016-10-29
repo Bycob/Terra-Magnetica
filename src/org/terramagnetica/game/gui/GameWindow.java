@@ -76,6 +76,8 @@ public class GameWindow {
 		while (this.gameRunning) {
 			
 			refresh();
+			long time = System.nanoTime();
+			
 			window.update();
 			
 			//fermeture du dialogue
@@ -103,7 +105,11 @@ public class GameWindow {
 			}
 			//-----
 			
+			System.out.println((float) (System.nanoTime() - time) / 1000000);
+			
 			Display.sync(FPS);
+			System.out.println((float) (System.nanoTime() - time) / 1000000);
+			System.out.println();
 		}
 		
 		destroyApp();
