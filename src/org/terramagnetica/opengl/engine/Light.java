@@ -46,6 +46,10 @@ public class Light {
 		}
 	}
 	
+	public static String getLightParam(int lightID, String param) {
+		return param.replace("[0]", "[" + lightID + "]");
+	}
+	
 	int id;
 	LightModel model;
 	boolean activated;
