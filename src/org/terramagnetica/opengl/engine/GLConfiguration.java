@@ -79,12 +79,28 @@ public class GLConfiguration implements Cloneable {
 	public GLConfiguration() {
 		for (GLProperty prop : GLProperty.values()) {
 			this.properties.put(prop, prop.defaultValue);
+			
+			
 		}
 	}
 	
 	public void setPropertieEnabled(GLProperty property, boolean enabled) {
-		if (this.properties.get(property) != enabled) notifyBeforeChanges();
+		if (this.properties.get(property) == enabled) return;
+		notifyBeforeChanges();
 		this.properties.put(property, enabled);
+		
+		glUpdateState(property, enabled);
+	}
+	
+	private void glUpdateState(GLProperty prop, boolean activated) {
+		if (this.painter != null) {
+			if (activated && !GL11.glIsEnabled(prop.glConst)) {
+				GL11.glEnable(prop.glConst);
+			}
+			else if (!activated && GL11.glIsEnabled(prop.glConst)) {
+				GL11.glDisable(prop.glConst);
+			}
+		}
 	}
 	
 	public boolean isPropertyEnabled(GLProperty property) {
@@ -96,6 +112,10 @@ public class GLConfiguration implements Cloneable {
 		
 		notifyBeforeChanges();
 		this.camera = camera;
+		
+		if (this.painter != null) {
+			camera.pushCamera(this.painter);
+		}
 	}
 	
 	public Camera getCamera() {
@@ -118,12 +138,7 @@ public class GLConfiguration implements Cloneable {
 		//Activation ou desactivation des différentes propriétés.
 		for (GLProperty prop : GLProperty.values()) {
 			boolean activated = this.properties.get(prop);
-			if (activated && !GL11.glIsEnabled(prop.glConst)) {
-				GL11.glEnable(prop.glConst);
-			}
-			else if (!activated && GL11.glIsEnabled(prop.glConst)) {
-				GL11.glDisable(prop.glConst);
-			}
+			glUpdateState(prop, activated);
 		}
 		
 		//Fonctions de test

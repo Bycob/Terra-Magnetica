@@ -133,7 +133,7 @@ public class Painter {
 		this.normalsBuf.flip();
 		this.colorsBuf.flip();
 		
-		setupEnvironment();
+		beforeDrawing();
 		
 		//Début
 		if (this.color != null) {
@@ -169,15 +169,13 @@ public class Painter {
 			GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
 		}
 		//Fin
-		unsetupEnvironment();
+		afterDrawing();
 		
 		initBuffers();
 	}
 	
-	private void setupEnvironment() {
+	private void beforeDrawing() {
 		if (this.recordedList == null) {
-			this.configuration.setup();
-			
 			if (this.viewport != null) {
 				drawViewport();
 			}
@@ -190,7 +188,7 @@ public class Painter {
 		}
 	}
 	
-	private void unsetupEnvironment() {
+	private void afterDrawing() {
 		
 		if (this.recordedList == null) {
 			this.configuration.clearConfig();
@@ -281,9 +279,13 @@ public class Painter {
 		if (config == null) throw new NullPointerException("config == null");
 		
 		flush();
+		this.configuration.clearConfig();
 		this.configuration.painter = null;
+		
 		this.configuration = config;
+		
 		this.configuration.painter = this;
+		this.configuration.setup();
 	}
 	
 	public GLConfiguration getConfiguration() {
@@ -505,9 +507,9 @@ public class Painter {
 	public void drawList(DisplayList list) {
 		flush();
 		
-		setupEnvironment();
+		beforeDrawing();
 		list.callList();
-		unsetupEnvironment();
+		afterDrawing();
 	}
 	
 	public void drawListAt(DisplayList list, Vec3d position) {

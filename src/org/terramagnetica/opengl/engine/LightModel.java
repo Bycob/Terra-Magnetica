@@ -88,7 +88,13 @@ public class LightModel {
 	public int lightCount() {
 		return this.lights.size();
 	}
-
+	
+	/** Envoie les informations de la lumière au programme en cours. */
+	void glSendLightsToGL() {
+		for (Entry<Integer, Light> entry : this.lights.entrySet()) {
+			entry.getValue().sendLightParamsToGL();
+		}
+	}
 	
 	Painter painter;
 	

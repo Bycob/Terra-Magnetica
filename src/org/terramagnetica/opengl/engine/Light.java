@@ -130,42 +130,46 @@ public class Light {
 	}
 	
 	void setActive(boolean active) {
-		if (active && ! this.activated) {
+		if (active ^ this.activated) {
+			this.activated = active;
 			sendLightParamsToGL();
-		}
-		else if (!active && this.activated) {
-			int glID = GL11.GL_LIGHT0 + id;
-			GL11.glDisable(glID);
 		}
 	}
 	
-	private void sendLightParamsToGL() {
-		int glID = GL11.GL_LIGHT0 + id;
-		GL11.glEnable(glID);
+	void sendLightParamsToGL() {
 		
-		//Position
-		this.positionBuffer.clear();
-		bufferPutVec(positionBuffer, this.position);
-		positionBuffer.put(this.type == LightType.DIRECTIONNAL ? 0 : 1);
-		positionBuffer.flip();
-		
-		GL11.glLight(glID, GL11.GL_POSITION, positionBuffer);
-		
-		//Couleurs
-		for (LightColor colorType : LightColor.values()) {
-			Color4f color = this.colors[colorType.ordinal()];
-			FloatBuffer colors = this.colorBuffers[colorType.ordinal()];
-			colors.clear();
-			colors.put(new float[] {color.getRedf(), color.getGreenf(), color.getBluef(), color.getAlphaf()});
-			colors.flip();
-			
-			GL11.glLight(glID, colorType.glID, colors);
+		if (!this.activated) {
+			int glID = GL11.GL_LIGHT0 + id;
+			GL11.glDisable(glID); // TODO cf en dessous
 		}
-		
-		//Atténuation
-		GL11.glLightf(glID, GL11.GL_CONSTANT_ATTENUATION, (float) this.attenuation.x);
-		GL11.glLightf(glID, GL11.GL_LINEAR_ATTENUATION, (float) this.attenuation.y);
-		GL11.glLightf(glID, GL11.GL_QUADRATIC_ATTENUATION, (float) this.attenuation.z);
+		else {
+			int glID = GL11.GL_LIGHT0 + id;
+			GL11.glEnable(glID); // TODO changer enable en setUniform
+			
+			//Position
+			this.positionBuffer.clear();
+			bufferPutVec(positionBuffer, this.position);
+			positionBuffer.put(this.type == LightType.DIRECTIONNAL ? 0 : 1);
+			positionBuffer.flip();
+			
+			GL11.glLight(glID, GL11.GL_POSITION, positionBuffer);
+			
+			//Couleurs
+			for (LightColor colorType : LightColor.values()) {
+				Color4f color = this.colors[colorType.ordinal()];
+				FloatBuffer colors = this.colorBuffers[colorType.ordinal()];
+				colors.clear();
+				colors.put(new float[] {color.getRedf(), color.getGreenf(), color.getBluef(), color.getAlphaf()});
+				colors.flip();
+				
+				GL11.glLight(glID, colorType.glID, colors);
+			}
+			
+			//Atténuation
+			GL11.glLightf(glID, GL11.GL_CONSTANT_ATTENUATION, (float) this.attenuation.x);
+			GL11.glLightf(glID, GL11.GL_LINEAR_ATTENUATION, (float) this.attenuation.y);
+			GL11.glLightf(glID, GL11.GL_QUADRATIC_ATTENUATION, (float) this.attenuation.z);
+		}
 	}
 	
 	
