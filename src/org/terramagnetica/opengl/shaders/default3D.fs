@@ -78,3 +78,29 @@ void main() {
     vec3 gamma = vec3(1);
     finalColor = vec4(pow(ambientIntensity + attenuation * (diffuseIntensity + specularIntensity), gamma), 1);
 }
+
+
+// NOUVEAU SHADER
+
+// Main shader
+#version 330 core
+
+uniform struct {
+	mat4 projection;
+	mat4 camera;
+	mat4 model;
+	vec3 cameraPosition;
+} view;
+
+
+vec4 applyLight(int lightID, vec4 initColor);
+
+in vec3 fragVert;
+in vec2 fragTexCoord;
+in vec3 fragNormal;
+
+out vec4 finalColor;
+
+void main() {
+	
+}
