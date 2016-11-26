@@ -53,7 +53,7 @@ public class GLConfiguration implements Cloneable {
 		STENCIL_TEST(GL11.GL_STENCIL_TEST, true),
 		BLEND(GL11.GL_BLEND, true),
 		TEXTURE(GL11.GL_TEXTURE_2D, true),
-		LIGHTING(GL11.GL_LIGHTING, false),
+		LIGHTING(-1, false),
 		MULTISAMPLE(GL13.GL_MULTISAMPLE, false);
 		
 		public final int glConst;
@@ -79,8 +79,6 @@ public class GLConfiguration implements Cloneable {
 	public GLConfiguration() {
 		for (GLProperty prop : GLProperty.values()) {
 			this.properties.put(prop, prop.defaultValue);
-			
-			
 		}
 	}
 	
@@ -94,11 +92,28 @@ public class GLConfiguration implements Cloneable {
 	
 	private void glUpdateState(GLProperty prop, boolean activated) {
 		if (this.painter != null) {
-			if (activated && !GL11.glIsEnabled(prop.glConst)) {
-				GL11.glEnable(prop.glConst);
+			//Propriétés openGL gérées par glEnable
+			if (prop.glConst != -1) {
+				if (activated && !GL11.glIsEnabled(prop.glConst)) {
+					GL11.glEnable(prop.glConst);
+				}
+				else if (!activated && GL11.glIsEnabled(prop.glConst)) {
+					GL11.glDisable(prop.glConst);
+				}
 			}
-			else if (!activated && GL11.glIsEnabled(prop.glConst)) {
-				GL11.glDisable(prop.glConst);
+			//Toutes les autres
+			else {
+				switch (prop) {
+				case LIGHTING :
+					if (activated) {
+						GL11.glEnable(GL11.GL_LIGHTING);
+					}
+					else {
+						GL11.glDisable(GL11.GL_LIGHTING);
+					}
+					break;
+				default:;
+				}
 			}
 		}
 	}

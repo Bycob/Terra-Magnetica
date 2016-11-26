@@ -44,6 +44,7 @@ public class GuiWindow {
 	}
 	
 	
+	private Painter painter;
 	
 	private boolean created = false;
 	private boolean closeRequested = false;
@@ -130,6 +131,8 @@ public class GuiWindow {
 		Mouse.create();
 		
 		enableInput(true);
+		
+		this.painter = new Painter();
 	}
 	
 	public void enableInput(boolean input) {
@@ -151,13 +154,14 @@ public class GuiWindow {
 		
 		Display.update();
 		GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
-		Painter.instance.clearScreen();
+		this.painter.clearScreen();
+		this.painter.initFrame();
 		
 		sendEvents();
 		this.contentPane.processLogic();
 		
-		this.contentPane.draw(Painter.instance);
-		Painter.instance.flush();
+		this.contentPane.draw(this.painter);
+		this.painter.flush();
 		
 		this.flushContentPane();
 		
@@ -363,6 +367,10 @@ public class GuiWindow {
 		result = (int)((y - ortho2D.bottom) / (ortho2D.top - ortho2D.bottom) * height); 
 		
 		return result;
+	}
+	
+	public Painter getPainter() {
+		return this.painter;
 	}
 	
 	public MouseInput getMouseInput() {

@@ -208,7 +208,7 @@ public class GuiControlsComponent extends GuiComponent implements
 		}
 		
 		public void drawSlot(RectangleDouble bounds, Painter painter) {
-			painter.ensure2D();
+			painter.set2DConfig();
 			painter.setPrimitive(Primitive.QUADS);
 			painter.setTexture(null);
 			

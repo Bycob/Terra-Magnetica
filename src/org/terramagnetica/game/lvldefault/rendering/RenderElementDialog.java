@@ -60,7 +60,7 @@ public class RenderElementDialog extends RenderGameDefaultElement {
 		long time = GameWindow.getSystemTime();
 		
 		//Initialisation du contexte openGL
-		painter.ensure2D();
+		painter.set2DConfig();
 		
 		//Rendu du texte
 		if (this.currentRender != null) {

@@ -102,7 +102,7 @@ public class GuiScrollPanel extends GuiComponent implements MouseListener {
 		double glWheel = theWindow.getHeightOnGLOrtho(Math.abs(wheel)) * Math.signum(wheel) * 0.1;
 		this.setBarLocation(ScrollBar.VERTICAL, this.yVBar + glWheel);
 		
-		p.ensure2D();
+		p.set2DConfig();
 		p.setTexture(null);
 		Color4f color = this.getColor().clone();
 		

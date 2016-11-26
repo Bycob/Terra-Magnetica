@@ -31,8 +31,8 @@ import net.bynaryscode.util.maths.geometric.RectangleInt;
 
 public abstract class GuiComponent implements Cloneable {
 	
-	protected final Painter thePainter = Painter.instance;
 	protected final GuiWindow theWindow = GuiWindow.getInstance();
+	protected final Painter thePainter = theWindow.getPainter();
 	protected final GuiTextPainter theTextPainter = new GuiTextPainter(this.thePainter);
 	
 	private GuiComponent parent;

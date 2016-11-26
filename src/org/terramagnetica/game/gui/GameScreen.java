@@ -41,7 +41,7 @@ public abstract class GameScreen extends GuiComponent implements Cloneable, GuiC
 	/** Dessin du fond d'écran : texture de sol sombre en décor
 	 * de montagnes */
 	protected void drawDefaultBackground(Painter painter) {
-		painter.ensure2D();
+		painter.set2DConfig();
 		TextureQuad tex = TexturesLoader.getQuad(Util.formatDecimal(GameRessources.SPEC_PATH_TERRAIN, 1) + GameRessources.TEX_SOL);
 		painter.setColor(new Color4f(0.5f, 0.5f, 0.5f));
 		tex.fillScreen2D(0.5, 0.5, true, painter);
@@ -75,7 +75,7 @@ public abstract class GameScreen extends GuiComponent implements Cloneable, GuiC
 	
 	@Override
 	public void draw(Painter painter){
-		painter.ensure2D();
+		painter.set2DConfig();
 		selectDrawingMode(painter);
 		drawChildren(painter);
 	}

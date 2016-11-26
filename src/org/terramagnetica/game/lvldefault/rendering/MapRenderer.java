@@ -66,7 +66,7 @@ public class MapRenderer extends RenderGameDefaultElement {
 	@Override
 	public void render(GamePlayingDefault game, Painter painter) {
 		if (this.theMap != null) {
-			painter.ensure2D();
+			painter.set2DConfig();
 			painter.setPrimitive(Primitive.QUADS);
 			
 			GLOrtho repere = GuiWindow.getInstance().getOrtho();

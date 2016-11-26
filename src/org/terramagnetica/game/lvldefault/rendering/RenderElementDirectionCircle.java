@@ -50,7 +50,7 @@ public class RenderElementDirectionCircle extends RenderGameDefaultElement {
 		ArrayList<IGoal> list = extractEntities(game);
 		PlayerDefault player = game.getPlayer();
 		
-		painter.ensure2D();
+		painter.set2DConfig();
 		painter.setPrimitive(Primitive.QUADS);
 		painter.setColor(new Color4f());//blanc
 		

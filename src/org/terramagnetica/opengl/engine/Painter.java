@@ -35,9 +35,7 @@ import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
 public class Painter {
-	
-	public static final Painter instance = new Painter();
-	
+
 	public static enum Primitive {
 		QUADS(GL11.GL_QUADS, 4),
 		LINES(GL11.GL_LINES, 2),
@@ -96,8 +94,11 @@ public class Painter {
 	//Contenu
 	private DisplayList recordedList;
 	private CameraFrustum camFrustum;
+	
+	//Tracking
+	private int texID = 0;
 
-	private Painter() {
+	public Painter() {
 		initBuffers();
 		
 		this.configuration.painter = this;
@@ -114,6 +115,10 @@ public class Painter {
 	
 	public void clearScreen() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
+	}
+	
+	public void initFrame() {
+		this.configuration.setup();
 	}
 	
 	public void flushAndSet(GLConfiguration config) {
@@ -142,12 +147,12 @@ public class Painter {
 		}
 		
 		if (this.texture != null) {
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.texture.getGLTextureID());
+			bindTexture(this.texture.getGLTextureID());
 			GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 			GL11.glTexCoordPointer(2, 0, this.texCoordsBuf);
 		}
 		else {
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+			bindTexture(0);
 		}
 		
 		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
@@ -204,6 +209,13 @@ public class Painter {
 		this.colorsBuf.clear();
 		
 		this.verticesCount = 0;
+	}
+	
+	private void bindTexture(int id) {
+		if (id != this.texID) {
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
+			this.texID = id;
+		}
 	}
 	
 	/** Infos sur l'autotexturing -> {@link #addVertex(Vec3d)} */
@@ -298,7 +310,7 @@ public class Painter {
 	
 	/** Si la configuration actuelle n'est pas 2D, alors redéfinit une
 	 * configuration 2D par défaut et l'applique au painter. */
-	public void ensure2D() {
+	public void set2DConfig() {
 		if (isCamera3D()) {
 			setConfiguration(this.painter2DConfig.clone());
 		}
@@ -306,7 +318,7 @@ public class Painter {
 	
 	/** Si la configuration actuelle n'est pas 3D, alors redéfinit une
 	 * configuration 3D par défaut et l'applique au painter. */
-	public void ensure3D() {
+	public void set3DConfig() {
 		if (!isCamera3D()) {
 			setConfiguration(this.painter3DConfig.clone());
 		}

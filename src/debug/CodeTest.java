@@ -121,23 +121,25 @@ public class CodeTest {
 			rotation -= 1f;
 		}
 		
-		Painter.instance.addTransform(Transform.newRotation(rotation, new Vec3d(0, 0, 1)));
+		Painter painter = GuiWindow.getInstance().getPainter();
 		
-		LightModel lightModel = Painter.instance.getLightModel();
+		painter.addTransform(Transform.newRotation(rotation, new Vec3d(0, 0, 1)));
+		
+		LightModel lightModel = painter.getLightModel();
 		Light l = lightModel.getLight0();
 		l.setPosition(0, 0, 1);
 		
 		Model3D model = ModelLoader.getNotNull(modelName);
-		model.draw(Painter.instance);
+		model.draw(painter);
 		
-		Painter.instance.clearTransforms();
+		painter.clearTransforms();
 	}
 	
 	public static class DrawPanel extends GuiFrameContainer {
 		
 		@Override
 		public void drawComponent(Painter painter) {
-			painter.ensure3D();
+			painter.set3DConfig();
 			
 			zoom -= Mouse.getDWheel() / 1000f;
 			camera.setEye(new Vec3d(0, -zoom, zoom));

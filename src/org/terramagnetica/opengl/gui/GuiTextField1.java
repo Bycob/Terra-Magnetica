@@ -98,7 +98,7 @@ public class GuiTextField1 extends GuiAbstractTextField {
 
 	@Override
 	protected void drawComponent(Painter painter) {
-		painter.ensure2D();
+		painter.set2DConfig();
 		painter.setTexture(null);
 		
 		RectangleDouble coordGL = this.getBoundsGL();
