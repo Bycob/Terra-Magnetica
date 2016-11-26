@@ -107,6 +107,7 @@ public class GLConfiguration implements Cloneable {
 				case LIGHTING :
 					if (activated) {
 						GL11.glEnable(GL11.GL_LIGHTING);
+						this.painter.getLightModel().sendLightsToGL();
 					}
 					else {
 						GL11.glDisable(GL11.GL_LIGHTING);
@@ -150,6 +151,8 @@ public class GLConfiguration implements Cloneable {
 	}
 	
 	public void setup() {
+		if (this.painter == null) return;
+		
 		//Activation ou desactivation des différentes propriétés.
 		for (GLProperty prop : GLProperty.values()) {
 			boolean activated = this.properties.get(prop);

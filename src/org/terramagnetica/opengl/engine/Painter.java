@@ -181,15 +181,16 @@ public class Painter {
 	
 	private void beforeDrawing() {
 		if (this.recordedList == null) {
+			//TODO remove - dû à la non utilisation des shaders... et la non praticité d'openGL
+			this.configuration.getCamera().pushCamera(this);
+			
 			if (this.viewport != null) {
 				drawViewport();
 			}
 			else if (!isCamera3D()) {
 				GL11.glDisable(GL11.GL_STENCIL_TEST);
 			}
-			for (Transform t : this.transforms) {
-				t.applyTransform();
-			}
+			applyTransforms();
 		}
 	}
 	
@@ -443,6 +444,11 @@ public class Painter {
 			this.transforms.clear();
 			this.transformsSaves.clear();
 		}
+	}
+	
+	private void applyTransforms() {
+		Transform multiTransform = Transform.newMultiTransform(this.transforms);
+		multiTransform.applyTransform();
 	}
 	
 	/** Sauvegarde l'état des transformation actuel. Retourne un identifiant

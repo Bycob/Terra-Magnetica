@@ -91,8 +91,10 @@ public class LightModel {
 	
 	/** Envoie les informations de la lumière au programme en cours. */
 	void sendLightsToGL() {
-		for (Entry<Integer, Light> entry : this.lights.entrySet()) {
-			entry.getValue().sendLightParamsToGL();
+		if (this.painter != null) {
+			for (Entry<Integer, Light> entry : this.lights.entrySet()) {
+				entry.getValue().sendLightParamsToGL();
+			}
 		}
 	}
 	
