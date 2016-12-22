@@ -11,7 +11,7 @@ public class ProgramRegistry {
 	private HashMap<String, Shader> internalShaders = new HashMap<String, Shader>();
 	private HashMap<String, Program> programs = new HashMap<String, Program>();
 	
-	public ProgramRegistry(Painter painter) {
+	ProgramRegistry(Painter painter) {
 		if (painter.getProgramRegistry() != null) {
 			throw new UnsupportedOperationException("you shall not create a program registry on your own.");
 		}

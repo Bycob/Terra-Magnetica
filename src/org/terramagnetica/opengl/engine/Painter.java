@@ -28,6 +28,7 @@ import java.util.LinkedList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.Shape;
@@ -83,6 +84,8 @@ public class Painter {
 	private FloatBuffer normalsBuf = BufferUtils.createFloatBuffer(this.verticesMax * 3);
 	private ByteBuffer colorsBuf = BufferUtils.createByteBuffer(this.verticesMax * 4);
 	
+	private VAO defaultVAO = new VAO();
+	
 	//Paramètres
 	private Primitive primitive = Primitive.QUADS;
 	private Color4f color;
@@ -107,6 +110,12 @@ public class Painter {
 		
 		this.configuration.painter = this;
 		this.lightModel.painter = this;
+		
+		// Définition des paramètres du VAO
+		this.defaultVAO.setAttrib(StdAttrib.VERTEX, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 3, GL11.GL_FLOAT);
+		this.defaultVAO.setAttrib(StdAttrib.NORMAL, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 3, GL11.GL_FLOAT);
+		this.defaultVAO.setAttrib(StdAttrib.TEX_COORD, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 2, GL11.GL_FLOAT);
+		this.defaultVAO.setAttrib(StdAttrib.COLOR, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 4, GL11.GL_BYTE);
 	}
 	
 	/** Avertit le painter qu'une propriété extérieure (relevant de la
@@ -145,38 +154,21 @@ public class Painter {
 		beforeDrawing();
 		
 		//Début
-		if (this.color != null) {
-			GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-			GL11.glColorPointer(4, true, 0, this.colorsBuf);
-		}
+		this.defaultVAO.getAttribBuffer(StdAttrib.COLOR).setData(this.colorsBuf);
 		
 		if (this.texture != null) {
 			bindTexture(this.texture.getGLTextureID());
-			GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-			GL11.glTexCoordPointer(2, 0, this.texCoordsBuf);
+			this.defaultVAO.getAttribBuffer(StdAttrib.TEX_COORD).setData(this.texCoordsBuf);
 		}
 		else {
 			bindTexture(0);
 		}
 		
-		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
-		GL11.glNormalPointer(0, this.normalsBuf);
-		
-		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glVertexPointer(3, 0, this.verticesBuf);
+		this.defaultVAO.getAttribBuffer(StdAttrib.NORMAL).setData(this.normalsBuf);
+		this.defaultVAO.getAttribBuffer(StdAttrib.VERTEX).setData(this.verticesBuf);
 		
 		GL11.glDrawArrays(this.primitive.glDrawMode, 0, this.verticesCount);
 		
-		GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
-		
-		if (this.texture != null) {
-			GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-		}
-		
-		if (this.color != null) {
-			GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-		}
 		//Fin
 		afterDrawing();
 		
@@ -185,7 +177,7 @@ public class Painter {
 	
 	private void beforeDrawing() {
 		if (this.recordedList == null) {
-			//TODO remove - dû à la non utilisation des shaders... et la non praticité d'openGL old
+			//TODO remove - dû à la non utilisation des shaders... et la non praticité d'openGL old (reset des matrices inopportun)
 			this.configuration.getCamera().pushCamera(this);
 			
 			if (this.viewport != null) {

@@ -1,6 +1,7 @@
 package org.terramagnetica.opengl.engine;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -33,8 +34,18 @@ public class VBO {
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, data, this.usage);
 	}
 	
+	public void setData(FloatBuffer data) {
+		bind();
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, data, this.usage);
+	}
+	
 	public void setDataUsage(int usage) {
 		this.usage = usage;
+	}
+	
+	public VBO withDataUsage(int usage) {
+		setDataUsage(usage);
+		return this;
 	}
 	
 	public int getDataUsage() {

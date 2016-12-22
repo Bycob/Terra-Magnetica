@@ -20,7 +20,7 @@ public class VAO {
 		}
 		
 		public Attrib(String name, VBO buffer, int count, int type) {
-			this.name = name; this.count = count; this.type = type;
+			this.name = name; this.buffer = buffer; this.count = count; this.type = type;
 		}
 	}
 	
@@ -54,6 +54,12 @@ public class VAO {
 		this.attribs.put(name, new Attrib(name, buffer, count, type));
 	}
 	
+	public VBO getAttribBuffer(String name) {
+		Attrib attrib = this.attribs.get(name);
+		if (attrib == null) throw new IllegalArgumentException("Le nom d'attribut n'est pas reconnu.");
+		return attrib.buffer;
+	}
+	
 	public void bind(Program program) {
 		bind();
 		for (Entry<String, Attrib> entry : this.attribs.entrySet()) {
@@ -62,7 +68,7 @@ public class VAO {
 			
 			int attribID = program.attribID(attrib.name);
 			GL20.glEnableVertexAttribArray(this.id);
-			GL20.glVertexAttribPointer(attribID, attrib.count, GL11.GL_FLOAT, false, 0, null);
+			GL20.glVertexAttribPointer(attribID, attrib.count, attrib.type, false, 0, null);
 		}
 		
 	}
