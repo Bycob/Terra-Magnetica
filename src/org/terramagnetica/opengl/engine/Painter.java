@@ -34,6 +34,7 @@ import net.bynaryscode.util.maths.geometric.Shape;
 import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
+/** Cette classe sert à plein de choses.*/
 public class Painter {
 
 	public static enum Primitive {
@@ -68,6 +69,7 @@ public class Painter {
 	public static final Vec3d DEFAULT_NORMAL = new Vec3d(0, 0, 1);
 	private static final int VERTICES_MAX = 1024;
 	
+	private ProgramRegistry programs;
 	private GLConfiguration configuration = GLConfiguration.default2DConfiguration();
 	private final GLConfiguration painter2DConfig = GLConfiguration.default2DConfiguration();
 	private final GLConfiguration painter3DConfig = GLConfiguration.default3DConfiguration();
@@ -100,6 +102,8 @@ public class Painter {
 
 	public Painter() {
 		initBuffers();
+		
+		this.programs = new ProgramRegistry(this);
 		
 		this.configuration.painter = this;
 		this.lightModel.painter = this;
@@ -181,7 +185,7 @@ public class Painter {
 	
 	private void beforeDrawing() {
 		if (this.recordedList == null) {
-			//TODO remove - dû à la non utilisation des shaders... et la non praticité d'openGL
+			//TODO remove - dû à la non utilisation des shaders... et la non praticité d'openGL old
 			this.configuration.getCamera().pushCamera(this);
 			
 			if (this.viewport != null) {
@@ -303,6 +307,10 @@ public class Painter {
 	
 	public GLConfiguration getConfiguration() {
 		return this.configuration;
+	}
+	
+	public ProgramRegistry getProgramRegistry() {
+		return this.programs;
 	}
 	
 	public boolean isCamera3D() {
