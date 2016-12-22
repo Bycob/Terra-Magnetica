@@ -59,7 +59,7 @@ public class ScreenEndGame extends GameScreen {
 	@Override
 	public void drawComponent(Painter p) {
 		TextureQuad tex = TexturesLoader.getQuad("decor/terrain1.png.sol");
-		p.ensure2D();
+		p.set2DConfig();
 		p.setColor(new Color4f(0.5f, 0.5f, 0.5f));
 		tex.fillScreen2D(0.5, 0.5, true, p);
 	}

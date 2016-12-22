@@ -51,7 +51,7 @@ public class GuiButtonLoadGame extends GuiAbstractButton {
 	@Override
 	public void drawComponent(Painter p) {
 		//initialisation.
-		p.ensure2D();
+		p.set2DConfig();
 		p.setPrimitive(Painter.Primitive.QUADS);
 		
 		RectangleDouble b = getBoundsGL();

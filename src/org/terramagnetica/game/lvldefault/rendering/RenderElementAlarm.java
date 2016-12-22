@@ -50,7 +50,7 @@ public class RenderElementAlarm extends RenderGameDefaultElement {
 		
 		long time = this.chrono.getTime();
 	
-		painter.ensure2D();
+		painter.set2DConfig();
 		painter.setTexture(null);
 		painter.setPrimitive(Primitive.QUADS);
 		

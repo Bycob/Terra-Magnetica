@@ -98,7 +98,7 @@ public class InterruptionChangeRoom extends GameInterruption {
 		
 		GuiTextPainter textPainter = new GuiTextPainter(painter);
 		
-		painter.ensure2D();
+		painter.set2DConfig();
 		if (time >= 0 && time < TIME_1_STAGE) {
 			if (this.hide) {
 				drawSideAnimation((double) (TIME_1_STAGE) / (double) (TIME_1_STAGE), painter);

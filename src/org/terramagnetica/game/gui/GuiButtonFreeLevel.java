@@ -100,7 +100,7 @@ public class GuiButtonFreeLevel extends GuiAbstractButton {
 	
 	@Override
 	public void drawComponent(Painter p) {
-		p.ensure2D();
+		p.set2DConfig();
 		p.setPrimitive(Painter.Primitive.QUADS);
 		
 		RectangleDouble bounds = this.getBoundsGL();

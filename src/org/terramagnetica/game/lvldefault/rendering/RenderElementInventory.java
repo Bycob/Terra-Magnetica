@@ -40,7 +40,7 @@ public class RenderElementInventory extends RenderGameDefaultElement {
 	@Override
 	public void render(GamePlayingDefault game, Painter painter) {
 
-		painter.ensure2D();
+		painter.set2DConfig();
 		painter.setPrimitive(Primitive.QUADS);
 		
 		GLOrtho dispBounds = GuiWindow.getInstance().getOrtho();

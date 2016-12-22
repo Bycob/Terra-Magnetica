@@ -55,7 +55,7 @@ public class RenderAnimationEndOfWall extends RenderEntityTexture {
 		painter.setTexture(this.texture);
 		Color4f color = this.getColor();
 		
-		painter.pushTransformState();
+		painter.clearTransforms();
 		applyTransforms(position, rotation, up, scale, painter);
 		
 		int i = 0;
@@ -74,6 +74,6 @@ public class RenderAnimationEndOfWall extends RenderEntityTexture {
 			i++;
 		}
 		
-		painter.popTransformState();
+		painter.clearTransforms();
 	}
 }

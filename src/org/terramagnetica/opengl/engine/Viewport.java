@@ -21,9 +21,10 @@ package org.terramagnetica.opengl.engine;
 
 import org.terramagnetica.opengl.gui.GuiComponent;
 
-import net.bynaryscode.util.maths.geometric.Shape;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Shape;
 
+/** Définit une zone d'affichage. */
 public class Viewport {
 
 	DisplayList list;

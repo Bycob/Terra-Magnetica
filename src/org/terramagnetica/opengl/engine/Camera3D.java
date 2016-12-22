@@ -155,7 +155,8 @@ public class Camera3D implements Camera {
 	}
 	
 	@Override
-	public void pushCamera() {
+	public void pushCamera(Painter painter) {
+		
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 		GLU.gluPerspective(fov, (float) Display.getWidth() / (float) Display.getHeight(), this.near, this.far);

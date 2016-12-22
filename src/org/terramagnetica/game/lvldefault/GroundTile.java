@@ -26,7 +26,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderLandscape;
+import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
+import org.terramagnetica.opengl.engine.Renderable;
 import org.terramagnetica.ressources.ImagesLoader;
 
 public class GroundTile extends LandscapeTile {
@@ -75,9 +76,16 @@ public class GroundTile extends LandscapeTile {
 	}
 	
 	@Override
-	public RenderLandscape createRender(DecorType type) {
+	public Renderable createRender(DecorType type, RenderRegistry renders) {
 		String id = "".equals(this.skin) ? pathTerrainArray[type.ordinal()] + TEX_SOL : this.skin;
-		return new RenderLandscape(id);
+		
+		Renderable render = renders.getRender(id);
+		if (render == null) {
+			render = new RenderEntityTexture(id).setOnGround(true);
+			renders.registerRender(id, render);
+		}
+		
+		return render;
 	}
 	
 	@Override

@@ -54,7 +54,7 @@ public class GuiPage extends GuiContainer {
 	public void drawComponent(Painter p) {
 		checkBounds();
 		
-		p.ensure2D();
+		p.set2DConfig();
 		p.flush();
 		RectangleDouble bounds = getBoundsGL();
 		

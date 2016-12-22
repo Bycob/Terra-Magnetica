@@ -46,8 +46,13 @@ public class Light {
 		}
 	}
 	
+	public static String getLightParam(int lightID, String param) {
+		return param.replace("[0]", "[" + lightID + "]");
+	}
+	
 	int id;
 	LightModel model;
+	boolean activated;
 	
 	private Vec3d position = new Vec3d(0, 0, 1);
 	private LightType type = LightType.DIRECTIONNAL;
@@ -83,6 +88,7 @@ public class Light {
 	public void setPosition(Vec3d position) {
 		notifyBeforeChanges();
 		this.position = position.clone();
+		sendLightParamsToGL();
 	}
 	
 	public void setPosition(double x, double y, double z) {
@@ -98,6 +104,7 @@ public class Light {
 		
 		notifyBeforeChanges();
 		this.type = type;
+		sendLightParamsToGL();
 	}
 	
 	public void setLightColor(LightColor type, Color4f color) {
@@ -105,6 +112,7 @@ public class Light {
 		
 		notifyBeforeChanges();
 		this.colors[type.ordinal()] = color.clone();
+		sendLightParamsToGL();
 	}
 	
 	public Vec3d getAttenuation() {
@@ -114,39 +122,54 @@ public class Light {
 	public void setAttenuation(Vec3d attenuation) {
 		notifyBeforeChanges();
 		this.attenuation = attenuation.clone();
+		sendLightParamsToGL();
 	}
 	
 	public void setAttenuation(double constant, double linear, double quadratic) {
 		setAttenuation(new Vec3d(constant, linear, quadratic));
 	}
 	
-	void activate() {
-		int glID = GL11.GL_LIGHT0 + id;
-		GL11.glEnable(glID);
-		
-		//Position
-		this.positionBuffer.clear();
-		bufferPutVec(positionBuffer, this.position);
-		positionBuffer.put(this.type == LightType.DIRECTIONNAL ? 0 : 1);
-		positionBuffer.flip();
-		
-		GL11.glLight(glID, GL11.GL_POSITION, positionBuffer);
-		
-		//Couleurs
-		for (LightColor colorType : LightColor.values()) {
-			Color4f color = this.colors[colorType.ordinal()];
-			FloatBuffer colors = this.colorBuffers[colorType.ordinal()];
-			colors.clear();
-			colors.put(new float[] {color.getRedf(), color.getGreenf(), color.getBluef(), color.getAlphaf()});
-			colors.flip();
-			
-			GL11.glLight(glID, colorType.glID, colors);
+	void setActive(boolean active) {
+		if (active ^ this.activated) {
+			this.activated = active;
+			sendLightParamsToGL();
 		}
+	}
+	
+	void sendLightParamsToGL() {
 		
-		//Atténuation
-		GL11.glLightf(glID, GL11.GL_CONSTANT_ATTENUATION, (float) this.attenuation.x);
-		GL11.glLightf(glID, GL11.GL_LINEAR_ATTENUATION, (float) this.attenuation.y);
-		GL11.glLightf(glID, GL11.GL_QUADRATIC_ATTENUATION, (float) this.attenuation.z);
+		if (!this.activated) {
+			int glID = GL11.GL_LIGHT0 + id;
+			GL11.glDisable(glID); // TODO cf en dessous
+		}
+		else {
+			int glID = GL11.GL_LIGHT0 + id;
+			GL11.glEnable(glID); // TODO changer enable en setUniform
+			
+			//Position
+			this.positionBuffer.clear();
+			bufferPutVec(positionBuffer, this.position);
+			positionBuffer.put(this.type == LightType.DIRECTIONNAL ? 0 : 1);
+			positionBuffer.flip();
+			
+			GL11.glLight(glID, GL11.GL_POSITION, positionBuffer);
+			
+			//Couleurs
+			for (LightColor colorType : LightColor.values()) {
+				Color4f color = this.colors[colorType.ordinal()];
+				FloatBuffer colors = this.colorBuffers[colorType.ordinal()];
+				colors.clear();
+				colors.put(new float[] {color.getRedf(), color.getGreenf(), color.getBluef(), color.getAlphaf()});
+				colors.flip();
+				
+				GL11.glLight(glID, colorType.glID, colors);
+			}
+			
+			//Atténuation
+			GL11.glLightf(glID, GL11.GL_CONSTANT_ATTENUATION, (float) this.attenuation.x);
+			GL11.glLightf(glID, GL11.GL_LINEAR_ATTENUATION, (float) this.attenuation.y);
+			GL11.glLightf(glID, GL11.GL_QUADRATIC_ATTENUATION, (float) this.attenuation.z);
+		}
 	}
 	
 	

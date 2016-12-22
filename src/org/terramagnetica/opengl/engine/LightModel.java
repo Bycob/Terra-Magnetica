@@ -24,9 +24,11 @@ import java.util.Map.Entry;
 
 public class LightModel {
 	
+	public static final int MAX_LIGHT_COUNT = 10;
+	
 	private HashMap<Integer, Light> lights = new HashMap<Integer, Light>();
 	
-	public LightModel() {
+	LightModel() {
 		
 	}
 	
@@ -39,6 +41,8 @@ public class LightModel {
 		Light newLight = new Light(freeID, this);
 		
 		notifyBeforeChanges();
+		
+		newLight.setActive(true);
 		this.lights.put(freeID, newLight);
 		
 		return newLight;
@@ -57,6 +61,7 @@ public class LightModel {
 			notifyBeforeChanges();
 			boolean result = this.lights.remove(light.getID()) != null;
 			
+			light.setActive(false);
 			light.id = -1;
 			light.model = null;
 			
@@ -72,6 +77,7 @@ public class LightModel {
 		for (Entry<Integer, Light> e : this.lights.entrySet()) {
 			Light light = e.getValue();
 			
+			light.setActive(false);
 			light.id = -1;
 			light.model = null;
 		}
@@ -83,16 +89,14 @@ public class LightModel {
 		return this.lights.size();
 	}
 	
-	void activate() {
-		for (Entry<Integer, Light> e : this.lights.entrySet()) {
-			e.getValue().activate();
+	/** Envoie les informations de la lumière au programme en cours. */
+	void sendLightsToGL() {
+		if (this.painter != null) {
+			for (Entry<Integer, Light> entry : this.lights.entrySet()) {
+				entry.getValue().sendLightParamsToGL();
+			}
 		}
 	}
-	
-	void desactivate() {
-		
-	}
-
 	
 	Painter painter;
 	

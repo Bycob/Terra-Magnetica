@@ -21,5 +21,5 @@ package org.terramagnetica.opengl.engine;
 
 public interface Camera {
 	
-	void pushCamera();
+	void pushCamera(Painter painter);
 }

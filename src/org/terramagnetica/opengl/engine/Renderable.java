@@ -75,7 +75,9 @@ public abstract class Renderable implements Cloneable, Animation {
 	public void setRotationOffset(double rotX, double rotY, double rotZ) {
 		this.rotOffset = new Vec3d(rotX, rotY, rotZ);
 	}
-	
+
+	/** Définit le décalage de rotation, en degré, selon les trois axes.
+	 * @return <tt>this</tt> pour chainer. */
 	public Renderable withRotationOffset(double rotX, double rotY, double rotZ) {
 		this.setRotationOffset(rotX, rotY, rotZ);
 		return this;
@@ -97,6 +99,7 @@ public abstract class Renderable implements Cloneable, Animation {
 	/** Applique les transformations passées en paramètres ainsi que les
 	 * offsets de position, de rotation et d'échelle. */
 	protected void applyTransforms(Vec3d position, double rotation, Vec3d up, Vec3d scale, Painter painter) {
+		painter.clearTransforms();
 		
 		//POSITION
 		if (!this.posOffset.isNull()) {

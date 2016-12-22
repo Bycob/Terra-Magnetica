@@ -28,17 +28,16 @@ import java.util.LinkedList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
+import org.lwjgl.opengl.GL15;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.Shape;
 import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
+/** Cette classe sert à plein de choses.*/
 public class Painter {
-	
-	public static final Painter instance = new Painter();
-	
+
 	public static enum Primitive {
 		QUADS(GL11.GL_QUADS, 4),
 		LINES(GL11.GL_LINES, 2),
@@ -71,6 +70,7 @@ public class Painter {
 	public static final Vec3d DEFAULT_NORMAL = new Vec3d(0, 0, 1);
 	private static final int VERTICES_MAX = 1024;
 	
+	private ProgramRegistry programs;
 	private GLConfiguration configuration = GLConfiguration.default2DConfiguration();
 	private final GLConfiguration painter2DConfig = GLConfiguration.default2DConfiguration();
 	private final GLConfiguration painter3DConfig = GLConfiguration.default3DConfiguration();
@@ -83,6 +83,8 @@ public class Painter {
 	private FloatBuffer texCoordsBuf = BufferUtils.createFloatBuffer(this.verticesMax * 2);
 	private FloatBuffer normalsBuf = BufferUtils.createFloatBuffer(this.verticesMax * 3);
 	private ByteBuffer colorsBuf = BufferUtils.createByteBuffer(this.verticesMax * 4);
+	
+	private VAO defaultVAO = new VAO();
 	
 	//Paramètres
 	private Primitive primitive = Primitive.QUADS;
@@ -97,11 +99,23 @@ public class Painter {
 	//Contenu
 	private DisplayList recordedList;
 	private CameraFrustum camFrustum;
+	
+	//Tracking
+	private int texID = 0;
 
-	private Painter() {
+	public Painter() {
 		initBuffers();
 		
+		this.programs = new ProgramRegistry(this);
+		
+		this.configuration.painter = this;
 		this.lightModel.painter = this;
+		
+		// Définition des paramètres du VAO
+		this.defaultVAO.setAttrib(StdAttrib.VERTEX, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 3, GL11.GL_FLOAT);
+		this.defaultVAO.setAttrib(StdAttrib.NORMAL, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 3, GL11.GL_FLOAT);
+		this.defaultVAO.setAttrib(StdAttrib.TEX_COORD, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 2, GL11.GL_FLOAT);
+		this.defaultVAO.setAttrib(StdAttrib.COLOR, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 4, GL11.GL_BYTE);
 	}
 	
 	/** Avertit le painter qu'une propriété extérieure (relevant de la
@@ -114,6 +128,10 @@ public class Painter {
 	
 	public void clearScreen() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
+	}
+	
+	public void initFrame() {
+		this.configuration.setup();
 	}
 	
 	public void flushAndSet(GLConfiguration config) {
@@ -133,50 +151,34 @@ public class Painter {
 		this.normalsBuf.flip();
 		this.colorsBuf.flip();
 		
-		setupEnvironment();
+		beforeDrawing();
 		
 		//Début
-		if (this.color != null) {
-			GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-			GL11.glColorPointer(4, true, 0, this.colorsBuf);
-		}
+		this.defaultVAO.getAttribBuffer(StdAttrib.COLOR).setData(this.colorsBuf);
 		
 		if (this.texture != null) {
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.texture.getGLTextureID());
-			GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-			GL11.glTexCoordPointer(2, 0, this.texCoordsBuf);
+			bindTexture(this.texture.getGLTextureID());
+			this.defaultVAO.getAttribBuffer(StdAttrib.TEX_COORD).setData(this.texCoordsBuf);
 		}
 		else {
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+			bindTexture(0);
 		}
 		
-		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
-		GL11.glNormalPointer(0, this.normalsBuf);
-		
-		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glVertexPointer(3, 0, this.verticesBuf);
+		this.defaultVAO.getAttribBuffer(StdAttrib.NORMAL).setData(this.normalsBuf);
+		this.defaultVAO.getAttribBuffer(StdAttrib.VERTEX).setData(this.verticesBuf);
 		
 		GL11.glDrawArrays(this.primitive.glDrawMode, 0, this.verticesCount);
 		
-		GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
-		
-		if (this.texture != null) {
-			GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-		}
-		
-		if (this.color != null) {
-			GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-		}
 		//Fin
-		unsetupEnvironment();
+		afterDrawing();
 		
 		initBuffers();
 	}
 	
-	private void setupEnvironment() {
+	private void beforeDrawing() {
 		if (this.recordedList == null) {
-			this.configuration.setup();
+			//TODO remove - dû à la non utilisation des shaders... et la non praticité d'openGL old (reset des matrices inopportun)
+			this.configuration.getCamera().pushCamera(this);
 			
 			if (this.viewport != null) {
 				drawViewport();
@@ -184,24 +186,13 @@ public class Painter {
 			else if (!isCamera3D()) {
 				GL11.glDisable(GL11.GL_STENCIL_TEST);
 			}
-			for (Transform t : this.transforms) {
-				t.applyTransform();
-			}
-			
-			if (this.configuration.isPropertyEnabled(GLProperty.LIGHTING)) {
-				this.lightModel.activate();
-			}
+			applyTransforms();
 		}
 	}
 	
-	private void unsetupEnvironment() {
+	private void afterDrawing() {
 		
 		if (this.recordedList == null) {
-			
-			if (this.configuration.isPropertyEnabled(GLProperty.LIGHTING)) {
-				this.lightModel.desactivate();
-			}
-			
 			this.configuration.clearConfig();
 		}
 	}
@@ -215,6 +206,13 @@ public class Painter {
 		this.colorsBuf.clear();
 		
 		this.verticesCount = 0;
+	}
+	
+	private void bindTexture(int id) {
+		if (id != this.texID) {
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
+			this.texID = id;
+		}
 	}
 	
 	/** Infos sur l'autotexturing -> {@link #addVertex(Vec3d)} */
@@ -290,13 +288,21 @@ public class Painter {
 		if (config == null) throw new NullPointerException("config == null");
 		
 		flush();
+		this.configuration.clearConfig();
 		this.configuration.painter = null;
+		
 		this.configuration = config;
+		
 		this.configuration.painter = this;
+		this.configuration.setup();
 	}
 	
 	public GLConfiguration getConfiguration() {
 		return this.configuration;
+	}
+	
+	public ProgramRegistry getProgramRegistry() {
+		return this.programs;
 	}
 	
 	public boolean isCamera3D() {
@@ -305,7 +311,7 @@ public class Painter {
 	
 	/** Si la configuration actuelle n'est pas 2D, alors redéfinit une
 	 * configuration 2D par défaut et l'applique au painter. */
-	public void ensure2D() {
+	public void set2DConfig() {
 		if (isCamera3D()) {
 			setConfiguration(this.painter2DConfig.clone());
 		}
@@ -313,7 +319,7 @@ public class Painter {
 	
 	/** Si la configuration actuelle n'est pas 3D, alors redéfinit une
 	 * configuration 3D par défaut et l'applique au painter. */
-	public void ensure3D() {
+	public void set3DConfig() {
 		if (!isCamera3D()) {
 			setConfiguration(this.painter3DConfig.clone());
 		}
@@ -427,12 +433,22 @@ public class Painter {
 		this.transforms.add(transform);
 	}
 	
+	public void setTransform(Transform transform) {
+		this.clearTransforms();
+		this.addTransform(transform);
+	}
+	
 	public void clearTransforms() {
 		if (this.transforms.size() != 0) {
 			flush();
 			this.transforms.clear();
 			this.transformsSaves.clear();
 		}
+	}
+	
+	private void applyTransforms() {
+		Transform multiTransform = Transform.newMultiTransform(this.transforms);
+		multiTransform.applyTransform();
 	}
 	
 	/** Sauvegarde l'état des transformation actuel. Retourne un identifiant
@@ -509,9 +525,9 @@ public class Painter {
 	public void drawList(DisplayList list) {
 		flush();
 		
-		setupEnvironment();
+		beforeDrawing();
 		list.callList();
-		unsetupEnvironment();
+		afterDrawing();
 	}
 	
 	public void drawListAt(DisplayList list, Vec3d position) {
@@ -519,13 +535,13 @@ public class Painter {
 	}
 	
 	public void drawListAt(DisplayList list, Vec3d position, Vec3d rotAxis, float rotAngle) {
-		pushTransformState();
+		clearTransforms();
 
 		addTransform(Transform.newRotation(rotAngle, rotAxis));
 		addTransform(Transform.newTranslation((float) position.x, (float) position.y, (float) position.z));
 		
 		drawList(list);
 		
-		popTransformState();
+		clearTransforms();
 	}
 }

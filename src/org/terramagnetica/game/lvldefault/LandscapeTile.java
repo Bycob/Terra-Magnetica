@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.terramagnetica.game.lvldefault.rendering.RenderLandscape;
-import org.terramagnetica.game.lvldefault.rendering.RenderLandscapeNothing;
+import org.terramagnetica.opengl.engine.Renderable;
+import org.terramagnetica.opengl.engine.RenderableNull;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxPolygon;
 
@@ -72,7 +72,7 @@ public abstract class LandscapeTile implements Serializable, Cloneable {
 	
 	protected Vec2i place;
 	
-	protected Map<DecorType, RenderLandscape> renders = new HashMap<DecorType, RenderLandscape>();
+	protected Map<DecorType, Renderable> renders = new HashMap<DecorType, Renderable>();
 	
 	protected String skin = new String();
 	private boolean norender = false;
@@ -198,26 +198,26 @@ public abstract class LandscapeTile implements Serializable, Cloneable {
 		this.norender = flag;
 	}
 	
-	public RenderLandscape getRender(DecorType type) {
+	public Renderable getRender(DecorType type, RenderRegistry renders) {
 		if (this.norender) {
-			return new RenderLandscapeNothing();
+			return new RenderableNull();
 		}
 		
 		if (this.renders.get(type) == null) {
-			this.renders.put(type, createRender(type));
+			this.renders.put(type, createRender(type, renders));
 		}
 		
-		RenderLandscape render = this.renders.get(type);
+		Renderable render = this.renders.get(type);
 		
 		return render;
 	}
 	
-	public RenderLandscape createRender(DecorType type) {
-		return new RenderLandscape();
+	public Renderable createRender(DecorType type, RenderRegistry renders) {
+		return new RenderableNull();
 	}
 	
 	public void removeAllRenders() {
-		this.renders = new HashMap<DecorType, RenderLandscape>();
+		this.renders = new HashMap<DecorType, Renderable>();
 	}
 	
 	public void setSkin(String skin) {
@@ -287,7 +287,7 @@ public abstract class LandscapeTile implements Serializable, Cloneable {
 			e.printStackTrace();
 		}
 		
-		result.renders = new HashMap<DecorType, RenderLandscape>();
+		result.renders = new HashMap<DecorType, Renderable>();
 		
 		return result;
 	}

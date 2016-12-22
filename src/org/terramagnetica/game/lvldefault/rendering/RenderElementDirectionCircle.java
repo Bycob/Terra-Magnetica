@@ -50,7 +50,7 @@ public class RenderElementDirectionCircle extends RenderGameDefaultElement {
 		ArrayList<IGoal> list = extractEntities(game);
 		PlayerDefault player = game.getPlayer();
 		
-		painter.ensure2D();
+		painter.set2DConfig();
 		painter.setPrimitive(Primitive.QUADS);
 		painter.setColor(new Color4f());//blanc
 		
@@ -81,14 +81,14 @@ public class RenderElementDirectionCircle extends RenderGameDefaultElement {
 			arrowLocation.x += Math.cos(dir) * this.sizeX / 2.15;
 			arrowLocation.y += Math.sin(dir) * this.sizeY / 2.15;
 			
-			painter.pushTransformState();
+			painter.clearTransforms();
 			painter.addTransform(Transform.newTranslation((float) arrowLocation.x, (float) arrowLocation.y, 0));
 			painter.addTransform(Transform.newRotation((float) Math.toDegrees(dir - Math.PI / 2), new Vec3d(0, 0, 1)));
 			
 			painter.setColor(obj.getIndicationColor());
 			GLUtil.drawQuad2D(arrowBounds, painter);
 			
-			painter.popTransformState();
+			painter.clearTransforms();
 		}
 	}
 	

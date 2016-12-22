@@ -75,7 +75,7 @@ public abstract class GuiDialog extends GuiComponent {
 		//Initialisation
 		GuiWindow window = GuiWindow.getInstance();
 		
-		painter.ensure2D();
+		painter.set2DConfig();
 		painter.setPrimitive(Primitive.QUADS);
 		painter.setTexture(null);
 		

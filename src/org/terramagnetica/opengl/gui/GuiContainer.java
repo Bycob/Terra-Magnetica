@@ -57,7 +57,7 @@ public class GuiContainer extends GuiComponent {
 	
 	@Override
 	public void drawComponent(Painter p) {
-		p.ensure2D();
+		p.set2DConfig();
 		p.setPrimitive(Painter.Primitive.QUADS);
 		p.setTexture(null);
 		p.setColor(this.backGround);

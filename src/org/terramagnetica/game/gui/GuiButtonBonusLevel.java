@@ -60,7 +60,7 @@ public class GuiButtonBonusLevel extends GuiAbstractButton {
 			break;
 		}
 		
-		p.ensure2D();
+		p.set2DConfig();
 		p.setPrimitive(Primitive.QUADS);
 		p.setColor(componentColor);
 		p.setTexture(TexturesLoader.get(this.texID));
