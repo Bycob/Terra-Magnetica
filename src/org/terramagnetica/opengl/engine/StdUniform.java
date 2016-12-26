@@ -15,6 +15,7 @@ public interface StdUniform {
 	public interface Light {
 		int MAX_LIGHT = 10;
 		
+		String ACTIVATED = "light[%d].activated";
 		String TYPE = "light[%d].type";
 		String POSITION = "light[%d].position";
 		String AMBIENT = "light[%d].ambient";

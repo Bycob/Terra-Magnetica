@@ -22,12 +22,10 @@ package org.terramagnetica.opengl.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 import org.terramagnetica.opengl.miscellaneous.Timer;
 
 public class WriterInput implements KeyboardListener {
-	
-	private static List<WriterInput> registerList = new ArrayList<WriterInput>();
 	
 	private List<Writer> writers = new ArrayList<Writer>();
 	
@@ -53,20 +51,8 @@ public class WriterInput implements KeyboardListener {
 			this.writers.add(writer);
 		}
 		
-		registerList.add(this);
-		
 		refused.add((char) 0);
 		refused.add((char) 8);
-	}
-	
-	/**
-	 * Pour chaque objet {@link WriterInput} existant, appelle la méthode
-	 * {@link #sendEvents()}.
-	 */
-	public static void allSendEvents() {
-		for (WriterInput input : registerList) {
-			input.sendEvents();
-		}
 	}
 	
 	/**
@@ -122,14 +108,14 @@ public class WriterInput implements KeyboardListener {
 		}
 		
 		switch (key) {
-		case Keyboard.KEY_BACK :
-		case Keyboard.KEY_DELETE :
+		case GLFW.GLFW_KEY_BACKSPACE :
+		case GLFW.GLFW_KEY_DELETE :
 			for (Writer writer : this.writers) {
 				writer.remove(key);
 			}
 			break;
-		case Keyboard.KEY_LEFT :
-		case Keyboard.KEY_RIGHT :
+		case GLFW.GLFW_KEY_LEFT :
+		case GLFW.GLFW_KEY_RIGHT :
 			for (Writer writer : this.writers) {
 				writer.move(key);
 			}

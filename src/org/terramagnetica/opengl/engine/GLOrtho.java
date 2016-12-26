@@ -19,6 +19,8 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.engine;
 
+import org.joml.Matrix4f;
+
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
 
 public class GLOrtho {
@@ -56,5 +58,9 @@ public class GLOrtho {
 	 * (left, top, right, bottom) */
 	public RectangleDouble getBounds2D() {
 		return new RectangleDouble(left, top, right, bottom);
+	}
+	
+	public Matrix4f getMatrix() {
+		return new Matrix4f().setOrtho((float) left, (float) right, (float) bottom, (float) top, (float) near, (float) far);
 	}
 }

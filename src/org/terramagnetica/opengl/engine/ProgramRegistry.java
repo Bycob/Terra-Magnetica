@@ -7,6 +7,8 @@ import org.terramagnetica.opengl.engine.Shader.ShaderType;
 
 public class ProgramRegistry {
 	
+	public static final String DEFAULT_PROGRAM_ID = "default";
+	
 	private Painter painter;
 	private HashMap<String, Shader> internalShaders = new HashMap<String, Shader>();
 	private HashMap<String, Program> programs = new HashMap<String, Program>();
@@ -20,6 +22,9 @@ public class ProgramRegistry {
 		
 		//Chargement des différents programmes
 		addInternalProgram("default3D", "default3D.vs", "default3D.fs", "lighting3D.fs");
+		
+		//Positionnement du programme par défaut
+		this.programs.put(DEFAULT_PROGRAM_ID, getDefaultProgram());
 	}
 	
 	public boolean addInternalProgram(String name, String... shaderNames) {
@@ -55,7 +60,7 @@ public class ProgramRegistry {
 	}
 	
 	public Program getDefaultProgram() {
-		return getProgram("default");
+		return getProgram(DEFAULT_PROGRAM_ID);
 	}
 	
 	public Shader getInternalShader(String shaderName) {

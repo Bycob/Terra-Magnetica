@@ -27,9 +27,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.ALC;
 import org.lwjgl.util.WaveData;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.openal.MusicStreaming;
@@ -85,13 +84,7 @@ public final class SoundManager implements Runnable {
 		
 		running = true;
 		//INITIALISATION 
-		try {
-			AL.create();
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-			System.err.println("\n<!> SONS NON INITIALISES");
-			return;
-		}
+		ALC.create();
 		
 		//sons simples
 		for (int i = 0 ; i < SOUND_SOURCES_COUNT ; i++) {
@@ -180,7 +173,7 @@ public final class SoundManager implements Runnable {
 		
 		
 		
-		AL.destroy();
+		ALC.destroy();
 	}
 	
 	

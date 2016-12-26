@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
+import org.terramagnetica.opengl.gui.GuiWindow;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.Shape;
@@ -70,7 +71,10 @@ public class Painter {
 	public static final Vec3d DEFAULT_NORMAL = new Vec3d(0, 0, 1);
 	private static final int VERTICES_MAX = 1024;
 	
+	private GuiWindow myWindow;
+	
 	private ProgramRegistry programs;
+	private Program currentProgram;
 	private GLConfiguration configuration = GLConfiguration.default2DConfiguration();
 	private final GLConfiguration painter2DConfig = GLConfiguration.default2DConfiguration();
 	private final GLConfiguration painter3DConfig = GLConfiguration.default3DConfiguration();
@@ -103,10 +107,10 @@ public class Painter {
 	//Tracking
 	private int texID = 0;
 
-	public Painter() {
+	public Painter(GuiWindow window) {
 		initBuffers();
 		
-		this.programs = new ProgramRegistry(this);
+		this.myWindow = window;
 		
 		this.configuration.painter = this;
 		this.lightModel.painter = this;
@@ -116,6 +120,10 @@ public class Painter {
 		this.defaultVAO.setAttrib(StdAttrib.NORMAL, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 3, GL11.GL_FLOAT);
 		this.defaultVAO.setAttrib(StdAttrib.TEX_COORD, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 2, GL11.GL_FLOAT);
 		this.defaultVAO.setAttrib(StdAttrib.COLOR, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 4, GL11.GL_BYTE);
+		
+		//Création des programmes et initialisation du contexte avec le programme par défaut
+		this.programs = new ProgramRegistry(this);
+		setCurrentProgram(ProgramRegistry.DEFAULT_PROGRAM_ID);
 	}
 	
 	/** Avertit le painter qu'une propriété extérieure (relevant de la
@@ -154,6 +162,7 @@ public class Painter {
 		beforeDrawing();
 		
 		//Début
+		this.defaultVAO.bind();
 		this.defaultVAO.getAttribBuffer(StdAttrib.COLOR).setData(this.colorsBuf);
 		
 		if (this.texture != null) {
@@ -175,9 +184,25 @@ public class Painter {
 		initBuffers();
 	}
 	
+	public void drawVAO(VAO vao, int vertCount) {
+		beforeDrawing();
+		
+		if (this.texture != null) {
+			bindTexture(this.texture.getGLTextureID());
+		}
+		else {
+			bindTexture(0);
+		}
+		
+		vao.bind(this.currentProgram);
+		GL11.glDrawArrays(this.primitive.glDrawMode, 0, vertCount);
+		
+		afterDrawing();
+	}
+	
 	private void beforeDrawing() {
 		if (this.recordedList == null) {
-			//TODO remove - dû à la non utilisation des shaders... et la non praticité d'openGL old (reset des matrices inopportun)
+			//FIXME remove - dû à la non utilisation des shaders... et la non praticité d'openGL old (reset des matrices inopportun)
 			this.configuration.getCamera().pushCamera(this);
 			
 			if (this.viewport != null) {
@@ -284,6 +309,10 @@ public class Painter {
 		this.verticesCount++;
 	}
 	
+	public GuiWindow getWindow() {
+		return this.myWindow;
+	}
+	
 	public void setConfiguration(GLConfiguration config) {
 		if (config == null) throw new NullPointerException("config == null");
 		
@@ -303,6 +332,27 @@ public class Painter {
 	
 	public ProgramRegistry getProgramRegistry() {
 		return this.programs;
+	}
+	
+	public void setCurrentProgram(String name) {
+		Program program = this.programs.getProgram(name);
+		if (program == null) {
+			program = this.programs.getDefaultProgram();
+		}
+		
+		if (program != this.currentProgram) {
+			flush();
+			
+			this.currentProgram = program;
+			this.currentProgram.use();
+			
+			this.configuration.setup();
+			this.defaultVAO.bind(this.currentProgram);
+		}
+	}
+	
+	public Program getCurrentProgram() {
+		return this.currentProgram;
 	}
 	
 	public boolean isCamera3D() {
@@ -336,7 +386,7 @@ public class Painter {
 		if (!isCamera3D()) throw new IllegalStateException("No frustum in 2D !");
 		
 		CameraFrustum camFrustum = new CameraFrustumRadar();
-		this.configuration.getCamera3D().setUpFrustum(camFrustum);
+		this.configuration.getCamera3D().setUpFrustum(this, camFrustum);
 		
 		return camFrustum;
 	}

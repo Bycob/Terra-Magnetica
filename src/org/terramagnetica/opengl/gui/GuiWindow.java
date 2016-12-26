@@ -21,22 +21,22 @@ package org.terramagnetica.opengl.gui;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.PixelFormat;
-import org.terramagnetica.game.TerraMagnetica;
+import org.lwjgl.system.MemoryUtil;
 import org.terramagnetica.opengl.engine.GLOrtho;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.miscellaneous.Timer;
 
-import net.bynaryscode.util.Log;
-
 public class GuiWindow {
 	
+	private static int instanceCount = 0;
 	private static GuiWindow instance = new GuiWindow();
 	
 	public static GuiWindow getInstance() {
@@ -44,6 +44,7 @@ public class GuiWindow {
 	}
 	
 	
+	private long window;
 	private Painter painter;
 	
 	private boolean created = false;
@@ -54,12 +55,14 @@ public class GuiWindow {
 	private GuiComponent contentPane;
 	private GuiComponent nextContentPane;
 	
+	/** Les dimensions réelles de la fenêtre, en pixels. Ces variables sont mises
+	 * à jour à chaque tour de boucle.*/
+	private int width, height;
 	private GLOrtho ortho2D = new GLOrtho();
 	private float scale = 1;
 	
 	public final Timer timer = new Timer();
 	
-	protected InputThread inputThread = new InputThread();
 	public MouseInput mainMouseInput = new MouseInput();
 	public KeyboardInput mainKeyboardInput = new KeyboardInput();
 	
@@ -67,97 +70,109 @@ public class GuiWindow {
 		
 	}
 	
-	protected class InputThread extends Thread {
-		
-		private boolean running = false;
-		
-		public InputThread() {
-			super("Input-Thread");
-			this.setDaemon(true);
-			this.setPriority(1);
-		}
-		
-		
-		@Override
-		public void run() {
-			this.running = true;
-			
-			while (this.running) {
-				try {
-					mainMouseInput.registerInput();
-					mainKeyboardInput.registerInput();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				try {
-					Thread.sleep(2);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
 	public void setTitle(String title) {
 		this.title = title == null ? "Game" : title;
+		if (this.created) {
+			GLFW.glfwSetWindowTitle(this.window, this.title);
+		}
 	}
 	
 	public void setIcon(ByteBuffer[] icons) {
 		this.icons = icons == null ? new ByteBuffer[0] : icons;
 	}
 	
-	public void createWindow() throws LWJGLException {
+	public void createWindow() throws RuntimeException {
 		this.closeRequested = false;
 		
-		DisplayMode displayMode = new DisplayMode(800, 600);
-		PixelFormat format = new PixelFormat(8, 8, 8, 4);
-		
-		Display.setDisplayMode(displayMode);
-		Display.setTitle(this.title);
-		Display.setIcon(this.icons);
-		Display.setResizable(true);
-		
-		try {
-			Display.create(format);
-		}
-		catch (LWJGLException e) {
-			TerraMagnetica.theGame.log.addMessage(
-					"Impossible de lancer la configuration optimale. Lancement de la configuration minimale", Log.WARNING_OBJET);
+		if (instanceCount <= 0) {
+			instanceCount = 0;
+			GLFWErrorCallback.createPrint(System.err).set();
 			
-			Display.create();
+			// Initialize GLFW. Most GLFW functions will not work before doing this.
+			if ( !GLFW.glfwInit() )
+				throw new IllegalStateException("Unable to initialize GLFW");
 		}
-		Keyboard.create();
-		Mouse.create();
 		
+		instanceCount++;
+		
+		// FIXME enlever ça si ça marche correctement :  PixelFormat format = new PixelFormat(8, 8, 8, 4);
+		GLFW.glfwDefaultWindowHints(); // optional, the current window hints are already the default
+		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE); // the window will stay hidden after creation
+		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE); // the window will be resizable
+		
+		this.window = GLFW.glfwCreateWindow(800, 600, this.title, MemoryUtil.NULL, MemoryUtil.NULL);
+		if (this.window == MemoryUtil.NULL) {
+			throw new RuntimeException("Creation of Terra Magnetica main window failed.");
+		}
+		
+		//Ajout des callbacks
+		GLFW.glfwSetCursorPosCallback(this.window, new GLFWCursorPosCallback() {
+			@Override public void invoke(long window, double xpos, double ypos) {
+				mainMouseInput.addCursorEvent(xpos, ypos);
+			}
+		});
+		
+		GLFW.glfwSetMouseButtonCallback(this.window, new GLFWMouseButtonCallback() {
+			@Override public void invoke(long window, int button, int action, int mods) {
+				mainMouseInput.addMouseButtonEvent(button, action, mods);
+			}
+		});
+		
+		GLFW.glfwSetKeyCallback(this.window, new GLFWKeyCallback() {
+			@Override public void invoke(long window, int key, int scancode, int action, int mods) {
+				//FIXME vérifier la conversion scancode / char
+				mainKeyboardInput.addKeyEvent(key, scancode, action, mods);
+			}
+		});
+
+		GLFWImage.Buffer icons = null;
+		try {
+			icons = GLFWImage.malloc(this.icons.length);
+			
+			for (ByteBuffer icon : this.icons) {
+				
+			}
+			
+			//FIXME GLFW.glfwSetWindowIcon(this.window, icons);
+		}
+		finally {
+			icons.free();
+		}
+		
+		GLFW.glfwMakeContextCurrent(this.window);
+		GL.createCapabilities();
+		
+		GLFW.glfwSwapInterval(1);
+		
+		GLFW.glfwShowWindow(this.window);
+		
+		this.created = true;
+		
+		//Préparation de la première frame
 		enableInput(true);
-		
-		this.painter = new Painter();
+		this.painter = new Painter(this);
 	}
 	
 	public void enableInput(boolean input) {
-		if (input) {
-			if (!this.inputThread.running) {
-				this.inputThread.start();
-			}
-		}
-		else {
-			if (this.inputThread.running) {
-				this.inputThread.running = false;
-				this.inputThread = new InputThread();
-			}
-		}
+		// FIXME DO ME !
 	}
 	
 	/** Repeint la fenêtre et execute les actions dues aux entrées de l'utilisateur. */
 	public void update() {
 		
-		Display.update();
-		GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		GLFW.glfwMakeContextCurrent(this.window);
+		
+		int width[] = new int[1];
+		int height[] = new int[2];
+		GLFW.glfwGetFramebufferSize(this.window, width, height);
+		this.width = width[0];
+		this.height = height[0];
+		
+		GL11.glViewport(0, 0, this.width, this.height);
 		this.painter.clearScreen();
 		this.painter.initFrame();
 		
-		sendEvents();
+		pollEvents();
 		this.contentPane.processLogic();
 		
 		this.contentPane.draw(this.painter);
@@ -165,17 +180,31 @@ public class GuiWindow {
 		
 		this.flushContentPane();
 		
-		if (Display.isCloseRequested()) {
+		if (GLFW.glfwWindowShouldClose(this.window)) {
 			this.closeRequested = true;
 		}
+		
+		GLFW.glfwSwapBuffers(this.window);
 	}
 	
 	public void destroy() {
+		if (!this.created) return;
+		
 		enableInput(false);
 		
-		Display.destroy();
-		Mouse.destroy();
-		Keyboard.destroy();
+		GLFW.glfwDestroyWindow(this.window);
+		
+		this.created = false;
+		
+		//Destruction du contexte GLFW
+		instanceCount--;
+		
+		if (instanceCount <= 0) {
+			instanceCount = 0;
+			
+			GLFW.glfwTerminate();
+			GLFW.glfwSetErrorCallback(null).free();
+		}
 	}
 
 
@@ -187,11 +216,11 @@ public class GuiWindow {
 		return this.closeRequested;
 	}
 	
-	void sendEvents() {
+	void pollEvents() {
+		GLFW.glfwPollEvents();
+		
 		mainMouseInput.sendEvents(this.contentPane);
 		mainKeyboardInput.sendEvents(this.contentPane);
-		
-		WriterInput.allSendEvents(); 
 	}
 	
 	public void setContentPane(GuiComponent contentPane) {
@@ -216,13 +245,10 @@ public class GuiWindow {
 	
 	/** place le repère openGL par défaut. */
 	public void setOrthoDefault() {
-		int width = Display.getWidth();
-		int height = Display.getHeight();
-		
-		if (width > 700 && height > 700) {
+		if (this.width > 700 && this.height > 700) {
 			this.scale = 3;
 		}
-		else if (width > 450 && height > 450) {
+		else if (this.width > 450 && this.height > 450) {
 			this.scale = 2;
 		}
 		else {
@@ -241,12 +267,12 @@ public class GuiWindow {
 	 * @param zFar - glOrtho(zFar)
 	 */
 	public void setOrthoRelative(double gradX, double gradY, double zNear, double zFar) {
-		if (!Display.isCreated()){
+		if (!this.created){
 			return;
 		}
 		
-		double h = Display.getHeight();
-		double w = Display.getWidth();
+		double h = this.height;
+		double w = this.width;
 		
 		ortho2D.left = - w / (gradX * 2.0);
 		ortho2D.right = w / (gradX * 2.0);
@@ -266,24 +292,23 @@ public class GuiWindow {
 		return ortho2D;
 	}
 	
-	/** (2D) raffraichit la vue openGL de façon à ce que le repère réel
-	 * corresponde bien au repère que l'on peut obtenir à l'aide de 
-	 * {@link #getOrtho()} */
-	public void refreshOrtho() {
-		//TODO Intégrer cette méthode dans #setOrtho
-		GL11.glOrtho(ortho2D.left, ortho2D.right, ortho2D.bottom, ortho2D.top,
-				ortho2D.near, ortho2D.far);
-	}
-	
 	/** Donne l'échelle du repère openGL. */
 	public double getScale() {
 		return this.scale;
 	}
 	
+	public int getWidth() {
+		return this.width;
+	}
+	
+	public int getHeight() {
+		return this.height;
+	}
+	
 	/** donne une longueur sur le repere openGL à partir d'une longueur en pixel. */
 	public double getWidthOnGLOrtho(int widthOnDisplay) {
 		double x = widthOnDisplay;
-		double scaleFactor = (ortho2D.right - ortho2D.left) / (double) Display.getWidth();
+		double scaleFactor = (ortho2D.right - ortho2D.left) / (double) this.width;
 		
 		return x * scaleFactor;
 	}
@@ -291,33 +316,33 @@ public class GuiWindow {
 	/** donne une hauteur sur le repere openGL à partir d'une longueur en pixel. */
 	public double getHeightOnGLOrtho(int heightOnDisplay) {
 		double y = heightOnDisplay;
-		double scaleFactor = (ortho2D.top - ortho2D.bottom) / (double) Display.getHeight();
+		double scaleFactor = (ortho2D.top - ortho2D.bottom) / (double) this.height;
 		
 		return y * scaleFactor;
 	}
 	
 	public int getWidthOnDisplay(double widthOnGLOrtho) {
 		double x = widthOnGLOrtho;
-		double scaleFactor = (double) Display.getWidth() / (ortho2D.right - ortho2D.left);
+		double scaleFactor = (double) this.width / (ortho2D.right - ortho2D.left);
 		
 		return (int) (x * scaleFactor);
 	}
 	
 	public int getHeightOnDisplay(double heightOnGLOrtho) {
 		double y = heightOnGLOrtho;
-		double scaleFactor = (double) Display.getHeight() / (ortho2D.top - ortho2D.bottom);
+		double scaleFactor = (double) this.height / (ortho2D.top - ortho2D.bottom);
 		
 		return (int) (y * scaleFactor);
 	}
 	
 	/** donne l'abscisse openGL à partir d'une abscisse basée sur les coordonnées à l'affichage */
 	public double getXOnGLOrtho(int XOnDisplay){
-		if (!Display.isCreated()){
+		if (!this.created){
 			return 0;
 		}
 		
 		double x = XOnDisplay;
-		double width = Display.getWidth();
+		double width = this.width;
 		double result = x / width * (ortho2D.right - ortho2D.left) + ortho2D.left; 
 		
 		return result;
@@ -326,12 +351,12 @@ public class GuiWindow {
 	/** donne l'ordonnée openGL, à partir d'une ordonnée basée sur les
 	 * coordonnées à l'affichage en pixels. */
 	public double getYOnGLOrtho(int YOnDisplay){
-		if (!Display.isCreated()){
+		if (!this.created){
 			return 0;
 		}
 		
 		double y = YOnDisplay;
-		double height = Display.getHeight();
+		double height = this.height;
 		double result = 0;
 		
 		result = y / height * (ortho2D.top - ortho2D.bottom) + ortho2D.bottom; 
@@ -341,12 +366,12 @@ public class GuiWindow {
 	
 	/** donne l'abscisse sur l'affichage à partir de l'abscisse sur le repere openGL */
 	public int getXOnDisplay(double XOnGLOrtho){
-		if (!Display.isCreated()){
+		if (!this.created) {
 			return 0;
 		}
 		
 		double x = XOnGLOrtho;
-		double width = Display.getWidth();
+		double width = this.width;
 		int result = 0;
 		
 		result = (int)((x - ortho2D.left) / (ortho2D.right - ortho2D.left) * width); 
@@ -356,12 +381,12 @@ public class GuiWindow {
 	
 	/** donne l'ordonnée sur l'affichage à partir de l'ordonnée sur le repere openGL */
 	public int getYOnDisplay(double YOnGLOrtho) {
-		if (!Display.isCreated()){
+		if (!this.created) {
 			return 0;
 		}
 		
 		double y = YOnGLOrtho;
-		double height = Display.getHeight();
+		double height = this.height;
 		int result = 0;
 		
 		result = (int)((y - ortho2D.bottom) / (ortho2D.top - ortho2D.bottom) * height); 
@@ -381,4 +406,7 @@ public class GuiWindow {
 		return this.mainKeyboardInput;
 	}
 	
+	public boolean isKeyPressed(int glfwCode) {
+		return GLFW.glfwGetKey(this.window, glfwCode) == GLFW.GLFW_PRESS;
+	}
 }

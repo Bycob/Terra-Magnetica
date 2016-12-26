@@ -135,19 +135,19 @@ public abstract class GameEngine implements Runnable, Codable, Cloneable, Serial
 		if (!this.automatic) return;
 		
 		this.running = true;
-		long startTime = GameWindow.getSystemTime();
+		long startTime = GameWindow.getTimeMillis();
 		this.lastUpdateTime = startTime;
 		long stopTime;
 		long timeToSleep;
 		
 		while(running){
-			startTime = GameWindow.getSystemTime();
+			startTime = GameWindow.getTimeMillis();
 			
 			update();
 			
 			this.getBuffer().write(this);
 			
-			stopTime = GameWindow.getSystemTime();
+			stopTime = GameWindow.getTimeMillis();
 			timeToSleep = Math.max(0, TIME_TO_SLEEP - stopTime + startTime);
 			
 			try {

@@ -21,7 +21,7 @@ package org.terramagnetica.opengl.gui;
 
 import java.util.ArrayList;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 import org.terramagnetica.game.gui.GameWindow;
 import org.terramagnetica.opengl.engine.Painter;
 
@@ -76,13 +76,13 @@ public abstract class GuiAbstractTextField extends GuiComponent implements Write
 		int cursorPlace = cursor.getCursorPlace();
 		
 		switch (key) {
-		case Keyboard.KEY_BACK :
+		case GLFW.GLFW_KEY_BACKSPACE :
 			before = text.substring(0, (cursorPlace  > 0)? cursorPlace - 1 : cursorPlace);
 			after = text.substring(cursorPlace);
 			remove = (cursorPlace > 0);
 			if (remove) cursor.moveLeft();
 			break;
-		case Keyboard.KEY_DELETE :
+		case GLFW.GLFW_KEY_DELETE :
 			before = text.substring(0, cursorPlace);
 			after = text.substring((cursorPlace < text.length())? cursorPlace + 1 : cursorPlace);
 			remove = (cursorPlace < text.length());
@@ -100,9 +100,9 @@ public abstract class GuiAbstractTextField extends GuiComponent implements Write
 	public synchronized void move(int key) {
 		if (!focused) return;
 		
-		if (key == Keyboard.KEY_RIGHT) {
+		if (key == GLFW.GLFW_KEY_RIGHT) {
 			cursor.moveRight();
-		} else if (key == Keyboard.KEY_LEFT) {
+		} else if (key == GLFW.GLFW_KEY_LEFT) {
 			cursor.moveLeft();
 		}
 

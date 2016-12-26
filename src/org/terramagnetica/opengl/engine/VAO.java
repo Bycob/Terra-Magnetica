@@ -1,5 +1,6 @@
 package org.terramagnetica.opengl.engine;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -25,7 +26,7 @@ public class VAO {
 	}
 	
 	private int id;
-	private boolean computed;
+	private Program currentProgram;
 	private HashMap<String, Attrib> attribs = new HashMap<String, Attrib>();
 	
 	public VAO() {
@@ -62,13 +63,17 @@ public class VAO {
 	
 	public void bind(Program program) {
 		bind();
+		
+		if (program == this.currentProgram) return;
+		this.currentProgram = program;
+		
 		for (Entry<String, Attrib> entry : this.attribs.entrySet()) {
 			Attrib attrib = entry.getValue();
 			attrib.buffer.bind();
 			
 			int attribID = program.attribID(attrib.name);
 			GL20.glEnableVertexAttribArray(this.id);
-			GL20.glVertexAttribPointer(attribID, attrib.count, attrib.type, false, 0, null);
+			GL20.glVertexAttribPointer(attribID, attrib.count, attrib.type, false, 0, (ByteBuffer) null);
 		}
 		
 	}

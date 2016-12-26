@@ -19,9 +19,8 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.engine;
 
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
+import org.joml.Matrix4f;
+import org.terramagnetica.opengl.gui.GuiWindow;
 
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
@@ -147,24 +146,26 @@ public class Camera3D implements Camera {
 		return this.fov;
 	}
 	
-	public void setUpFrustum(CameraFrustum frustum) {
+	public void setUpFrustum(Painter painter, CameraFrustum frustum) {
+		GuiWindow window = painter.getWindow();
 		frustum.set(this.getEye(),
 				this.getCenter(),
 				this.getUp(),
-				near, far, (float) Display.getWidth() / (float) Display.getHeight(), this.fov);
+				near, far, (float) window.getWidth() / (float) window.getHeight(), this.fov);
 	}
 	
 	@Override
 	public void pushCamera(Painter painter) {
 		
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GLU.gluPerspective(fov, (float) Display.getWidth() / (float) Display.getHeight(), this.near, this.far);
+		GuiWindow window = painter.getWindow();
+		Program currentProgram = painter.getCurrentProgram();
 		
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		GLU.gluLookAt((float) eye.x, (float) eye.y, (float) eye.z, 
+		Matrix4f projection = new Matrix4f().setPerspective(fov, (float) window.getWidth() / (float) window.getHeight(), this.near, this.far);
+		Matrix4f camera = new Matrix4f().lookAt((float) eye.x, (float) eye.y, (float) eye.z, 
 				(float) center.x, (float) center.y, (float) center.z, 
 				(float) up.x, (float) up.y, (float) up.z);
+		
+		currentProgram.setUniformMatrix4f(StdUniform.View.PROJECTION_MATRIX, projection);
+		currentProgram.setUniformMatrix4f(StdUniform.View.CAMERA_MATRIX, camera);
 	}
 }

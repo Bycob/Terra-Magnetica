@@ -21,10 +21,8 @@ package debug;
 
 import java.util.ArrayList;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.Entity;
 import org.terramagnetica.game.lvldefault.lvl2.ControlPane;
@@ -91,11 +89,7 @@ public class CodeTest {
 	
 	public static void appliGL() {
 		GuiWindow window = GuiWindow.getInstance();
-		try {
-			window.createWindow();
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-		}
+		window.createWindow();
 		GuiTextPainter.init();
 		window.setContentPane(new DrawPanel());
 		
@@ -106,7 +100,6 @@ public class CodeTest {
 		
 		while (!window.isCloseRequested()) {
 			window.update();
-			Display.sync(60);
 		}
 	}
 	
@@ -114,10 +107,10 @@ public class CodeTest {
 	private static float zoom = 1f;
 	
 	public static void toDo() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+		if (GuiWindow.getInstance().isKeyPressed(GLFW.GLFW_KEY_RIGHT)) {
 			rotation += 1f;
 		}
-		else if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+		else if (GuiWindow.getInstance().isKeyPressed(GLFW.GLFW_KEY_LEFT)) {
 			rotation -= 1f;
 		}
 		

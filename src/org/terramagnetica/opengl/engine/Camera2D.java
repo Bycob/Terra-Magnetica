@@ -19,7 +19,7 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.engine;
 
-import org.lwjgl.opengl.GL11;
+import org.joml.Matrix4f;
 import org.terramagnetica.opengl.gui.GuiWindow;
 
 public class Camera2D implements Camera {
@@ -30,13 +30,10 @@ public class Camera2D implements Camera {
 	
 	@Override
 	public void pushCamera(Painter painter) {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		
 		GuiWindow.getInstance().setOrthoDefault();
-		GuiWindow.getInstance().refreshOrtho();
+		
+		Program currentProgram = painter.getCurrentProgram();
+		currentProgram.setUniformMatrix4f(StdUniform.View.PROJECTION_MATRIX, GuiWindow.getInstance().getOrtho().getMatrix());
+		currentProgram.setUniformMatrix4f(StdUniform.View.CAMERA_MATRIX, new Matrix4f());
 	}
 }

@@ -21,9 +21,7 @@ package org.terramagnetica.game.gui;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
+import org.lwjgl.glfw.GLFW;
 import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.opengl.gui.GuiDialog;
 import org.terramagnetica.opengl.gui.GuiDialogMessage;
@@ -76,7 +74,7 @@ public class GameWindow {
 		while (this.gameRunning) {
 			
 			refresh();
-			long time = System.nanoTime();
+			long startTime = getTimeNanos();
 			
 			window.update();
 			
@@ -92,10 +90,10 @@ public class GameWindow {
 			}
 			
 			//screenshots
-			if (Keyboard.isKeyDown(Keyboard.KEY_F1)) {
+			if (window.isKeyPressed(GLFW.GLFW_KEY_F1)) {
 				if (!f1KeyPressed) {
 					f1KeyPressed = true;
-					ExternalFilesManager.saveScreenshot(Screenshot.takeScreenshot());
+					ExternalFilesManager.saveScreenshot(Screenshot.takeScreenshot(window));
 				}
 			}
 			else {
@@ -105,14 +103,35 @@ public class GameWindow {
 			}
 			//-----
 			
-			System.out.println((float) (System.nanoTime() - time) / 1000000);
+			long totalTime = getTimeNanos() - startTime;
+			System.out.println((float) (totalTime) / 1000000);
+			//TODO profiling
 			
-			Display.sync(FPS);
-			System.out.println((float) (System.nanoTime() - time) / 1000000);
-			System.out.println();
+			sync(startTime);
+			System.out.println(((float) (getTimeNanos() - startTime) / 1000000) + "\n");
 		}
 		
 		destroyApp();
+	}
+	
+	/** @param frameDuration en nanosecondes*/
+	void sync(long frameStartTime) {
+		long frameDuration = getTimeNanos() - frameStartTime;
+		long nanosWanted = 1000000000L / this.FPS;
+		
+		while (nanosWanted - frameDuration > 1000000) { // 1 ms
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			frameDuration = getTimeNanos() - frameStartTime;
+		}
+		
+		while (nanosWanted > frameDuration) {
+			Thread.yield();
+			frameDuration = getTimeNanos() - frameStartTime;
+		}
 	}
 	
 	/** arrête le jeu */
@@ -123,7 +142,7 @@ public class GameWindow {
 	/** effectue des actions diverses qu'il faut executer à chaque
 	 * tour de jeu. */
 	protected void refresh() {
-		time = getSystemTime();
+		time = getTimeMillis();
 	}
 	
 	/** Prépare l'affichage, charge les textures...<br>
@@ -201,12 +220,12 @@ public class GameWindow {
 	}
 
 	/** Donne le temps du systeme en millisecondes. */
-	public static long getSystemTime(){
-		return Sys.getTime() * 1000L / Sys.getTimerResolution();
+	public static long getTimeMillis() {
+		return (long) (GLFW.glfwGetTime() * 1000);
 	}
 	
 	/** Donne le temps du systeme en nanosecondes. */
-	public static long getSystemNanos() {
-		return Sys.getTime() * 1000000000L / Sys.getTimerResolution();
+	public static long getTimeNanos() {
+		return (long) (GLFW.glfwGetTime() * 1000000000L);
 	}
 }

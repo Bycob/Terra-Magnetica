@@ -57,7 +57,7 @@ public class RenderElementDialog extends RenderGameDefaultElement {
 	
 	@Override
 	public void render(GamePlayingDefault game, Painter painter) {
-		long time = GameWindow.getSystemTime();
+		long time = GameWindow.getTimeMillis();
 		
 		//Initialisation du contexte openGL
 		painter.set2DConfig();

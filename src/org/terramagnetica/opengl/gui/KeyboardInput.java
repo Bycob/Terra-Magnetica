@@ -22,7 +22,7 @@ package org.terramagnetica.opengl.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 public class KeyboardInput {
 	
@@ -35,25 +35,38 @@ public class KeyboardInput {
 	 */
 	public void sendEvents(GuiComponent listener) {
 		synchronized (events) {
+			KeyboardListener[] keyboardListeners = listener.getKeyboardListeners();
 			for (KeyboardEvent e : events) {
-				for (KeyboardListener l : listener.getKeyboardListeners()) {
+				for (KeyboardListener l : keyboardListeners) {
 					l.eventKey(e);
 				}
 			}
+			
+			for (KeyboardListener l : keyboardListeners) {
+				if (l instanceof WriterInput) {
+					((WriterInput) l).sendEvents();
+				}
+			}
+			
 			if (events.size() != 0)
 				events = new ArrayList<KeyboardEvent>();
 		}
 	}
-	
-	/**
+	/*
 	 * Enregistre tous les évènements clavier disponibles.
-	 */
+	 *
 	public void registerInput() {
 		synchronized (events) {
 			while (Keyboard.isCreated() && Keyboard.next()) {
 				events.add(new KeyboardEvent(Keyboard.getEventCharacter(),
 						Keyboard.getEventKey(), Keyboard.getEventKeyState()));
 			}
+		}
+	}*/
+
+	public void addKeyEvent(int key, int scancode, int action, int mods) {
+		synchronized (this.events) {
+			this.events.add(new KeyboardEvent((char) scancode, key, action == GLFW.GLFW_PRESS));
 		}
 	}
 }

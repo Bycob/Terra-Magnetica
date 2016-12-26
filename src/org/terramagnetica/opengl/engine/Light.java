@@ -19,9 +19,8 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.engine;
 
-import java.nio.FloatBuffer;
+import static org.terramagnetica.opengl.engine.StdUniform.Light.*;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import net.bynaryscode.util.Color4f;
@@ -35,15 +34,9 @@ public class Light {
 	}
 	
 	public enum LightColor {
-		AMBIENT(GL11.GL_AMBIENT),
-		DIFFUSE(GL11.GL_DIFFUSE),
-		SPECULAR(GL11.GL_SPECULAR);
-		
-		public final int glID;
-		
-		LightColor(int glID) {
-			this.glID = glID;
-		}
+		AMBIENT,
+		DIFFUSE,
+		SPECULAR;
 	}
 	
 	public static String getLightParam(int lightID, String param) {
@@ -58,15 +51,6 @@ public class Light {
 	private LightType type = LightType.DIRECTIONNAL;
 	private Color4f colors[] = new Color4f[] {new Color4f(), new Color4f(), new Color4f()};
 	private Vec3d attenuation = new Vec3d(1, 0.1, 0.001);
-	
-	private FloatBuffer positionBuffer = BufferUtils.createFloatBuffer(4);
-	private FloatBuffer colorBuffers[] = new FloatBuffer[3];
-	
-	{
-		for (int i = 0 ; i < colorBuffers.length ; i++) {
-			this.colorBuffers[i] = BufferUtils.createFloatBuffer(4);
-		}
-	}
 	
 	Light(int id, LightModel model) {
 		this.id = id;
@@ -138,37 +122,29 @@ public class Light {
 	
 	void sendLightParamsToGL() {
 		
+		if (this.painter == null) return;
+		Program currentProgram = this.painter.getCurrentProgram();
+		int glID = id;
+		
 		if (!this.activated) {
-			int glID = GL11.GL_LIGHT0 + id;
-			GL11.glDisable(glID); // TODO cf en dessous
+			currentProgram.setUniform1i(uniformID(ACTIVATED, glID), GL11.GL_FALSE);
 		}
 		else {
-			int glID = GL11.GL_LIGHT0 + id;
-			GL11.glEnable(glID); // TODO changer enable en setUniform
+			currentProgram.setUniform1i(uniformID(ACTIVATED, glID), GL11.GL_TRUE);
 			
 			//Position
-			this.positionBuffer.clear();
-			bufferPutVec(positionBuffer, this.position);
-			positionBuffer.put(this.type == LightType.DIRECTIONNAL ? 0 : 1);
-			positionBuffer.flip();
-			
-			GL11.glLight(glID, GL11.GL_POSITION, positionBuffer);
+			currentProgram.setUniform1f(uniformID(TYPE, glID), this.type.ordinal());
+			currentProgram.setUniformVec3d(uniformID(POSITION, glID), this.position);
 			
 			//Couleurs
 			for (LightColor colorType : LightColor.values()) {
 				Color4f color = this.colors[colorType.ordinal()];
-				FloatBuffer colors = this.colorBuffers[colorType.ordinal()];
-				colors.clear();
-				colors.put(new float[] {color.getRedf(), color.getGreenf(), color.getBluef(), color.getAlphaf()});
-				colors.flip();
-				
-				GL11.glLight(glID, colorType.glID, colors);
+				String colorID = new String[] {AMBIENT, DIFFUSE, SPECULAR}[colorType.ordinal()];
+				currentProgram.setUniform3f(uniformID(colorID, glID), color.getRedf(), color.getGreenf(), color.getBluef());
 			}
 			
 			//Atténuation
-			GL11.glLightf(glID, GL11.GL_CONSTANT_ATTENUATION, (float) this.attenuation.x);
-			GL11.glLightf(glID, GL11.GL_LINEAR_ATTENUATION, (float) this.attenuation.y);
-			GL11.glLightf(glID, GL11.GL_QUADRATIC_ATTENUATION, (float) this.attenuation.z);
+			currentProgram.setUniformVec3d(uniformID(ATTENUATION, glID), this.attenuation);
 		}
 	}
 	
@@ -181,7 +157,7 @@ public class Light {
 		}
 	}
 	
-	private void bufferPutVec(FloatBuffer buffer, Vec3d vec) {
-		buffer.put(new float[] {(float) vec.x, (float) vec.y, (float) vec.z});
+	private String uniformID(String stdID, int lightID) {
+		return stdID.replaceAll("%d", String.valueOf(lightID));
 	}
 }

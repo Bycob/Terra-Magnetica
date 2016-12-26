@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 import org.terramagnetica.game.GameInputBuffer.InputKey;
 
 /**
@@ -40,12 +40,12 @@ public class Options {
 	}
 	
 	private void initControls() {
-		this.controls.put(InputKey.KEY_DOWN, Keyboard.KEY_DOWN);
-		this.controls.put(InputKey.KEY_LEFT, Keyboard.KEY_LEFT);
-		this.controls.put(InputKey.KEY_UP, Keyboard.KEY_UP);
-		this.controls.put(InputKey.KEY_RIGHT, Keyboard.KEY_RIGHT);
-		this.controls.put(InputKey.KEY_TALK, Keyboard.KEY_SPACE);
-		this.controls.put(InputKey.KEY_ECHAP, Keyboard.KEY_ESCAPE);
+		this.controls.put(InputKey.KEY_DOWN, GLFW.GLFW_KEY_DOWN);
+		this.controls.put(InputKey.KEY_LEFT, GLFW.GLFW_KEY_LEFT);
+		this.controls.put(InputKey.KEY_UP, GLFW.GLFW_KEY_UP);
+		this.controls.put(InputKey.KEY_RIGHT, GLFW.GLFW_KEY_RIGHT);
+		this.controls.put(InputKey.KEY_TALK, GLFW.GLFW_KEY_SPACE);
+		this.controls.put(InputKey.KEY_ECHAP, GLFW.GLFW_KEY_ESCAPE);
 	}
 	
 	private InputKey assignedInput(int keyID) {

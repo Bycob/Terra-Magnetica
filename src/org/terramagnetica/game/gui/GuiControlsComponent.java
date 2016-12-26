@@ -23,7 +23,7 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 import org.terramagnetica.game.GameInputBuffer.InputKey;
 import org.terramagnetica.game.Options;
 import org.terramagnetica.opengl.engine.GLUtil;
@@ -123,25 +123,25 @@ public class GuiControlsComponent extends GuiComponent implements
 		}
 		else {
 			switch (e.getKey()) {
-			case Keyboard.KEY_UP :
+			case GLFW.GLFW_KEY_UP :
 				if (this.index_selected > 0) this.index_selected--;
 				updateSlots();
 				break;
-			case Keyboard.KEY_DOWN :
+			case GLFW.GLFW_KEY_DOWN :
 				if (this.index_selected < this.slots.size() - 1) this.index_selected++;
 				updateSlots();
 				break;
-			case Keyboard.KEY_RIGHT :
+			case GLFW.GLFW_KEY_RIGHT :
 				this.index_selected += this.column_height;
 				if (this.index_selected >= this.slots.size()) this.index_selected -= this.column_height;
 				updateSlots();
 				break;
-			case Keyboard.KEY_LEFT :
+			case GLFW.GLFW_KEY_LEFT :
 				this.index_selected -= this.column_height;
 				if (this.index_selected < 0) this.index_selected += this.column_height;
 				updateSlots();
 				break;
-			case Keyboard.KEY_RETURN :
+			case GLFW.GLFW_KEY_ENTER :
 				if (this.index_selected != -1 && this.index_selected < this.slots.size()) {
 					this.index_edit = this.index_selected;
 					updateSlots();
@@ -204,7 +204,7 @@ public class GuiControlsComponent extends GuiComponent implements
 		public Slot(InputKey command, int key_value) {
 			this.command = command;
 			this.key_value = key_value;
-			this.key = Keyboard.getKeyName(this.key_value);
+			this.key = GLFW.getKeyName(this.key_value);
 		}
 		
 		public void drawSlot(RectangleDouble bounds, Painter painter) {

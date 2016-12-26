@@ -22,7 +22,7 @@ package org.terramagnetica.game;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.input.Keyboard;
+import org.terramagnetica.opengl.gui.GuiWindow;
 
 /**
  * Cette classe sauvegarde les touches pressées par l'utilisateur, 
@@ -80,10 +80,15 @@ public class GameInputBuffer {
 		AVAILABLE_KEY_INPUT = InputKey.values();
 	}
 	
+	private GuiWindow window;
+	
 	private Map<InputKey, Boolean> inputMap = new HashMap<InputKey, Boolean>();
 	public Options options;
 	
-	public GameInputBuffer() {
+	public GameInputBuffer(GuiWindow window) {
+		if (window == null) throw new NullPointerException("window == null");
+		this.window = window;
+		
 		this.options = TerraMagnetica.theGame == null ? new Options() : TerraMagnetica.theGame.options;
 		
 		for (InputKey input : AVAILABLE_KEY_INPUT) {
@@ -109,7 +114,7 @@ public class GameInputBuffer {
 	
 	public void listenInput() {
 		for (InputKey input : AVAILABLE_KEY_INPUT) {
-			this.pressKey(input, Keyboard.isKeyDown(this.options.getInputID(input)));
+			this.pressKey(input, this.window.isKeyPressed(this.options.getInputID(input)));
 		}
 	}
 }

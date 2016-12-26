@@ -92,6 +92,8 @@ public class GLConfiguration implements Cloneable {
 	
 	private void glUpdateState(GLProperty prop, boolean activated) {
 		if (this.painter != null) {
+			Program currentProgram = this.painter.getCurrentProgram();
+			
 			//Propriétés openGL gérées par glEnable
 			if (prop.glConst != -1) {
 				if (activated && !GL11.glIsEnabled(prop.glConst)) {
@@ -106,11 +108,11 @@ public class GLConfiguration implements Cloneable {
 				switch (prop) {
 				case LIGHTING :
 					if (activated) {
-						GL11.glEnable(GL11.GL_LIGHTING);
+						currentProgram.setUniform1i(StdUniform.USE_LIGHTS, GL11.GL_TRUE);
 						this.painter.getLightModel().sendLightsToGL();
 					}
 					else {
-						GL11.glDisable(GL11.GL_LIGHTING);
+						currentProgram.setUniform1i(StdUniform.USE_LIGHTS, GL11.GL_FALSE);
 					}
 					break;
 				default:;

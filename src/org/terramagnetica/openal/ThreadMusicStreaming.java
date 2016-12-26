@@ -23,9 +23,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.ALC;
 
 public class ThreadMusicStreaming extends Thread {
 	
@@ -45,13 +44,7 @@ public class ThreadMusicStreaming extends Thread {
 		
 		this.running = true;
 		
-		try {
-			AL.create();
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-			System.err.println("\n<!> SONS NON INITIALISES");
-			return;
-		}
+		ALC.create();
 		
 		try {
 			this.music.initStream();
@@ -128,7 +121,7 @@ public class ThreadMusicStreaming extends Thread {
 		
 		this.music.closeStream();
 		
-		AL.destroy();
+		ALC.destroy();
 		
 		threadRunning --;
 	}

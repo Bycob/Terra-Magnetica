@@ -2,10 +2,10 @@ package org.terramagnetica.opengl.engine;
 
 import java.nio.FloatBuffer;
 
+import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.util.vector.Matrix4f;
 
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
@@ -86,7 +86,7 @@ public class Program {
 	public void setUniformMatrix4f(String uniformName, Matrix4f matrix) {
 		checkInUse();
 		FloatBuffer matrixBuf = BufferUtils.createFloatBuffer(16);
-		matrix.store(matrixBuf);
-		GL20.glUniformMatrix4(uniformID(uniformName), false, matrixBuf);
+		matrix.get(matrixBuf);
+		GL20.glUniformMatrix4fv(uniformID(uniformName), false, matrixBuf);
 	}
 }

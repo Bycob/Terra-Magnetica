@@ -22,11 +22,13 @@ package org.terramagnetica.opengl.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.input.Mouse;
+import org.lwjgl.glfw.GLFW;
 
 public class MouseInput {
 	
 	private List<MouseEvent> events = new ArrayList<MouseEvent>();
+	
+	private double mouseX, mouseY;
 	
 	public MouseInput() {}
 	
@@ -43,12 +45,30 @@ public class MouseInput {
 		}
 	}
 	
-	public void registerInput() {
+	public void addCursorEvent(double x, double y) {
+		this.mouseX = x;
+		this.mouseY = y;
+	}
+	
+	public void addMouseButtonEvent(int button, int action, int mods) {
 		synchronized (events) {
-			while (Mouse.isCreated() && Mouse.next()) {
-				events.add(new MouseEvent(Mouse.getEventButton(), Mouse.getEventButtonState(),
-						Mouse.getEventX(), Mouse.getEventY()));
-			}
+			this.events.add(new MouseEvent(button, action == GLFW.GLFW_PRESS, (int) this.mouseX, (int) this.mouseY));
 		}
+	}
+	
+	public int getMouseX() {
+		return (int) this.mouseX;
+	}
+	
+	public int getMouseY() {
+		return (int) this.mouseY;
+	}
+	
+	public double getMouseXFullRes() {
+		return this.mouseX;
+	}
+	
+	public double getMouseYFullRes() {
+		return this.mouseY;
 	}
 }

@@ -24,15 +24,15 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.terramagnetica.opengl.gui.GuiWindow;
 import org.terramagnetica.utile.ImgUtil;
 
 public class Screenshot {
 	
-	public static BufferedImage takeScreenshot() {
-		int h = Display.getHeight();
-		int w = Display.getWidth();
+	public static BufferedImage takeScreenshot(GuiWindow window) {
+		int h = window.getHeight();
+		int w = window.getWidth();
 		
 		ByteBuffer pixels = BufferUtils.createByteBuffer(w * h * 4).order(ByteOrder.nativeOrder());
 		GL11.glReadPixels(0, 0, w, h, GL11.GL_RGBA, GL11.GL_BYTE, pixels);
