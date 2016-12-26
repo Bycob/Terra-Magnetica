@@ -202,8 +202,6 @@ public class Painter {
 	
 	private void beforeDrawing() {
 		if (this.recordedList == null) {
-			//FIXME remove - dû à la non utilisation des shaders... et la non praticité d'openGL old (reset des matrices inopportun)
-			this.configuration.getCamera().pushCamera(this);
 			
 			if (this.viewport != null) {
 				drawViewport();

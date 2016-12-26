@@ -21,7 +21,6 @@ package org.terramagnetica.opengl.gui;
 
 import java.util.ArrayList;
 
-import org.lwjgl.input.Mouse;
 import org.terramagnetica.opengl.engine.GLUtil;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.Viewport;
@@ -98,8 +97,8 @@ public class GuiScrollPanel extends GuiComponent implements MouseListener {
 	@Override
 	public void drawComponent(Painter p) {
 		
-		int wheel = Mouse.getDWheel();
-		double glWheel = theWindow.getHeightOnGLOrtho(Math.abs(wheel)) * Math.signum(wheel) * 0.1;
+		double wheel = this.theWindow.getMouseInput().getMouseDWheel();
+		double glWheel = wheel * 0.1; //FIXME Ajuster ce paramètre
 		this.setBarLocation(ScrollBar.VERTICAL, this.yVBar + glWheel);
 		
 		p.set2DConfig();

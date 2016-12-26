@@ -74,7 +74,7 @@ public class GameWindow {
 		while (this.gameRunning) {
 			
 			refresh();
-			long startTime = getTimeNanos();
+			long startTime = GuiWindow.getTimeNanos();
 			
 			window.update();
 			
@@ -103,12 +103,12 @@ public class GameWindow {
 			}
 			//-----
 			
-			long totalTime = getTimeNanos() - startTime;
+			long totalTime = GuiWindow.getTimeNanos() - startTime;
 			System.out.println((float) (totalTime) / 1000000);
 			//TODO profiling
 			
 			sync(startTime);
-			System.out.println(((float) (getTimeNanos() - startTime) / 1000000) + "\n");
+			System.out.println(((float) (GuiWindow.getTimeNanos() - startTime) / 1000000) + "\n");
 		}
 		
 		destroyApp();
@@ -116,7 +116,7 @@ public class GameWindow {
 	
 	/** @param frameDuration en nanosecondes*/
 	void sync(long frameStartTime) {
-		long frameDuration = getTimeNanos() - frameStartTime;
+		long frameDuration = GuiWindow.getTimeNanos() - frameStartTime;
 		long nanosWanted = 1000000000L / this.FPS;
 		
 		while (nanosWanted - frameDuration > 1000000) { // 1 ms
@@ -125,12 +125,12 @@ public class GameWindow {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			frameDuration = getTimeNanos() - frameStartTime;
+			frameDuration = GuiWindow.getTimeNanos() - frameStartTime;
 		}
 		
 		while (nanosWanted > frameDuration) {
 			Thread.yield();
-			frameDuration = getTimeNanos() - frameStartTime;
+			frameDuration = GuiWindow.getTimeNanos() - frameStartTime;
 		}
 	}
 	
@@ -142,7 +142,7 @@ public class GameWindow {
 	/** effectue des actions diverses qu'il faut executer à chaque
 	 * tour de jeu. */
 	protected void refresh() {
-		time = getTimeMillis();
+		time = GuiWindow.getTimeMillis();
 	}
 	
 	/** Prépare l'affichage, charge les textures...<br>
@@ -217,15 +217,5 @@ public class GameWindow {
 	
 	public long getTime() {
 		return this.time;
-	}
-
-	/** Donne le temps du systeme en millisecondes. */
-	public static long getTimeMillis() {
-		return (long) (GLFW.glfwGetTime() * 1000);
-	}
-	
-	/** Donne le temps du systeme en nanosecondes. */
-	public static long getTimeNanos() {
-		return (long) (GLFW.glfwGetTime() * 1000000000L);
 	}
 }

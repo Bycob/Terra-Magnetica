@@ -85,9 +85,8 @@ public class GameInputBuffer {
 	private Map<InputKey, Boolean> inputMap = new HashMap<InputKey, Boolean>();
 	public Options options;
 	
-	public GameInputBuffer(GuiWindow window) {
-		if (window == null) throw new NullPointerException("window == null");
-		this.window = window;
+	public GameInputBuffer() {
+		this.window = GuiWindow.getInstance();
 		
 		this.options = TerraMagnetica.theGame == null ? new Options() : TerraMagnetica.theGame.options;
 		

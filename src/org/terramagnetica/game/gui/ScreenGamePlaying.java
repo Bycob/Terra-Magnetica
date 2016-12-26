@@ -20,9 +20,6 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 package org.terramagnetica.game.gui;
 
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.terramagnetica.game.GameBuffer;
 import org.terramagnetica.game.GameEngine;
 import org.terramagnetica.game.GameInputBuffer.InputKey;
@@ -167,7 +164,7 @@ public class ScreenGamePlaying extends GameScreen {
 			if (TerraMagnetica.theGame != null) {
 				escKey = TerraMagnetica.theGame.options.getInputID(InputKey.KEY_ECHAP);
 			}
-			if (GuiWindow.getInstance().isKeyPressed(escKey) || !(GLFW.glfwGet())) {
+			if (this.theWindow.isKeyPressed(escKey) || !(this.theWindow.hasFocus())) {
 				this.interruptGame(new Pause());
 			}
 			
@@ -208,7 +205,8 @@ public class ScreenGamePlaying extends GameScreen {
 	 * sinon.
 	 */
 	private void updateMouseGrabbing(boolean flag) {
-		GLFW.glfwSetCursor(flag && GameWindow.getTimeNanos() - Mouse.getEventNanoseconds() > 1000000000l));// 1s
+		boolean hidden = flag && GuiWindow.getTimeNanos() - this.theWindow.getMouseInput().getLastEventNanos() > 1000000000l;
+		this.theWindow.setCursorHidden(hidden);// 1s
 	}
 	
 	/** Lance le jeu à la création du Panel. Lance également la musique. */

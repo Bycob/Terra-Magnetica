@@ -204,7 +204,7 @@ public class GuiControlsComponent extends GuiComponent implements
 		public Slot(InputKey command, int key_value) {
 			this.command = command;
 			this.key_value = key_value;
-			this.key = GLFW.getKeyName(this.key_value);
+			this.key = GLFW.glfwGetKeyName(this.key_value, 0);
 		}
 		
 		public void drawSlot(RectangleDouble bounds, Painter painter) {

@@ -22,7 +22,6 @@ package debug;
 import java.util.ArrayList;
 
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.input.Mouse;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.Entity;
 import org.terramagnetica.game.lvldefault.lvl2.ControlPane;
@@ -134,7 +133,7 @@ public class CodeTest {
 		public void drawComponent(Painter painter) {
 			painter.set3DConfig();
 			
-			zoom -= Mouse.getDWheel() / 1000f;
+			zoom -= GuiWindow.getInstance().getMouseInput().getMouseDWheel() / 1000f;
 			camera.setEye(new Vec3d(0, -zoom, zoom));
 			
 			painter.getConfiguration().setCamera(camera);

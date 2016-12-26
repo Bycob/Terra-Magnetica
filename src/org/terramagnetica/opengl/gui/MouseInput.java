@@ -20,40 +20,62 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 package org.terramagnetica.opengl.gui;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
 public class MouseInput {
 	
-	private List<MouseEvent> events = new ArrayList<MouseEvent>();
+	private ArrayList<MouseEvent> events = new ArrayList<MouseEvent>();
 	
 	private double mouseX, mouseY;
+	private double dwheel = 0;
+	private boolean wheelUpdated = false;
+	
+	private long lastEventNanos = 0;
 	
 	public MouseInput() {}
 	
 	public void sendEvents(GuiComponent listener) {
 		
 		synchronized (events) {
+			//On envoie les évènements à tout le monde
 			for (MouseListener l : listener.getMouseListeners()) {
 				for (MouseEvent e : events) {
 					l.eventMouse(e);
 				}
 			}
 			
-			events = new ArrayList<MouseEvent>();
+			//On vide la liste des évènements
+			this.events.clear();
 		}
+		
+		//Mise à jour de l'état de la molette
+		if (!this.wheelUpdated) {
+			this.dwheel = 0;
+		}
+		this.wheelUpdated = false;
 	}
 	
 	public void addCursorEvent(double x, double y) {
 		this.mouseX = x;
 		this.mouseY = y;
+		
+		this.lastEventNanos = GuiWindow.getTimeNanos();
 	}
 	
 	public void addMouseButtonEvent(int button, int action, int mods) {
 		synchronized (events) {
 			this.events.add(new MouseEvent(button, action == GLFW.GLFW_PRESS, (int) this.mouseX, (int) this.mouseY));
 		}
+
+		this.lastEventNanos = GuiWindow.getTimeNanos();
+	}
+	
+	public void addMouseWheelEvent(double xoffset, double yoffset) {
+		this.dwheel = yoffset;
+		this.wheelUpdated = true;
+
+		this.lastEventNanos = GuiWindow.getTimeNanos();
 	}
 	
 	public int getMouseX() {
@@ -70,5 +92,15 @@ public class MouseInput {
 	
 	public double getMouseYFullRes() {
 		return this.mouseY;
+	}
+	
+	/** Retourne le mouvement de la molette de souris pendant le tour de jeu
+	 * actuel. */ 
+	public double getMouseDWheel() {
+		return this.dwheel;
+	}
+
+	public long getLastEventNanos() {
+		return this.lastEventNanos;
 	}
 }

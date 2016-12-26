@@ -23,7 +23,6 @@ import static org.terramagnetica.game.GameRessources.*;
 
 import org.terramagnetica.game.GameInputBuffer;
 import org.terramagnetica.game.GameInputBuffer.InputKey;
-import org.terramagnetica.game.gui.GameWindow;
 import org.terramagnetica.game.gui.GuiConstants;
 import org.terramagnetica.game.lvldefault.DialogInGame.Statement;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
@@ -57,7 +56,7 @@ public class RenderElementDialog extends RenderGameDefaultElement {
 	
 	@Override
 	public void render(GamePlayingDefault game, Painter painter) {
-		long time = GameWindow.getTimeMillis();
+		long time = GuiWindow.getTimeMillis();
 		
 		//Initialisation du contexte openGL
 		painter.set2DConfig();

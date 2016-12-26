@@ -19,7 +19,7 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.miscellaneous;
 
-import org.terramagnetica.game.gui.GameWindow;
+import org.terramagnetica.opengl.gui.GuiWindow;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.Codable;
@@ -49,7 +49,7 @@ public class Timer implements Codable, Cloneable {
 			this.lastPause = 0L;
 		}
 		
-		this.start = GameWindow.getTimeMillis();
+		this.start = GuiWindow.getTimeMillis();
 		this.running = true;
 	}
 	
@@ -87,7 +87,7 @@ public class Timer implements Codable, Cloneable {
 	public void pause() {
 		if (!this.paused && this.running) {
 			this.paused = true;
-			this.lastPause = GameWindow.getTimeMillis();
+			this.lastPause = GuiWindow.getTimeMillis();
 		}
 	}
 	
@@ -96,7 +96,7 @@ public class Timer implements Codable, Cloneable {
 	 * Dans le cas contraire, cette méthode n'a aucun effet. */
 	public void resume() {
 		if (this.paused && this.running) {
-			this.start += GameWindow.getTimeMillis() - lastPause;
+			this.start += GuiWindow.getTimeMillis() - lastPause;
 			this.paused = false;
 		}
 	}
@@ -109,7 +109,7 @@ public class Timer implements Codable, Cloneable {
 			return this.lastPause - this.start;
 		}
 		
-		long time = GameWindow.getTimeMillis() - this.start;
+		long time = GuiWindow.getTimeMillis() - this.start;
 		
 		return time;
 	}

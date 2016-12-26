@@ -27,6 +27,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
@@ -105,7 +106,7 @@ public class GuiWindow {
 			throw new RuntimeException("Creation of Terra Magnetica main window failed.");
 		}
 		
-		//Ajout des callbacks
+		// Ajout des callbacks
 		GLFW.glfwSetCursorPosCallback(this.window, new GLFWCursorPosCallback() {
 			@Override public void invoke(long window, double xpos, double ypos) {
 				mainMouseInput.addCursorEvent(xpos, ypos);
@@ -118,13 +119,20 @@ public class GuiWindow {
 			}
 		});
 		
+		GLFW.glfwSetScrollCallback(this.window, new GLFWScrollCallback() {
+			@Override public void invoke(long window, double xoffset, double yoffset) {
+				mainMouseInput.addMouseWheelEvent(xoffset, yoffset);
+			}
+		});
+		
 		GLFW.glfwSetKeyCallback(this.window, new GLFWKeyCallback() {
 			@Override public void invoke(long window, int key, int scancode, int action, int mods) {
 				//FIXME vérifier la conversion scancode / char
 				mainKeyboardInput.addKeyEvent(key, scancode, action, mods);
 			}
 		});
-
+		
+		// Ajout de l'icone
 		GLFWImage.Buffer icons = null;
 		try {
 			icons = GLFWImage.malloc(this.icons.length);
@@ -216,6 +224,10 @@ public class GuiWindow {
 		return this.closeRequested;
 	}
 	
+	public boolean hasFocus() {
+		return GLFW.glfwGetWindowAttrib(this.window, GLFW.GLFW_FOCUSED) == GLFW.GLFW_TRUE;
+	}
+	
 	void pollEvents() {
 		GLFW.glfwPollEvents();
 		
@@ -241,6 +253,10 @@ public class GuiWindow {
 			this.contentPane = this.nextContentPane;
 			this.nextContentPane = null;
 		}
+	}
+	
+	public void setCursorHidden(boolean hidden) {
+		GLFW.glfwSetCursor(this.window, hidden ? GLFW.GLFW_CURSOR_HIDDEN : GLFW.GLFW_CURSOR_NORMAL);
 	}
 	
 	/** place le repère openGL par défaut. */
@@ -408,5 +424,15 @@ public class GuiWindow {
 	
 	public boolean isKeyPressed(int glfwCode) {
 		return GLFW.glfwGetKey(this.window, glfwCode) == GLFW.GLFW_PRESS;
+	}
+	
+	/** Donne le temps du systeme en nanosecondes. */
+	public static long getTimeNanos() {
+		return (long) (GLFW.glfwGetTime() * 1000000000L);
+	}
+	
+	/** Donne le temps du systeme en millisecondes. */
+	public static long getTimeMillis() {
+		return (long) (GLFW.glfwGetTime() * 1000);
 	}
 }

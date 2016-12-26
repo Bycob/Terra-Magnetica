@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.terramagnetica.game.gui.GameRendering;
-import org.terramagnetica.game.gui.GameWindow;
 import org.terramagnetica.openal.MusicStreaming;
+import org.terramagnetica.opengl.gui.GuiWindow;
 import org.terramagnetica.ressources.SoundManager;
 import org.terramagnetica.ressources.TextureSet;
 import org.terramagnetica.ressources.io.Codable;
@@ -135,19 +135,19 @@ public abstract class GameEngine implements Runnable, Codable, Cloneable, Serial
 		if (!this.automatic) return;
 		
 		this.running = true;
-		long startTime = GameWindow.getTimeMillis();
+		long startTime = GuiWindow.getTimeMillis();
 		this.lastUpdateTime = startTime;
 		long stopTime;
 		long timeToSleep;
 		
 		while(running){
-			startTime = GameWindow.getTimeMillis();
+			startTime = GuiWindow.getTimeMillis();
 			
 			update();
 			
 			this.getBuffer().write(this);
 			
-			stopTime = GameWindow.getTimeMillis();
+			stopTime = GuiWindow.getTimeMillis();
 			timeToSleep = Math.max(0, TIME_TO_SLEEP - stopTime + startTime);
 			
 			try {
