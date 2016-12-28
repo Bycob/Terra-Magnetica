@@ -33,6 +33,7 @@ public class Camera2D implements Camera {
 		GuiWindow.getInstance().setOrthoDefault();
 		
 		Program currentProgram = painter.getCurrentProgram();
+		currentProgram.setUniform3f(StdUniform.View.CAMERA_POSITION, 0, 0, 0);
 		currentProgram.setUniformMatrix4f(StdUniform.View.PROJECTION_MATRIX, GuiWindow.getInstance().getOrtho().getMatrix());
 		currentProgram.setUniformMatrix4f(StdUniform.View.CAMERA_MATRIX, new Matrix4f());
 	}

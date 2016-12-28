@@ -31,7 +31,6 @@ public class GLConfiguration implements Cloneable {
 		GLConfiguration config = new GLConfiguration();
 		
 		config.setPropertieEnabled(GLProperty.DEPTH_TEST, false);
-		config.setPropertieEnabled(GLProperty.ALPHA_TEST, false);
 		
 		return config;
 	}
@@ -49,12 +48,10 @@ public class GLConfiguration implements Cloneable {
 	
 	public static enum GLProperty {
 		DEPTH_TEST(GL11.GL_DEPTH_TEST, true),
-		ALPHA_TEST(GL11.GL_ALPHA_TEST, true),
 		STENCIL_TEST(GL11.GL_STENCIL_TEST, true),
 		BLEND(GL11.GL_BLEND, true),
-		TEXTURE(GL11.GL_TEXTURE_2D, true),
-		LIGHTING(-1, false),
-		MULTISAMPLE(GL13.GL_MULTISAMPLE, false);
+		MULTISAMPLE(GL13.GL_MULTISAMPLE, false),
+		LIGHTING(-1, false);
 		
 		public final int glConst;
 		public final boolean defaultValue;
@@ -72,8 +69,6 @@ public class GLConfiguration implements Cloneable {
 	
 	private int blendSFactor = GL11.GL_SRC_ALPHA;
 	private int blendDFactor = GL11.GL_ONE_MINUS_SRC_ALPHA;
-	private int alphaFunc = GL11.GL_GREATER;
-	private float alphaRef = 0f;
 	private int depthFunc = GL11.GL_LESS;
 	
 	public GLConfiguration() {
@@ -164,9 +159,6 @@ public class GLConfiguration implements Cloneable {
 		//Fonctions de test
 		if (this.properties.get(GLProperty.BLEND)) {
 			GL11.glBlendFunc(blendSFactor, blendDFactor);
-		}
-		if (this.properties.get(GLProperty.ALPHA_TEST)) {
-			GL11.glAlphaFunc(alphaFunc, alphaRef);
 		}
 		if (this.properties.get(GLProperty.DEPTH_TEST)) {
 			GL11.glDepthFunc(depthFunc);

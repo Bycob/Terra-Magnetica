@@ -43,7 +43,7 @@ uniform struct {
 in vec3 fragVert;
 in vec2 fragTexCoord;
 in vec3 fragNormal;
-in vec3 fragColor;
+in vec4 fragColor;
 
 vec4 applyLight(int lightID) {
 	if (light[lightID].activated == 0) {

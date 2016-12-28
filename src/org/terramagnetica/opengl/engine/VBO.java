@@ -25,6 +25,10 @@ public class VBO {
 		if (!isBound()) GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.id);
 	}
 	
+	public static void unbind() {
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
 	public boolean isBound() {
 		return GL11.glGetInteger(GL15.GL_ARRAY_BUFFER_BINDING) == this.id;
 	}

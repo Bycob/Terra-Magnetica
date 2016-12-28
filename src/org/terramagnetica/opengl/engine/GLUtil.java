@@ -22,9 +22,9 @@ package org.terramagnetica.opengl.engine;
 import org.lwjgl.opengl.GL11;
 
 import net.bynaryscode.util.Color4f;
-import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Rectangle;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
+import net.bynaryscode.util.maths.geometric.Vec2d;
 
 public class GLUtil {
 	

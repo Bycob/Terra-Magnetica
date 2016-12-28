@@ -56,6 +56,7 @@ public class Program {
 	}
 	
 	public int attribID(String attribName) {
+		System.out.println(attribName + " : " + GL20.glGetAttribLocation(this.programID, attribName));
 		return GL20.glGetAttribLocation(this.programID, attribName);
 	}
 	

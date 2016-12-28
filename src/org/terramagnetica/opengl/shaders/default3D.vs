@@ -1,5 +1,5 @@
 //Main shader
-#version 330 core
+#version 330
 
 //uniforms
 uniform struct {
@@ -9,24 +9,24 @@ uniform struct {
 	vec3 cameraPosition;
 } view;
 
-in vec3 vert;
-in vec2 texCoord;
-in vec3 normal;
-in vec3 color;
+in vec2 v_texCoord;
+in vec3 v_normal;
+in vec3 v_pos;
+in vec4 v_color;
 
 out vec3 fragVert;
 out vec2 fragTexCoord;
 out vec3 fragNormal;
-out vec3 fragColor;
+out vec4 fragColor;
 
 void main() {
     //Passage au fragment shader
-    fragTexCoord = texCoord;
-    fragVert = vert;
-    fragNormal = normal;
-    fragColor = color;
+    fragTexCoord = v_texCoord;
+    fragVert = v_pos;
+    fragNormal = v_normal;
+    fragColor = v_color;
 
     //Application des modifications de position.
-    gl_Position = view.projection * view.camera * view.model * vec4(vert, 1);
+    gl_Position = view.projection * view.camera * view.model * vec4(v_pos, 1);
 }
 

@@ -15,17 +15,18 @@ uniform struct {
 } view;
 
 
-vec4 applyLights(vec4 initColor);
-
 in vec3 fragVert;
 in vec2 fragTexCoord;
 in vec3 fragNormal;
-in vec3 fragColor;
+in vec4 fragColor;
 
 out vec4 finalColor;
 
+
+vec4 applyLights(vec4 initColor);
+
 void main() {
-	vec4 tempColor = vec4(fragColor, 1);
+	vec4 tempColor = vec4(fragTexCoord, 0, 0) + vec4(0.5, 0.5, 0.5, 1);
 	if (useTextures) {
 		tempColor *= texture(tex, fragTexCoord);
 	}

@@ -24,11 +24,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALC10;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.util.WaveData;
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.openal.MusicStreaming;
@@ -42,6 +48,7 @@ public final class SoundManager implements Runnable {
 	
 	private static final SoundManager instance = new SoundManager();
 	private static boolean running = false;
+	private static ALCapabilities capabilities;
 	
 	private static final Object LOCK = new Object();
 	
@@ -83,8 +90,14 @@ public final class SoundManager implements Runnable {
 		
 		
 		running = true;
-		//INITIALISATION 
-		ALC.create();
+		//INITIALISATION
+		long device = ALC10.alcOpenDevice((ByteBuffer)null);
+		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
+		
+		long context = ALC10.alcCreateContext(device, (IntBuffer)null);
+		ALC10.alcMakeContextCurrent(context);
+		capabilities = AL.createCapabilities(deviceCaps);
+		
 		
 		//sons simples
 		for (int i = 0 ; i < SOUND_SOURCES_COUNT ; i++) {
@@ -171,8 +184,7 @@ public final class SoundManager implements Runnable {
 			}
 		}
 		
-		
-		
+		ALC10.alcCloseDevice(device);
 		ALC.destroy();
 	}
 	

@@ -1,6 +1,5 @@
 package org.terramagnetica.opengl.engine;
 
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -15,13 +14,14 @@ public class VAO {
 		public VBO buffer;
 		public int count;
 		public int type;
+		public boolean normalize;
 		
 		public Attrib() {
 			
 		}
 		
-		public Attrib(String name, VBO buffer, int count, int type) {
-			this.name = name; this.buffer = buffer; this.count = count; this.type = type;
+		public Attrib(String name, VBO buffer, int count, int type, boolean normalize) {
+			this.name = name; this.buffer = buffer; this.count = count; this.type = type; this.normalize = normalize;
 		}
 	}
 	
@@ -51,8 +51,12 @@ public class VAO {
 	}
 	
 	public void setAttrib(String name, VBO buffer, int count, int type) {
+		setAttrib(name, buffer, count, type, false);
+	}
+	
+	public void setAttrib(String name, VBO buffer, int count, int type, boolean normalize) {
 		if (buffer == null) throw new NullPointerException("buffer == null !");
-		this.attribs.put(name, new Attrib(name, buffer, count, type));
+		this.attribs.put(name, new Attrib(name, buffer, count, type, normalize));
 	}
 	
 	public VBO getAttribBuffer(String name) {
@@ -73,8 +77,9 @@ public class VAO {
 			
 			int attribID = program.attribID(attrib.name);
 			GL20.glEnableVertexAttribArray(this.id);
-			GL20.glVertexAttribPointer(attribID, attrib.count, attrib.type, false, 0, (ByteBuffer) null);
+			GL20.glVertexAttribPointer(attribID, attrib.count, attrib.type, attrib.normalize, 0, 0);
 		}
 		
+		VBO.unbind();
 	}
 }

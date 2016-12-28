@@ -26,6 +26,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
 
+import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -40,7 +41,7 @@ import net.bynaryscode.util.maths.geometric.Vec3d;
 public class Painter {
 
 	public static enum Primitive {
-		QUADS(GL11.GL_QUADS, 4),
+		QUADS(GL11.GL_TRIANGLES, 6),
 		LINES(GL11.GL_LINES, 2),
 		LINE_STRIP(GL11.GL_LINE_STRIP, -1),
 		TRIANGLES(GL11.GL_TRIANGLES, 3),
@@ -119,7 +120,7 @@ public class Painter {
 		this.defaultVAO.setAttrib(StdAttrib.VERTEX, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 3, GL11.GL_FLOAT);
 		this.defaultVAO.setAttrib(StdAttrib.NORMAL, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 3, GL11.GL_FLOAT);
 		this.defaultVAO.setAttrib(StdAttrib.TEX_COORD, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 2, GL11.GL_FLOAT);
-		this.defaultVAO.setAttrib(StdAttrib.COLOR, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 4, GL11.GL_BYTE);
+		this.defaultVAO.setAttrib(StdAttrib.COLOR, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 4, GL11.GL_UNSIGNED_BYTE, true);
 		
 		//Création des programmes et initialisation du contexte avec le programme par défaut
 		this.programs = new ProgramRegistry(this);
@@ -163,16 +164,18 @@ public class Painter {
 		
 		//Début
 		this.defaultVAO.bind();
-		this.defaultVAO.getAttribBuffer(StdAttrib.COLOR).setData(this.colorsBuf);
 		
 		if (this.texture != null) {
 			bindTexture(this.texture.getGLTextureID());
-			this.defaultVAO.getAttribBuffer(StdAttrib.TEX_COORD).setData(this.texCoordsBuf);
+			this.currentProgram.setUniform1i(StdUniform.USE_TEXTURES, 0); // FIXME passer à 1
 		}
 		else {
 			bindTexture(0);
+			this.currentProgram.setUniform1i(StdUniform.USE_TEXTURES, 0);
 		}
-		
+
+		this.defaultVAO.getAttribBuffer(StdAttrib.COLOR).setData(this.colorsBuf);
+		this.defaultVAO.getAttribBuffer(StdAttrib.TEX_COORD).setData(this.texCoordsBuf);
 		this.defaultVAO.getAttribBuffer(StdAttrib.NORMAL).setData(this.normalsBuf);
 		this.defaultVAO.getAttribBuffer(StdAttrib.VERTEX).setData(this.verticesBuf);
 		
@@ -249,7 +252,7 @@ public class Painter {
 	 * <p>Le painter implémente par défaut l'autotexturing : les coordonnées
 	 * correspondant à ce vertex sur la texture sont déterminés automatiquement
 	 * selon une rotation dans le sens horaire. Le point de départ dépend de la
-	 * texture. Veuillez ajouter les points dans l'ordre, spécifié par la méthode
+	 * texture. Il faut ajouter les points dans l'ordre, spécifié par la méthode
 	 * {@link Texture#getSTSommets()} de la texture en cours d'utilisation pour
 	 * un résultat optimal. */
 	public void addVertex(Vec3d vertex) { addVertex(vertex, DEFAULT_NORMAL); }
@@ -264,8 +267,9 @@ public class Painter {
 		if (this.texture != null) {
 			Vec2d[] texCoords = this.texture.getSTSommets();
 			
-			if (texCoords.length == this.primitive.verticeCount) {
-				Vec2d st = texCoords[verticesCount % texCoords.length];
+			if (this.primitive.verticeCount > 2) {
+				int id = Math.min(texCoords.length - 1, this.verticesCount % this.primitive.verticeCount);
+				Vec2d st = texCoords[id];
 				s = st.x;
 				t = st.y;
 			}
@@ -274,17 +278,13 @@ public class Painter {
 		addVertex(vertex, normal, s, t);
 	}
 	
-	public void addVertex(Vec3d vertex, Vec3d normal, double s, double t) {
+	public void addVertex(Vec3d vertex, Vec3d normal, double s, double t) { // FIXME Triangulate
 		if (this.verticesCount + 32 >= this.verticesMax && this.verticesCount % this.primitive.verticeCount == 0) {
 			flush();
 		}
 		
 		this.verticesBuf.put(new float[] {(float) vertex.x, (float) vertex.y, (float) vertex.z});
-		
-		if (this.texture != null) {
-			this.texCoordsBuf.put(new float[] {(float) s, (float) t});
-		}
-		
+		this.texCoordsBuf.put(new float[] {(float) s, (float) t});
 		this.normalsBuf.put(new float[] {(float) normal.x, (float) normal.y, (float) normal.z});
 		
 		if (this.color != null) {
@@ -497,6 +497,10 @@ public class Painter {
 	private void applyTransforms() {
 		Transform multiTransform = Transform.newMultiTransform(this.transforms);
 		multiTransform.applyTransform();
+		
+		//FIXME apply transforms... really !
+		Matrix4f model = new Matrix4f();
+		this.currentProgram.setUniformMatrix4f(StdUniform.View.MODEL_MATRIX, model);
 	}
 	
 	/** Sauvegarde l'état des transformation actuel. Retourne un identifiant

@@ -24,7 +24,7 @@ public class ProgramRegistry {
 		addInternalProgram("default3D", "default3D.vs", "default3D.fs", "lighting3D.fs");
 		
 		//Positionnement du programme par défaut
-		this.programs.put(DEFAULT_PROGRAM_ID, getDefaultProgram());
+		this.programs.put(DEFAULT_PROGRAM_ID, getProgram("default3D"));
 	}
 	
 	public boolean addInternalProgram(String name, String... shaderNames) {

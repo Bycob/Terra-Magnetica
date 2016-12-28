@@ -89,7 +89,7 @@ public class GuiWindow {
 			instanceCount = 0;
 			GLFWErrorCallback.createPrint(System.err).set();
 			
-			// Initialize GLFW. Most GLFW functions will not work before doing this.
+			// Initialize GLFW.
 			if ( !GLFW.glfwInit() )
 				throw new IllegalStateException("Unable to initialize GLFW");
 		}
@@ -97,9 +97,11 @@ public class GuiWindow {
 		instanceCount++;
 		
 		// FIXME enlever ça si ça marche correctement :  PixelFormat format = new PixelFormat(8, 8, 8, 4);
-		GLFW.glfwDefaultWindowHints(); // optional, the current window hints are already the default
-		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE); // the window will stay hidden after creation
-		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE); // the window will be resizable
+		GLFW.glfwDefaultWindowHints();
+	    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
+	    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
+		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
+		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 		
 		this.window = GLFW.glfwCreateWindow(800, 600, this.title, MemoryUtil.NULL, MemoryUtil.NULL);
 		if (this.window == MemoryUtil.NULL) {
@@ -150,7 +152,7 @@ public class GuiWindow {
 		GLFW.glfwMakeContextCurrent(this.window);
 		GL.createCapabilities();
 		
-		GLFW.glfwSwapInterval(1);
+		GLFW.glfwSwapInterval(0);
 		
 		GLFW.glfwShowWindow(this.window);
 		
@@ -171,7 +173,7 @@ public class GuiWindow {
 		GLFW.glfwMakeContextCurrent(this.window);
 		
 		int width[] = new int[1];
-		int height[] = new int[2];
+		int height[] = new int[1];
 		GLFW.glfwGetFramebufferSize(this.window, width, height);
 		this.width = width[0];
 		this.height = height[0];

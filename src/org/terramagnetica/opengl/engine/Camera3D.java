@@ -167,5 +167,6 @@ public class Camera3D implements Camera {
 		
 		currentProgram.setUniformMatrix4f(StdUniform.View.PROJECTION_MATRIX, projection);
 		currentProgram.setUniformMatrix4f(StdUniform.View.CAMERA_MATRIX, camera);
+		currentProgram.setUniform3f(StdUniform.View.CAMERA_POSITION, (float) eye.x, (float) eye.y, (float) eye.z);
 	}
 }
