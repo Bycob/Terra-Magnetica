@@ -19,10 +19,13 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.engine;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 import org.terramagnetica.opengl.engine.Painter.Primitive;
 
 import net.bynaryscode.util.FileFormatException;
@@ -75,8 +78,7 @@ public class Model3D {
 	
 	private List<Model3D> children = new ArrayList<Model3D>();
 	
-	private DisplayList displayList = new DisplayList();
-	private boolean shouldRecompile = true;
+	private VAO myVAO;
 	
 	/**
 	 * Determine le fichier contenant les informations sur les matériaux
@@ -269,35 +271,51 @@ public class Model3D {
 	public void draw(Painter painter) {
 		if (this.facesCount == 0 && this.children.size() == 0) return;
 		
-		if (!this.displayList.isCompiled() || this.shouldRecompile) {
-			compileDisplayList(painter);
+		if (this.myVAO == null) {
+			generateBuffer(painter);
 		}
 		
-		painter.drawList(this.displayList);
+		painter.setPrimitive(Primitive.TRIANGLES);
+		this.material.use(painter);
+		painter.getCurrentProgram().setUniform1i(StdUniform.USE_COLOR, 0); // FIXME intégrer ça à la configuration
+		
+		painter.drawVAO(this.myVAO, this.faces.size());
+		
+		this.material.unset(painter);
+		painter.getCurrentProgram().setUniform1i(StdUniform.USE_COLOR, 1);
 		
 		for (Model3D child : this.children) {
 			child.draw(painter);
 		}
 	}
 	
-	private void compileDisplayList(Painter painter) {
-		painter.startRecordList(this.displayList);
+	private void generateBuffer(Painter painter) {
+		this.myVAO = new VAO();
 		
-		painter.setPrimitive(Primitive.TRIANGLES);
-		this.material.use(painter);
+		VBO vbo = new VBO();
+		// [x(f)][y(f)][z(f)] [s(f)][t(f)] [nx(f)][ny(f)][nz(f)]
+		int stride = 3 * 4 + 2 * 4 + 3 * 4;
+		int capacity = this.facesCount * this.vertPerFace * stride;
+		ByteBuffer buffer = BufferUtils.createByteBuffer(capacity);
 		
-		for (FaceVertex v : this.faces) {
-			Vec2d texCoord = new Vec2d();
-			if (v.texCoord != 0) texCoord = this.texCoords.get(v.texCoord - 1);
-			Vec3d normal = new Vec3d();
-			if (v.normale != 0) normal = this.normales.get(v.normale - 1);
-			painter.addVertex(this.vertices.get(v.vertex - 1), normal, texCoord.x, texCoord.y);
-		}
+		for (FaceVertex vert : this.faces) {
+			Vec3d pos = this.vertices.get(vert.vertex - 1);
+			buffer.putFloat((float) pos.x).putFloat((float) pos.y).putFloat((float) pos.z);
 
-		this.material.unset(painter);
-		painter.endRecordList();
+			Vec2d texCoord = new Vec2d();
+			if (vert.texCoord != 0) texCoord = this.texCoords.get(vert.texCoord - 1);
+			buffer.putFloat((float) texCoord.x).putFloat((float) texCoord.y);
+			
+			Vec3d normale = new Vec3d();
+			if (vert.normale != 0) normale = this.normales.get(vert.normale - 1);
+			buffer.putFloat((float) normale.x).putFloat((float) normale.y).putFloat((float) normale.z);
+		}
 		
-		this.shouldRecompile = false;
+		vbo.setData(buffer);
+		
+		this.myVAO.setAttrib(StdAttrib.VERTEX, vbo, 3, GL11.GL_FLOAT, false, stride, 0);
+		this.myVAO.setAttrib(StdAttrib.TEX_COORD, vbo, 2, GL11.GL_FLOAT, false, stride, 3 * 4);
+		this.myVAO.setAttrib(StdAttrib.NORMAL, vbo, 3, GL11.GL_FLOAT, false, stride, 3 * 4 + 2 * 4);
 	}
 	
 	/**
@@ -411,7 +429,7 @@ public class Model3D {
 	}
 	
 	private void onModelEdit() {
-		this.shouldRecompile = true;
+		this.myVAO = null;
 		this.boundingBox = null;
 	}
 	

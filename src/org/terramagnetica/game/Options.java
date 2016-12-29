@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 
 import org.lwjgl.glfw.GLFW;
 import org.terramagnetica.game.GameInputBuffer.InputKey;
+import org.terramagnetica.opengl.miscellaneous.GLFWUtil;
 
 /**
  * La classe qui gère les options dans le jeu (contrôles...)
@@ -75,13 +76,19 @@ public class Options {
 		for (int i = 0 ; i < lines.length ; ++i) {
 			line = lines[i];
 			
-			if (line.equals("controls")) {
+			if (line.equals("GLFW-controls")) {
+				
 				while (i < lines.length - 1 && !(line = lines[++i]).equals("")) {
 					String[] kv = line.split(":");
 					InputKey key;
+					
 					if (kv.length > 1 && (key = InputKey.getInputByName(kv[0])) != null) {
 						try {
-							this.controls.put(key, Integer.parseInt(kv[1]));
+							Integer keycode = Integer.parseInt(kv[1]);
+							
+							if (GLFWUtil.keyExists(keycode)) {
+								this.controls.put(key, keycode);
+							}
 						} catch (NumberFormatException e) {}
 					}
 				}

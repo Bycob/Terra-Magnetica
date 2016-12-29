@@ -25,6 +25,7 @@ import org.lwjgl.opengl.GL11;
  * Cet objet représente une liste d'affichage openGL, gérée automatiquement.
  * @author Louis JEAN
  */
+//FIXME démolir cette merde
 public class DisplayList {
 	
 	private int id = 0;

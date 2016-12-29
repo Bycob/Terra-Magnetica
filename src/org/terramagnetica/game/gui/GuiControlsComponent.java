@@ -36,6 +36,7 @@ import org.terramagnetica.opengl.gui.KeyboardEvent;
 import org.terramagnetica.opengl.gui.KeyboardListener;
 import org.terramagnetica.opengl.gui.MouseEvent;
 import org.terramagnetica.opengl.gui.MouseListener;
+import org.terramagnetica.opengl.miscellaneous.GLFWUtil;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
@@ -204,7 +205,7 @@ public class GuiControlsComponent extends GuiComponent implements
 		public Slot(InputKey command, int key_value) {
 			this.command = command;
 			this.key_value = key_value;
-			this.key = GLFW.glfwGetKeyName(this.key_value, 0);
+			this.key = GLFWUtil.getKeyName(this.key_value);
 		}
 		
 		public void drawSlot(RectangleDouble bounds, Painter painter) {

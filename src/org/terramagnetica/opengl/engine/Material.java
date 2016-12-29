@@ -24,11 +24,22 @@ import net.bynaryscode.util.FileFormatException;
 
 public class Material {
 	
-	private Color4f color = new Color4f();
 	private TextureImpl tex = new TextureImpl();
 	private String texPath = "";
 	
 	private String name = "";
+	
+	private Color4f diffuse;
+	private Color4f specular;
+	private Color4f ambient;
+	private float specularIntensity = 0;
+	private float specularShininess = 0;
+	
+	public Material() {
+		this.diffuse = new Color4f(1f, 1f, 1f);
+		this.specular = new Color4f(0f, 0f, 0f);
+		this.ambient = new Color4f(0f, 0f, 0f);
+	}
 	
 	public static Material parseMtl(String mtlFile, String mtlName) throws FileFormatException {
 		Material ret = new Material();
@@ -70,7 +81,8 @@ public class Material {
 	 * @param painter
 	 */
 	public void use(Painter painter) {
-		painter.setColor(this.color);
+		painter.getCurrentProgram().setUniform3f(StdUniform.Material.DIFFUSE, this.diffuse.getRedf(), this.diffuse.getGreenf(), this.diffuse.getBluef());
+		
 		if (this.tex.getGLTextureID() == 0) {
 			painter.setTexture(null);
 		}

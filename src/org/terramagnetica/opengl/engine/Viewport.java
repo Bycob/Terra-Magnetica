@@ -27,7 +27,8 @@ import net.bynaryscode.util.maths.geometric.Shape;
 /** Définit une zone d'affichage. */
 public class Viewport {
 
-	DisplayList list;
+	VAO myVAO;
+	int vertCount;
 	
 	private Shape viewport;
 	

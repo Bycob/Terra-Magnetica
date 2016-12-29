@@ -22,6 +22,7 @@ package org.terramagnetica.opengl.engine;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -29,6 +30,7 @@ import java.util.LinkedList;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.terramagnetica.opengl.gui.GuiWindow;
 
@@ -41,7 +43,7 @@ import net.bynaryscode.util.maths.geometric.Vec3d;
 public class Painter {
 
 	public static enum Primitive {
-		QUADS(GL11.GL_TRIANGLES, 6),
+		QUADS(GL11.GL_TRIANGLES, 4, true),
 		LINES(GL11.GL_LINES, 2),
 		LINE_STRIP(GL11.GL_LINE_STRIP, -1),
 		TRIANGLES(GL11.GL_TRIANGLES, 3),
@@ -50,10 +52,16 @@ public class Painter {
 		
 		private int glDrawMode;
 		private int verticeCount;
+		private boolean triangulate;
 		
 		private Primitive(int drawMode, int verticeCount) {
 			this.glDrawMode = drawMode;
 			this.verticeCount = verticeCount;
+		}
+		
+		private Primitive(int drawMode, int verticeCount, boolean triangulate) {
+			this(drawMode, verticeCount);
+			this.triangulate = true;
 		}
 	
 		public int getGlDrawMode() {
@@ -64,8 +72,12 @@ public class Painter {
 			return verticeCount;
 		}
 		
+		public boolean needsTriangulation() {
+			return this.triangulate;
+		}
+		
 		public boolean supportsAutoTexturing() {
-			return this.verticeCount != -1;
+			return this.verticeCount > 2;
 		}
 	}
 	
@@ -83,11 +95,14 @@ public class Painter {
 	//Buffers
 	private int verticesMax = VERTICES_MAX;
 	private int verticesCount = 0;
+	private int indicesCount = 0;
 	
 	private FloatBuffer verticesBuf = BufferUtils.createFloatBuffer(this.verticesMax * 3);
 	private FloatBuffer texCoordsBuf = BufferUtils.createFloatBuffer(this.verticesMax * 2);
 	private FloatBuffer normalsBuf = BufferUtils.createFloatBuffer(this.verticesMax * 3);
 	private ByteBuffer colorsBuf = BufferUtils.createByteBuffer(this.verticesMax * 4);
+	
+	private IntBuffer indices = BufferUtils.createIntBuffer(this.verticesMax * 6);
 	
 	private VAO defaultVAO = new VAO();
 	
@@ -121,6 +136,8 @@ public class Painter {
 		this.defaultVAO.setAttrib(StdAttrib.NORMAL, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 3, GL11.GL_FLOAT);
 		this.defaultVAO.setAttrib(StdAttrib.TEX_COORD, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 2, GL11.GL_FLOAT);
 		this.defaultVAO.setAttrib(StdAttrib.COLOR, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 4, GL11.GL_UNSIGNED_BYTE, true);
+		
+		this.defaultVAO.setIndicesBuffer(new VBO(GL15.GL_ELEMENT_ARRAY_BUFFER).withDataUsage(GL15.GL_DYNAMIC_DRAW));
 		
 		//Création des programmes et initialisation du contexte avec le programme par défaut
 		this.programs = new ProgramRegistry(this);
@@ -159,6 +176,7 @@ public class Painter {
 		this.texCoordsBuf.flip();
 		this.normalsBuf.flip();
 		this.colorsBuf.flip();
+		this.indices.flip();
 		
 		beforeDrawing();
 		
@@ -167,7 +185,7 @@ public class Painter {
 		
 		if (this.texture != null) {
 			bindTexture(this.texture.getGLTextureID());
-			this.currentProgram.setUniform1i(StdUniform.USE_TEXTURES, 0); // FIXME passer à 1
+			this.currentProgram.setUniform1i(StdUniform.USE_TEXTURES, 1);
 		}
 		else {
 			bindTexture(0);
@@ -179,7 +197,10 @@ public class Painter {
 		this.defaultVAO.getAttribBuffer(StdAttrib.NORMAL).setData(this.normalsBuf);
 		this.defaultVAO.getAttribBuffer(StdAttrib.VERTEX).setData(this.verticesBuf);
 		
-		GL11.glDrawArrays(this.primitive.glDrawMode, 0, this.verticesCount);
+		this.defaultVAO.getIndicesBuffer().setData(this.indices);
+		
+		//GL11.glDrawArrays(this.primitive.glDrawMode, 0, this.verticesCount);
+		GL11.glDrawElements(this.primitive.glDrawMode, this.indicesCount, GL11.GL_UNSIGNED_INT, 0);
 		
 		//Fin
 		afterDrawing();
@@ -230,13 +251,18 @@ public class Painter {
 		this.texCoordsBuf.clear();
 		this.normalsBuf.clear();
 		this.colorsBuf.clear();
+		this.indices.clear();
 		
 		this.verticesCount = 0;
+		this.indicesCount = 0;
 	}
 	
 	private void bindTexture(int id) {
 		if (id != this.texID) {
+			this.currentProgram.setUniform1i(StdUniform.TEXTURE_0, 0); // TODO intégrer ça quelque part (optimisations)
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
+			
 			this.texID = id;
 		}
 	}
@@ -278,7 +304,7 @@ public class Painter {
 		addVertex(vertex, normal, s, t);
 	}
 	
-	public void addVertex(Vec3d vertex, Vec3d normal, double s, double t) { // FIXME Triangulate
+	public void addVertex(Vec3d vertex, Vec3d normal, double s, double t) {
 		if (this.verticesCount + 32 >= this.verticesMax && this.verticesCount % this.primitive.verticeCount == 0) {
 			flush();
 		}
@@ -304,7 +330,22 @@ public class Painter {
 			}
 		}
 		
+		this.indices.put(this.verticesCount);
 		this.verticesCount++;
+		this.indicesCount++;
+		
+		
+		//TRIANGULARISATION
+		if (this.primitive.triangulate) {
+			int vertexID = this.verticesCount % this.primitive.verticeCount;
+			
+			if (vertexID >= 3) {
+				//Triangulation en forme de lézard couché
+				//Triangularisation du dernier vertex, le malheureux !
+				this.indices.put(new int[] {this.verticesCount - vertexID, this.verticesCount - vertexID + 2});
+				this.indicesCount += 2;
+			}
+		}
 	}
 	
 	public GuiWindow getWindow() {
@@ -435,41 +476,38 @@ public class Painter {
 	private void drawViewport() {
 		if (this.viewport == null) return;
 		
-		if (this.viewport.list == null) {
-			DisplayList list = new DisplayList();
-			list.startCompilation();
-			
-			GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFFFFFFFF);
-			GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_REPLACE, GL11.GL_REPLACE);
-			GL11.glColorMask(false, false, false, false);
+		if (this.viewport.myVAO == null) {
+			VAO vao = new VAO();
+			vao.setAttrib(StdAttrib.VERTEX, new VBO(), 3, GL11.GL_FLOAT);
 			Shape f = viewport.getViewport();
 			
-			//dessin
 			Vec2d[] s = f.getVertices();
+			int vertCount = Math.max(0, (s.length - 2) * 3);
+			FloatBuffer vertices = BufferUtils.createFloatBuffer(vertCount * 3);
 			
-			if (s.length >= 1) {
-				//TODO à remplacer par des VBO
-				GL11.glBegin(GL11.GL_TRIANGLES);
-				for (int i = 1 ; i < s.length - 1 ; i++) {
-					GL11.glVertex2d(s[0].x, s[0].y);
-					GL11.glVertex2d(s[i].x, s[i].y);
-					GL11.glVertex2d(s[i+1].x, s[i+1].y);
-				}
-				GL11.glEnd();
+			for (int i = 1 ; i < s.length - 1 ; i++) {
+				vertices.put(new float[]{(float) s[0].x, (float) s[0].y, 0});
+				vertices.put(new float[]{(float) s[i].x, (float) s[i].y, 0});
+				vertices.put(new float[]{(float) s[i+1].x, (float) s[i+1].y, 0});
 			}
-			//fin dessin
 			
-			GL11.glColorMask(true, true, true, true);
+			vertices.flip();
+			vao.getAttribBuffer(StdAttrib.VERTEX).setData(vertices);
 			
-			GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFFFFFFFF);
-			GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-			
-			list.endOfCompilation();
-			
-			this.viewport.list = list;
+			this.viewport.vertCount = vertCount;
+			this.viewport.myVAO = vao;
 		}
 		
-		this.viewport.list.callList();
+		GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFFFFFFFF);
+		GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_REPLACE, GL11.GL_REPLACE);
+		GL11.glColorMask(false, false, false, false);
+		
+		this.viewport.myVAO.bind(this.currentProgram);
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, this.viewport.vertCount);
+		
+		GL11.glColorMask(true, true, true, true);
+		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFFFFFFFF);
+		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 	}
 	
 	public void addTransform(Transform transform) {
@@ -496,10 +534,8 @@ public class Painter {
 	
 	private void applyTransforms() {
 		Transform multiTransform = Transform.newMultiTransform(this.transforms);
-		multiTransform.applyTransform();
-		
-		//FIXME apply transforms... really !
 		Matrix4f model = new Matrix4f();
+		multiTransform.applyTransform(model);
 		this.currentProgram.setUniformMatrix4f(StdUniform.View.MODEL_MATRIX, model);
 	}
 	

@@ -2,10 +2,11 @@
 // Main shader
 #version 330 core
 
+uniform sampler2D tex0;
+
 uniform bool useTextures;
 uniform bool useLights;
-
-uniform sampler2D tex;
+uniform bool useColor;
 
 uniform struct {
 	mat4 projection;
@@ -22,14 +23,26 @@ in vec4 fragColor;
 
 out vec4 finalColor;
 
-
 vec4 applyLights(vec4 initColor);
 
 void main() {
-	vec4 tempColor = vec4(fragTexCoord, 0, 0) + vec4(0.5, 0.5, 0.5, 1);
-	if (useTextures) {
-		tempColor *= texture(tex, fragTexCoord);
+	vec4 tempColor = vec4(1, 1, 1, 1);
+	if (useColor) {
+		tempColor *= fragColor;
 	}
 	
+	//Alpha test
+	if (tempColor.a <= 1.0 / 255.0) discard;
+	
+	if (useTextures) {
+		tempColor *= texture(tex0, fragTexCoord);
+	}
+	
+	//Alpha test
+	if (tempColor.a <= 1.0 / 255.0) discard;
+	
 	finalColor = applyLights(tempColor);
+	if (!useColor) {
+		finalColor = vec4(1);
+	}
 }

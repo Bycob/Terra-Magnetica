@@ -28,6 +28,7 @@ public class MouseInput {
 	private ArrayList<MouseEvent> events = new ArrayList<MouseEvent>();
 	
 	private double mouseX, mouseY;
+	private boolean state;
 	private double dwheel = 0;
 	private boolean wheelUpdated = false;
 	
@@ -59,13 +60,19 @@ public class MouseInput {
 	public void addCursorEvent(double x, double y) {
 		this.mouseX = x;
 		this.mouseY = y;
+
+		synchronized (events) {
+			this.events.add(new MouseEvent(0, this.state, (int) this.mouseX, (int) this.mouseY));
+		}
 		
 		this.lastEventNanos = GuiWindow.getTimeNanos();
 	}
 	
 	public void addMouseButtonEvent(int button, int action, int mods) {
+		this.state = action == GLFW.GLFW_PRESS;
+		
 		synchronized (events) {
-			this.events.add(new MouseEvent(button, action == GLFW.GLFW_PRESS, (int) this.mouseX, (int) this.mouseY));
+			this.events.add(new MouseEvent(button, this.state, (int) this.mouseX, (int) this.mouseY));
 		}
 
 		this.lastEventNanos = GuiWindow.getTimeNanos();

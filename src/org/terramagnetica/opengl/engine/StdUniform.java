@@ -4,6 +4,9 @@ public interface StdUniform {
 	
 	String USE_TEXTURES = "useTextures";
 	String USE_LIGHTS = "useLights";
+	String USE_COLOR = "useColor";
+	
+	String TEXTURE_0 = "tex0";
 	
 	public interface View {
 		String PROJECTION_MATRIX = "view.projection";

@@ -33,6 +33,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 import org.terramagnetica.opengl.engine.GLOrtho;
 import org.terramagnetica.opengl.engine.Painter;
+import org.terramagnetica.opengl.miscellaneous.GLFWUtil;
 import org.terramagnetica.opengl.miscellaneous.Timer;
 
 public class GuiWindow {
@@ -102,16 +103,17 @@ public class GuiWindow {
 	    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
+		//GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
 		
 		this.window = GLFW.glfwCreateWindow(800, 600, this.title, MemoryUtil.NULL, MemoryUtil.NULL);
 		if (this.window == MemoryUtil.NULL) {
-			throw new RuntimeException("Creation of Terra Magnetica main window failed.");
+			throw new RuntimeException("the creation of Terra Magnetica main window failed.");
 		}
 		
 		// Ajout des callbacks
 		GLFW.glfwSetCursorPosCallback(this.window, new GLFWCursorPosCallback() {
 			@Override public void invoke(long window, double xpos, double ypos) {
-				mainMouseInput.addCursorEvent(xpos, ypos);
+				mainMouseInput.addCursorEvent(xpos, height - ypos);
 			}
 		});
 		
@@ -130,6 +132,7 @@ public class GuiWindow {
 		GLFW.glfwSetKeyCallback(this.window, new GLFWKeyCallback() {
 			@Override public void invoke(long window, int key, int scancode, int action, int mods) {
 				//FIXME vérifier la conversion scancode / char
+				System.out.println(scancode + " : " + ((char) scancode));
 				mainKeyboardInput.addKeyEvent(key, scancode, action, mods);
 			}
 		});
@@ -258,7 +261,7 @@ public class GuiWindow {
 	}
 	
 	public void setCursorHidden(boolean hidden) {
-		GLFW.glfwSetCursor(this.window, hidden ? GLFW.GLFW_CURSOR_HIDDEN : GLFW.GLFW_CURSOR_NORMAL);
+		GLFW.glfwSetInputMode(this.window, GLFW.GLFW_CURSOR, hidden ? GLFW.GLFW_CURSOR_HIDDEN : GLFW.GLFW_CURSOR_NORMAL);
 	}
 	
 	/** place le repère openGL par défaut. */
@@ -425,6 +428,9 @@ public class GuiWindow {
 	}
 	
 	public boolean isKeyPressed(int glfwCode) {
+		if (!GLFWUtil.keyExists(glfwCode)) {
+			return false;
+		}
 		return GLFW.glfwGetKey(this.window, glfwCode) == GLFW.GLFW_PRESS;
 	}
 	

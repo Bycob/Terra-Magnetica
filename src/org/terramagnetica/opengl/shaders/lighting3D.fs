@@ -96,7 +96,7 @@ vec4 applyLight(int lightID) {
 
     //intensité speculaire
     vec3 specularIntensity = vec3(pow(max(dot(fragToCam, reflect(fragToLight, normal)), 0), material.shininess));
-    specularIntensity *= diffuseIntensity * material.specular * light[lightID].specular * material.specularIntensity;
+    specularIntensity *= diffuseIntensity * light[lightID].specular * material.specular * material.specularIntensity;
 
 
     //Calcul final

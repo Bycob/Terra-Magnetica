@@ -160,7 +160,7 @@ public class Camera3D implements Camera {
 		GuiWindow window = painter.getWindow();
 		Program currentProgram = painter.getCurrentProgram();
 		
-		Matrix4f projection = new Matrix4f().setPerspective(fov, (float) window.getWidth() / (float) window.getHeight(), this.near, this.far);
+		Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(fov), (float) window.getWidth() / (float) window.getHeight(), this.near, this.far);
 		Matrix4f camera = new Matrix4f().lookAt((float) eye.x, (float) eye.y, (float) eye.z, 
 				(float) center.x, (float) center.y, (float) center.z, 
 				(float) up.x, (float) up.y, (float) up.z);

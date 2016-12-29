@@ -22,7 +22,7 @@ package org.terramagnetica.opengl.engine;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
+import org.joml.Matrix4f;
 
 import net.bynaryscode.util.maths.geometric.Vec3d;
 
@@ -66,7 +66,7 @@ public abstract class Transform {
 		return new MultiTransform(this, other);
 	}
 	
-	public abstract void applyTransform();
+	public abstract void applyTransform(Matrix4f modelMatrix);
 	
 	private static class Rotation extends Transform {
 		Vec3d axis;
@@ -78,8 +78,8 @@ public abstract class Transform {
 		}
 		
 		@Override
-		public void applyTransform() {
-			GL11.glRotated(angle, axis.x, axis.y, axis.z);
+		public void applyTransform(Matrix4f modelMatrix) {
+			modelMatrix.rotate(angle, (float) axis.x, (float) axis.y, (float) axis.z);
 		}
 	}
 	
@@ -92,8 +92,8 @@ public abstract class Transform {
 		}
 		
 		@Override
-		public void applyTransform() {
-			GL11.glTranslated(move.x, move.y, move.z);
+		public void applyTransform(Matrix4f modelMatrix) {
+			modelMatrix.translate((float) move.x, (float) move.y, (float) move.z);
 		}
 	}
 	
@@ -106,8 +106,8 @@ public abstract class Transform {
 		}
 		
 		@Override
-		public void applyTransform() {
-			GL11.glScalef((float) scale.x, (float) scale.y, (float) scale.z);
+		public void applyTransform(Matrix4f modelMatrix) {
+			modelMatrix.scale((float) scale.x, (float) scale.y, (float) scale.z);
 		}
 	}
 	
@@ -136,9 +136,9 @@ public abstract class Transform {
 		}
 		
 		@Override
-		public void applyTransform() {
+		public void applyTransform(Matrix4f modelMatrix) {
 			for (Transform t : this.transforms) {
-				t.applyTransform();
+				t.applyTransform(modelMatrix);
 			}
 		}
 	}

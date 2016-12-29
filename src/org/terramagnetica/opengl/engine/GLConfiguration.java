@@ -50,8 +50,9 @@ public class GLConfiguration implements Cloneable {
 		DEPTH_TEST(GL11.GL_DEPTH_TEST, true),
 		STENCIL_TEST(GL11.GL_STENCIL_TEST, true),
 		BLEND(GL11.GL_BLEND, true),
-		MULTISAMPLE(GL13.GL_MULTISAMPLE, false),
-		LIGHTING(-1, false);
+		MULTISAMPLE(GL13.GL_MULTISAMPLE, true),
+		LIGHTING(-1, false),
+		COLOR(-1, true);
 		
 		public final int glConst;
 		public final boolean defaultValue;
@@ -110,6 +111,13 @@ public class GLConfiguration implements Cloneable {
 						currentProgram.setUniform1i(StdUniform.USE_LIGHTS, GL11.GL_FALSE);
 					}
 					break;
+				case COLOR :
+					if (activated) {
+						currentProgram.setUniform1i(StdUniform.USE_COLOR, GL11.GL_TRUE);
+					}
+					else {
+						currentProgram.setUniform1i(StdUniform.USE_COLOR, GL11.GL_FALSE);
+					}
 				default:;
 				}
 			}
