@@ -28,6 +28,8 @@ import org.lwjgl.openal.ALC;
 
 public class ThreadMusicStreaming extends Thread {
 	
+	//FIXME I am broken pls... I am only used for tests... PLEASE...
+	
 	private static int threadRunning = 0;
 	
 	private MusicStreaming music = null;

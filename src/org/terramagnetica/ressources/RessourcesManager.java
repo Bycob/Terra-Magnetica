@@ -52,7 +52,7 @@ public class RessourcesManager {
 	public static final int NB_LEVEL = 2;
 	
 	/** Icone du jeu */
-	public static ByteBuffer tmIcon;
+	public static ByteBuffer[] tmIcon = new ByteBuffer[0];
 	
 	private RessourcesManager(){};
 	
@@ -84,7 +84,13 @@ public class RessourcesManager {
 	 */
 	public static void loadIcon() {
 		BufferedImage img = ImagesLoader.readImage("gui/game/tm32.png");
-		if (img != null) tmIcon = ImgUtil.imageToByteBuffer(img);
+		if (img != null) {
+			tmIcon = new ByteBuffer[2];
+			//Image 1:1
+			tmIcon[0] = ImgUtil.imageToByteBuffer(img);
+			//Image 1:2
+			tmIcon[1] = ImgUtil.imageToByteBuffer(ImgUtil.getScaledInstance(img, 16, 16));
+		}
 	}
 	
 	/**

@@ -101,8 +101,10 @@ vec4 applyLight(int lightID) {
 
     //Calcul final
     vec3 gamma = vec3(1);
-    //return vec4(pow(ambientIntensity + attenuation * (diffuseIntensity + specularIntensity), gamma), 1);
-    return vec4(diffuseIntensity, 1);
+    return vec4(pow(ambientIntensity + attenuation * (diffuseIntensity), gamma), 1);
+    
+    
+    //TODO DEBUGGER LUMIERE SPECULAIRE !!!!!!!
 }
 
 vec4 applyLights(vec4 initColor) {

@@ -75,6 +75,7 @@ import com.sun.media.sound.WaveFileReader;
  * @version $Revision$
  * $Id$
  */
+@SuppressWarnings("restriction")
 public class WaveData {
 	/** actual wave data */
 	public final ByteBuffer data;

@@ -55,9 +55,18 @@ public final class ModelLoader {
 	public static void unloadAll() {
 		for (Entry<String, Model3D> e : models.entrySet()) {
 			Model3D m = e.getValue();
-			TexturesLoader.unloadTexturesWithGLID(m.getTextureID());
+			unloadModel0(m);
 		}
 		models.clear();
+	}
+	
+	private static void unloadModel0(Model3D model) {
+		TexturesLoader.unloadTexturesWithGLID(model.getTextureID());
+		model.freeMemory();
+		
+		for (Model3D child : model.getChildren()) {
+			unloadModel0(child);
+		}
 	}
 	
 	/** Charge un modèle 3D contenu dans l'archive .jar.

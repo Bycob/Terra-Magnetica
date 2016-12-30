@@ -40,7 +40,7 @@ public class ProgramRegistry {
 		this.painter = painter;
 		
 		//Chargement des différents programmes
-		addInternalProgram("default3D", "default3D.vs", "default3D.fs", "lighting3D.fs");
+		addInternalProgram("default3D", "default3D.vs", "default3D.fs", "basics3D.fs", "lighting3D.fs");
 		
 		//Positionnement du programme par défaut
 		this.programs.put(DEFAULT_PROGRAM_ID, getProgram("default3D"));

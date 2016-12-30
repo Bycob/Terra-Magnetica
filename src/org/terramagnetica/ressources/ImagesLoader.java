@@ -94,7 +94,7 @@ public class ImagesLoader {
 			Image player = ImageIO.read(RessourcesManager.getURL(GameRessources.PATH_PLAYER));
 			
 			if (player != null) {
-				ImagesLoader.imgMap.put(GameRessources.PATH_PLAYER, ImgUtil.getPartOfImage(player, 0, 0, 128, 256));
+				ImagesLoader.imgMap.put(GameRessources.PATH_PLAYER, ImgUtil.getSubImage(player, 0, 0, 128, 256));
 			}
 		} catch (IllegalArgumentException e){
 			e.printStackTrace();
@@ -131,7 +131,7 @@ public class ImagesLoader {
 					if (textureEntry.getValue() instanceof TextureQuad) {
 						ImagesLoader.imgMap.put(
 								textureEntry.getKey(),
-								ImgUtil.getPartOfImage(src, (TextureQuad) textureEntry.getValue()));
+								ImgUtil.getSubImage(src, (TextureQuad) textureEntry.getValue()));
 					}
 				}
 				

@@ -460,7 +460,14 @@ public class Painter {
 	}
 	
 	public void setViewport(Viewport viewport) {
-		if (viewport != this.viewport) flush();
+		if (viewport == this.viewport) return;
+		
+		flush();
+		
+		if (this.viewport != null) {
+			this.viewport.myVAO.destroyAll();
+		}
+		
 		this.viewport = viewport;
 	}
 	
@@ -492,10 +499,11 @@ public class Painter {
 			this.viewport.vertCount = vertCount;
 			this.viewport.myVAO = vao;
 		}
-		
+
+		GL11.glColorMask(false, false, false, false);
 		GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFFFFFFFF);
 		GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_REPLACE, GL11.GL_REPLACE);
-		GL11.glColorMask(false, false, false, false);
+		this.currentProgram.setUniform1i(StdUniform.STENCIL, GL11.GL_TRUE);
 		
 		this.viewport.myVAO.bind(this.currentProgram);
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, this.viewport.vertCount);
@@ -503,6 +511,7 @@ public class Painter {
 		GL11.glColorMask(true, true, true, true);
 		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFFFFFFFF);
 		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+		this.currentProgram.setUniform1i(StdUniform.STENCIL, GL11.GL_FALSE);
 	}
 	
 	public void addTransform(Transform transform) {

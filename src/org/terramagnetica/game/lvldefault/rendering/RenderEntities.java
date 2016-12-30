@@ -29,6 +29,11 @@ import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.game.lvldefault.MapLandscape;
 import org.terramagnetica.game.lvldefault.MapUpdater;
 import org.terramagnetica.opengl.engine.CameraFrustum;
+import org.terramagnetica.opengl.engine.GLConfiguration;
+import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
+import org.terramagnetica.opengl.engine.Light;
+import org.terramagnetica.opengl.engine.Light.LightType;
+import org.terramagnetica.opengl.engine.LightModel;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.Renderable;
 import org.terramagnetica.opengl.engine.RenderableCompound;
@@ -127,9 +132,17 @@ public class RenderEntities extends RenderGameDefaultElement {
 	@Override
 	public void render(GamePlayingDefault game, Painter painter) {
 		
-		painter.setConfiguration(this.getDefault3DConfiguration());
+		GLConfiguration config = this.getDefault3DConfiguration();
+		painter.setConfiguration(config);
 		this.frustum = painter.createCameraFrustum();
 		
+		//Configuration de la lumière
+		LightModel lights = painter.getLightModel();
+		Light light = lights.getLight0();
+		light.setPosition(0, 0, 1);
+		light.setType(LightType.DIRECTIONNAL);
+		
+		// Définition des variables nécessaires au rendu
 		ArrayList<RenderEntityUnit> renderList = getRenderList(game.getEntities());
 		MapUpdater miniMapManager = game.getAspect(MapUpdater.class);
 		MapRenderer miniMapRenderer = miniMapManager.getRenderer();
@@ -159,6 +172,14 @@ public class RenderEntities extends RenderGameDefaultElement {
 						r.render.setColor(initColor.multiply(coef, coef, coef, 1));
 					}
 				}
+			}
+			
+			// Dessin du rendu
+			if (r.render instanceof RenderableModel3D) {
+				config.setPropertieEnabled(GLProperty.LIGHTING, true);
+			}
+			else {
+				config.setPropertieEnabled(GLProperty.LIGHTING, false);
 			}
 			
 			r.render(painter);

@@ -86,33 +86,38 @@ public final class SoundManager implements Runnable {
 	@Override
 	public void run() {
 		if (running) return;
-		
-		
-		
 		running = true;
+		
+		
 		//INITIALISATION
-		long device = ALC10.alcOpenDevice((ByteBuffer)null);
-		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
+		long device = 0;
+		long context = 0;
 		
-		long context = ALC10.alcCreateContext(device, (IntBuffer)null);
-		ALC10.alcMakeContextCurrent(context);
-		capabilities = AL.createCapabilities(deviceCaps);
-		
-		
-		//sons simples
-		for (int i = 0 ; i < SOUND_SOURCES_COUNT ; i++) {
-			int srcID = AL10.alGenSources();
-			soundSources.put(i, new Source(srcID));
+		synchronized (LOCK) {
+			device = ALC10.alcOpenDevice((ByteBuffer)null);
+			ALCCapabilities deviceCaps = ALC.createCapabilities(device);
+			
+			context = ALC10.alcCreateContext(device, (IntBuffer)null);
+			ALC10.alcMakeContextCurrent(context);
+			capabilities = AL.createCapabilities(deviceCaps);
+			
+			//sons simples
+			for (int i = 0 ; i < SOUND_SOURCES_COUNT ; i++) {
+				int srcID = AL10.alGenSources();
+				soundSources.put(i, new Source(srcID));
+			}
+			
+			//sons en boucle
+			for (int i = 0 ; i < LOOP_SOUND_SOURCES_COUNT ; i++) {
+				int srcID = AL10.alGenSources();
+				Source src = new Source(srcID);
+				src.enableSourceLoop(true);
+				loopSoundSources.put(i, src);
+			}
 		}
 		
-		//sons en boucle
-		for (int i = 0 ; i < LOOP_SOUND_SOURCES_COUNT ; i++) {
-			int srcID = AL10.alGenSources();
-			Source src = new Source(srcID);
-			src.enableSourceLoop(true);
-			loopSoundSources.put(i, src);
-		}
 		
+		// ----- EXECUTION
 		
 		
 		while (running) {
@@ -126,12 +131,8 @@ public final class SoundManager implements Runnable {
 				}
 				
 				playSoundQueue.clear();
-			}
 			
-			
-			
-			//SONS EN BOUCLE
-			synchronized (LOCK) {
+				//SONS EN BOUCLE
 				for (LoopSound ls : loopSoundQueue) {
 					if (ls.play) {
 						if (!ls.enableDupli && isLoopSoundPlaying(ls.sound)) continue;
@@ -154,12 +155,8 @@ public final class SoundManager implements Runnable {
 				}
 				
 				loopSoundQueue.clear();
-			}
 			
-			
-			
-			//MUSIQUE
-			synchronized (LOCK) {
+				//MUSIQUE
 				for (String evt : musicEventQueue) {
 					if (START_EVENT.equals(evt)) {
 						if (thePlayer.getMusic() != null) thePlayer.playMusic();
@@ -185,7 +182,6 @@ public final class SoundManager implements Runnable {
 		}
 		
 		ALC10.alcCloseDevice(device);
-		ALC.destroy();
 	}
 	
 	
@@ -265,8 +261,10 @@ public final class SoundManager implements Runnable {
 		}
 		
 		if (dat != null) {
-			ID = AL10.alGenBuffers();
-			AL10.alBufferData(ID, dat.format, dat.data, dat.samplerate);
+			synchronized (LOCK) {
+				ID = AL10.alGenBuffers();
+				AL10.alBufferData(ID, dat.format, dat.data, dat.samplerate);
+			}
 		}
 		
 		return ID;

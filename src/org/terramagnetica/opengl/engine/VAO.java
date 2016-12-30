@@ -57,9 +57,16 @@ public class VAO {
 		this.id = GL30.glGenVertexArrays();
 	}
 	
-	@Override
-	protected void finalize() {
+	public void destroyVAO() {
 		GL30.glDeleteVertexArrays(this.id);
+	}
+	
+	public void destroyAll() {
+		destroyVAO();
+		
+		for (Entry<String, Attrib> e : this.attribs.entrySet()) {
+			e.getValue().buffer.destroy();
+		}
 	}
 	
 	public boolean isBound() {

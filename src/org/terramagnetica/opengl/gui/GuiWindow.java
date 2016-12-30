@@ -156,14 +156,20 @@ public class GuiWindow {
 		try {
 			icons = GLFWImage.malloc(this.icons.length);
 			
+			int i = 0;
 			for (ByteBuffer icon : this.icons) {
-				
+				int size = (int) Math.sqrt(icon.limit() / 4);
+				icons.position(i).width(size).height(size).pixels(icon);
+				i++;
 			}
 			
-			//FIXME GLFW.glfwSetWindowIcon(this.window, icons);
+			icons.flip();
+			GLFW.glfwSetWindowIcon(this.window, icons);
 		}
 		finally {
-			icons.free();
+			if (icons != null) {
+				icons.free();
+			}
 		}
 		
 		GLFW.glfwMakeContextCurrent(this.window);
@@ -176,12 +182,7 @@ public class GuiWindow {
 		this.created = true;
 		
 		//Préparation de la première frame
-		enableInput(true);
 		this.painter = new Painter(this);
-	}
-	
-	public void enableInput(boolean input) {
-		// FIXME DO ME !
 	}
 	
 	/** Repeint la fenêtre et execute les actions dues aux entrées de l'utilisateur. */
@@ -216,8 +217,6 @@ public class GuiWindow {
 	
 	public void destroy() {
 		if (!this.created) return;
-		
-		enableInput(false);
 		
 		GLFW.glfwDestroyWindow(this.window);
 		

@@ -19,8 +19,6 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game.gui;
 
-import java.nio.ByteBuffer;
-
 import org.lwjgl.glfw.GLFW;
 import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.opengl.gui.GuiDialog;
@@ -154,7 +152,7 @@ public class GameWindow {
 			window.setTitle("Terra Magnetica - V" + TerraMagnetica.VERSION);
 			
 			RessourcesManager.loadIcon();
-			window.setIcon(new ByteBuffer[] {RessourcesManager.tmIcon});
+			window.setIcon(RessourcesManager.tmIcon);
 			
 			window.createWindow();
 			
@@ -176,6 +174,9 @@ public class GameWindow {
 	
 	protected void loadRessources() {
 		RessourcesManager.loadRessourcesGame();
+		
+		//Chargement du shader terramagnetica
+		
 	}
 	
 	/** détruit l'affichage, libère les ressources de mémoires et quitte l'application. */

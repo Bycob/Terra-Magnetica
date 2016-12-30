@@ -47,8 +47,7 @@ public class VBO {
 		this.id = GL15.glGenBuffers();
 	}
 	
-	@Override
-	protected void finalize() {
+	public void destroy() {
 		GL15.glDeleteBuffers(this.id);
 	}
 	

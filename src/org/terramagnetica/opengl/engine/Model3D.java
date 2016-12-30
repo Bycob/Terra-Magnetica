@@ -430,8 +430,14 @@ public class Model3D {
 	}
 	
 	private void onModelEdit() {
-		this.myVAO = null;
+		freeMemory();
 		this.boundingBox = null;
+	}
+	
+	/** Détruit les objets openGL utilisés par ce modèle. */
+	public void freeMemory() {
+		if (this.myVAO != null) this.myVAO.destroyAll();
+		this.myVAO = null;
 	}
 	
 	@Override

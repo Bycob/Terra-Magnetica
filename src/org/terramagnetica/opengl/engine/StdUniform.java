@@ -21,6 +21,9 @@ package org.terramagnetica.opengl.engine;
 
 public interface StdUniform {
 	
+	/** Option permettant d'écrire des pixels blancs dans le stencil buffer */
+	String STENCIL = "stencils";
+	
 	String USE_TEXTURES = "useTextures";
 	String USE_LIGHTS = "useLights";
 	String USE_COLOR = "useColor";

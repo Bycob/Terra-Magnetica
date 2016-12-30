@@ -31,7 +31,7 @@ import net.bynaryscode.util.maths.geometric.Vec2i;
 
 public final class ImgUtil {
 	
-	public static Image getPartOfImage(Image img, int x, int y, int width, int height) {		
+	public static Image getSubImage(Image img, int x, int y, int width, int height) {		
 		if (img.getWidth(null) < width || img.getHeight(null) < height)
 			return img;
 		
@@ -43,7 +43,7 @@ public final class ImgUtil {
 		return result;
 	}
 	
-	public static Image getPartOfImage(Image img, TextureQuad clip){
+	public static Image getSubImage(Image img, TextureQuad clip){
 		if (img.getWidth(null) < clip.getWidth() || img.getHeight(null) < clip.getHeight())
 			return img;
 		
@@ -54,6 +54,15 @@ public final class ImgUtil {
 		Vec2i c1 = clip.getCoinHautGauche();
 		Vec2i c2 = clip.getCoinBasDroit();
 		g2d.drawImage(img, 0, 0, result.getWidth(), result.getHeight(), c1.x, c1.y, c2.x, c2.y, null);
+		
+		return result;
+	}
+	
+	public static BufferedImage getScaledInstance(Image image, int width, int height) {
+		BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g2d = result.createGraphics();
+		g2d.drawImage(image, 0, 0, result.getWidth(), result.getHeight(), 0, 0, image.getWidth(null), image.getHeight(null), null);
 		
 		return result;
 	}

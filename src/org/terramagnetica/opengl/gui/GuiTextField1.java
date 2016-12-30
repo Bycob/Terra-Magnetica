@@ -33,12 +33,12 @@ import net.bynaryscode.util.maths.geometric.Vec2i;
 
 public class GuiTextField1 extends GuiAbstractTextField {
 	
-	private Vec2d textBegin;
 	
 	private Color4f color = new Color4f(1f, 1f, 1f);
 	private Color4f textColor = new Color4f(255, 234, 0);
 	
 	private int preferedFontSize = 20;
+	private double textOffset;
 	private FontSizeManager fm = new FontSizeRelativeToHeight(this.theTextPainter);
 	
 	public GuiTextField1() {
@@ -51,23 +51,11 @@ public class GuiTextField1 extends GuiAbstractTextField {
 	
 	public void init(RectangleDouble coordGL) {
 		this.setBoundsGL(coordGL);
+		this.textOffset = 0.03 * coordGL.getWidth();
 		
 		this.cursor = new Cursor();
 		
 		input.accept(new char[] {13, '\n'}, false);//n'accepte ni le retour à la ligne, ni le retour chariot.
-	}
-	
-	@Override
-	public void setBoundsGL(RectangleDouble bounds) {
-		super.setBoundsGL(bounds);
-		
-		recalculateTextStartPoint();
-	}
-	
-	private void recalculateTextStartPoint() {
-		RectangleDouble bounds = getBoundsGL();
-		double marge = 0.03 * bounds.getWidth();
-		this.textBegin = new Vec2d(bounds.xmin + marge, bounds.center().y);
 	}
 	
 	@Override
@@ -78,6 +66,7 @@ public class GuiTextField1 extends GuiAbstractTextField {
 		Vec2d mouseGL = new Vec2d(
 				theWindow.getXOnGLOrtho(mouse.x),
 				theWindow.getYOnGLOrtho(mouse.y));
+		RectangleDouble boundsGL = this.getBoundsGL();
 		
 		if (button == BUTTON_LEFT && state) {
 			if (this.getBoundsDisp().contains(mouse)) {
@@ -90,7 +79,7 @@ public class GuiTextField1 extends GuiAbstractTextField {
 				boolean done = false;
 				for (int i = 0 ; i < text.length() ; i++) {
 					strBefore = text.substring(0, i);
-					if (mouseGL.x <= textBegin.x + this.theTextPainter.widthOnGL(strBefore, fontSize)) {
+					if (mouseGL.x <= boundsGL.xmin + this.textOffset + this.theTextPainter.widthOnGL(strBefore, fontSize)) {
 						this.cursor.setCursorPlace(i);
 						done = true;
 						break;
@@ -123,15 +112,14 @@ public class GuiTextField1 extends GuiAbstractTextField {
 		
 		//le texte
 		this.theTextPainter.setColor(this.textColor);
-
-		recalculateTextStartPoint();
+		
 		int fontSize = this.fm.calculFontSize(this.getBoundsDisp(), text, preferedFontSize);
 		
 		RectangleDouble viewport = this.getBoundsGL();
 		viewport.xmin += marge; viewport.xmax -= marge;
 		painter.setViewport(new Viewport(viewport));
 		
-		this.theTextPainter.drawString2DBeginAt(text, textBegin.x, textBegin.y, fontSize);
+		this.theTextPainter.drawString2DBeginAt(text, coordGL.xmin + this.textOffset, coordGL.center().y, fontSize);
 		
 		painter.setViewport(null);
 		
@@ -215,30 +203,32 @@ public class GuiTextField1 extends GuiAbstractTextField {
 		}
 		
 		public double getX() {
+			RectangleDouble boundsGL = getBoundsGL();
 			String textBefore = text.substring(0, this.getCursorPlace());
 			int fontSize = fm.calculFontSize(getBoundsDisp(), text, preferedFontSize);
 			double widthBefore = GuiTextField1.this.theTextPainter.widthOnGL(textBefore, fontSize);
-			return textBegin.x + widthBefore;
+			return boundsGL.xmin + textOffset + widthBefore;
 		}
 		
 		private void putCursorInBounds() {
+			RectangleDouble boundsGL = getBoundsGL();
 			int fontSize = fm.calculFontSize(getBoundsDisp(), text, preferedFontSize);
 			String textBefore = text.substring(0, this.getCursorPlace());
 			double widthBefore = GuiTextField1.this.theTextPainter.widthOnGL(textBefore, fontSize);
 			
-			double marge = getBoundsGL().getWidth() * 0.03;
-			double xmin = getBoundsGL().xmin + marge;
-			double xmax = getBoundsGL().xmax - marge;
-			double cursorX = textBegin.x + widthBefore;
+			double marge = boundsGL.getWidth() * 0.03;
+			double xmin = boundsGL.xmin + marge;
+			double xmax = boundsGL.xmax - marge;
+			double cursorX = boundsGL.xmin + textOffset + widthBefore;
 			
 			if (cursorX < xmin) {
-				textBegin.x = xmin + 10 * marge - widthBefore;
-				if (textBegin.x > xmin) {
-					textBegin.x = xmin;
+				textOffset = 11 * marge - widthBefore;
+				if (textOffset > marge) {
+					textOffset = marge;
 				}
 			}
 			if (cursorX > xmax) {
-				textBegin.x = xmax - widthBefore;
+				textOffset = xmax - widthBefore - boundsGL.xmin;
 			}
 		}
 	}

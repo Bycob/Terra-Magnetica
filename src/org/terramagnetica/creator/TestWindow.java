@@ -94,10 +94,12 @@ public class TestWindow extends GameWindow {
 	protected void destroyApp() {
 		super.destroyApp();
 		
-		this.game.destroyRenders();
-		
-		if (this.game.hasWon()) {
-			JOptionPane.showMessageDialog(pointer, "Vous avez gagné !", "Victoire", JOptionPane.INFORMATION_MESSAGE);
+		if (this.game != null) {
+			this.game.destroyRenders();
+			
+			if (this.game.hasWon()) {
+				JOptionPane.showMessageDialog(pointer, "Vous avez gagné !", "Victoire", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 	}
 }
