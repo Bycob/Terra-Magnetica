@@ -58,6 +58,7 @@ public class RenderFullLandscape extends RenderGameDefaultElement {
 		
 		Light light = painter.getLightModel().getLight0();
 		light.setLightColor(LightColor.AMBIENT, new Color4f(0.5f, 0.5f, 0.5f, 0.5f));
+		light.setPosition(0, 0, 1);
 		
 		this.frustum = painter.createCameraFrustum();
 		

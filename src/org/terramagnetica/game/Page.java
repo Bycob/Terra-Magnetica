@@ -128,10 +128,25 @@ public class Page {
 						this.contents.add(new Legende(leg));
 					}
 				} else if ("p".equals(tag)) {
-					this.insertString("\n\n");
+					this.insertString("\n");
 				}
 			}
 		}
+		
+		// Séparation des paragraphes pour permettre l'optimisation
+		ArrayList<Object> rebuiltList = new ArrayList<Object>();
+		
+		for (Object item : this.contents) {
+			if (item instanceof String) {
+				String[] paragraphs = item.toString().split("\n");
+				Util.addAll(paragraphs, rebuiltList, false);
+			}
+			else {
+				rebuiltList.add(item);
+			}
+		}
+		
+		this.contents = rebuiltList;
 	}
 	
 	public Object[] getContents() {

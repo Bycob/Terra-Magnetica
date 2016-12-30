@@ -47,7 +47,7 @@ in vec4 fragColor;
 
 vec4 applyLight(int lightID) {
 	if (light[lightID].activated == 0) {
-		return vec4(0);
+		return vec4(0, 0, 0, 1);
 	}
 	
 	//Calcul des positions réelles des éléments de la scene
@@ -87,7 +87,7 @@ vec4 applyLight(int lightID) {
     //Calcul de l'effet de la lumière sur le matériau
     
     //intensité diffuse
-    vec3 diffuseIntensity = vec3(max(- dot(normal, fragToLight), 0));
+    vec3 diffuseIntensity = vec3(max(-dot(normal, fragToLight), 0));
     diffuseIntensity *= material.diffuse * light[lightID].diffuse;
 
     //intensité ambiente
@@ -101,7 +101,8 @@ vec4 applyLight(int lightID) {
 
     //Calcul final
     vec3 gamma = vec3(1);
-    return vec4(pow(ambientIntensity + attenuation * (diffuseIntensity + specularIntensity), gamma), 1);
+    //return vec4(pow(ambientIntensity + attenuation * (diffuseIntensity + specularIntensity), gamma), 1);
+    return vec4(diffuseIntensity, 1);
 }
 
 vec4 applyLights(vec4 initColor) {

@@ -55,6 +55,7 @@ public class Light {
 	Light(int id, LightModel model) {
 		this.id = id;
 		this.model = model;
+		this.painter = this.model.painter;
 	}
 	
 	public int getID() {
@@ -133,7 +134,7 @@ public class Light {
 			currentProgram.setUniform1i(uniformID(ACTIVATED, glID), GL11.GL_TRUE);
 			
 			//Position
-			currentProgram.setUniform1f(uniformID(TYPE, glID), this.type.ordinal());
+			currentProgram.setUniform1i(uniformID(TYPE, glID), this.type.ordinal());
 			currentProgram.setUniformVec3d(uniformID(POSITION, glID), this.position);
 			
 			//Couleurs

@@ -48,7 +48,7 @@ public class FontSizeRelativeToHeight implements FontSizeManager {
 			int preferedFontSize) {
 		
 		int fontSize;
-		if (bounds.getHeight() < (preferedFontSize * this.textPainter.getRealScale())) {
+		if (bounds.getHeight() < preferedFontSize) {
 			fontSize = bounds.getHeight();
 		}
 		else {

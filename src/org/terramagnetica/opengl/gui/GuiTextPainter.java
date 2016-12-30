@@ -150,7 +150,9 @@ public final class GuiTextPainter {
 	
 	/**
 	 * Dessine le texte passé en paramètre à l'écran, aux coordonnées
-	 * indiquées. 
+	 * indiquées. Le retour à la ligne est calculé automatiquement. Ainsi
+	 * les paragraphes doivent être marqués par le caractère de retour à
+	 * la ligne, et seront dessinés avec un alinéa.
 	 * @param text - Le texte à dessiner. Chaque retour à la ligne doit
 	 * marquer un changement de paragraphe.
 	 * @param bounds - Le rectangle définissant la zone de dessin :
@@ -177,6 +179,21 @@ public final class GuiTextPainter {
 				this.drawString2D(tline, x, y, fontSize);
 				nbLines++;
 			}
+		}
+		
+		return nbLines;
+	}
+	
+	public int getLineCount(String text, Rectangle bounds, int fontSize) {
+		String[] pg = text.split("\n");
+		RectangleDouble bd = bounds.asDouble();
+		final int dispWidth = theWindow.getWidthOnDisplay(bd.getWidth());
+		int nbLines = 0;
+		
+		for (String str : pg) {
+			str = "   " + str;
+			List<String> ft = getLines(str, fontSize, dispWidth);
+			nbLines += ft.size();
 		}
 		
 		return nbLines;

@@ -83,6 +83,7 @@ public class Painter {
 	
 	public static final Vec3d DEFAULT_NORMAL = new Vec3d(0, 0, 1);
 	private static final int VERTICES_MAX = 1024;
+	private static final int STRIDE = 3 * 4 + 2 * 4 + 3 * 4 + 4;
 	
 	private GuiWindow myWindow;
 	
@@ -97,11 +98,7 @@ public class Painter {
 	private int verticesCount = 0;
 	private int indicesCount = 0;
 	
-	private FloatBuffer verticesBuf = BufferUtils.createFloatBuffer(this.verticesMax * 3);
-	private FloatBuffer texCoordsBuf = BufferUtils.createFloatBuffer(this.verticesMax * 2);
-	private FloatBuffer normalsBuf = BufferUtils.createFloatBuffer(this.verticesMax * 3);
-	private ByteBuffer colorsBuf = BufferUtils.createByteBuffer(this.verticesMax * 4);
-	
+	private ByteBuffer dataBuf = BufferUtils.createByteBuffer(this.verticesMax * STRIDE);
 	private IntBuffer indices = BufferUtils.createIntBuffer(this.verticesMax * 6);
 	
 	private VAO defaultVAO = new VAO();
@@ -117,7 +114,6 @@ public class Painter {
 	private Deque<Integer> transformsSaves = new ArrayDeque<Integer>(8);
 	
 	//Contenu
-	private DisplayList recordedList;
 	private CameraFrustum camFrustum;
 	
 	//Tracking
@@ -132,10 +128,11 @@ public class Painter {
 		this.lightModel.painter = this;
 		
 		// Définition des paramètres du VAO
-		this.defaultVAO.setAttrib(StdAttrib.VERTEX, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 3, GL11.GL_FLOAT);
-		this.defaultVAO.setAttrib(StdAttrib.NORMAL, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 3, GL11.GL_FLOAT);
-		this.defaultVAO.setAttrib(StdAttrib.TEX_COORD, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 2, GL11.GL_FLOAT);
-		this.defaultVAO.setAttrib(StdAttrib.COLOR, new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW), 4, GL11.GL_UNSIGNED_BYTE, true);
+		VBO commonVBO = new VBO().withDataUsage(GL15.GL_DYNAMIC_DRAW);
+		this.defaultVAO.setAttrib(StdAttrib.VERTEX, commonVBO, 3, GL11.GL_FLOAT, false, STRIDE, 0);
+		this.defaultVAO.setAttrib(StdAttrib.TEX_COORD, commonVBO, 2, GL11.GL_FLOAT, false, STRIDE, 3 * 4);
+		this.defaultVAO.setAttrib(StdAttrib.NORMAL, commonVBO, 3, GL11.GL_FLOAT, false, STRIDE, (3 + 2) * 4);
+		this.defaultVAO.setAttrib(StdAttrib.COLOR, commonVBO, 4, GL11.GL_UNSIGNED_BYTE, true, STRIDE, (3 + 2 + 3) * 4);
 		
 		this.defaultVAO.setIndicesBuffer(new VBO(GL15.GL_ELEMENT_ARRAY_BUFFER).withDataUsage(GL15.GL_DYNAMIC_DRAW));
 		
@@ -172,10 +169,7 @@ public class Painter {
 			return;
 		}
 		
-		this.verticesBuf.flip();
-		this.texCoordsBuf.flip();
-		this.normalsBuf.flip();
-		this.colorsBuf.flip();
+		this.dataBuf.flip();
 		this.indices.flip();
 		
 		beforeDrawing();
@@ -185,18 +179,12 @@ public class Painter {
 		
 		if (this.texture != null) {
 			bindTexture(this.texture.getGLTextureID());
-			this.currentProgram.setUniform1i(StdUniform.USE_TEXTURES, 1);
 		}
 		else {
 			bindTexture(0);
-			this.currentProgram.setUniform1i(StdUniform.USE_TEXTURES, 0);
 		}
 
-		this.defaultVAO.getAttribBuffer(StdAttrib.COLOR).setData(this.colorsBuf);
-		this.defaultVAO.getAttribBuffer(StdAttrib.TEX_COORD).setData(this.texCoordsBuf);
-		this.defaultVAO.getAttribBuffer(StdAttrib.NORMAL).setData(this.normalsBuf);
-		this.defaultVAO.getAttribBuffer(StdAttrib.VERTEX).setData(this.verticesBuf);
-		
+		this.defaultVAO.getAttribBuffer(StdAttrib.VERTEX).setData(this.dataBuf); // Le même buffer pour tous
 		this.defaultVAO.getIndicesBuffer().setData(this.indices);
 		
 		//GL11.glDrawArrays(this.primitive.glDrawMode, 0, this.verticesCount);
@@ -209,6 +197,7 @@ public class Painter {
 	}
 	
 	public void drawVAO(VAO vao, int vertCount) {
+		if (vertCount == 0 || vertCount <= this.primitive.glDrawMode) return;
 		beforeDrawing();
 		
 		if (this.texture != null) {
@@ -225,32 +214,23 @@ public class Painter {
 	}
 	
 	private void beforeDrawing() {
-		if (this.recordedList == null) {
-			
-			if (this.viewport != null) {
-				drawViewport();
-			}
-			else if (!isCamera3D()) {
-				GL11.glDisable(GL11.GL_STENCIL_TEST);
-			}
-			applyTransforms();
+		if (this.viewport != null) {
+			drawViewport();
 		}
+		else if (!isCamera3D()) {
+			GL11.glDisable(GL11.GL_STENCIL_TEST);
+		}
+		applyTransforms();
 	}
 	
 	private void afterDrawing() {
-		
-		if (this.recordedList == null) {
-			this.configuration.clearConfig();
-		}
+		this.configuration.clearConfig();
 	}
 	
 	
 	//Dessin point par point
 	private void initBuffers() {
-		this.verticesBuf.clear();
-		this.texCoordsBuf.clear();
-		this.normalsBuf.clear();
-		this.colorsBuf.clear();
+		this.dataBuf.clear();
 		this.indices.clear();
 		
 		this.verticesCount = 0;
@@ -259,7 +239,6 @@ public class Painter {
 	
 	private void bindTexture(int id) {
 		if (id != this.texID) {
-			this.currentProgram.setUniform1i(StdUniform.TEXTURE_0, 0); // TODO intégrer ça quelque part (optimisations)
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
 			
@@ -309,20 +288,20 @@ public class Painter {
 			flush();
 		}
 		
-		this.verticesBuf.put(new float[] {(float) vertex.x, (float) vertex.y, (float) vertex.z});
-		this.texCoordsBuf.put(new float[] {(float) s, (float) t});
-		this.normalsBuf.put(new float[] {(float) normal.x, (float) normal.y, (float) normal.z});
+		this.dataBuf.putFloat((float) vertex.x).putFloat((float) vertex.y).putFloat((float) vertex.z);
+		this.dataBuf.putFloat((float) s).putFloat((float) t);
+		this.dataBuf.putFloat((float) normal.x).putFloat((float) normal.y).putFloat((float) normal.z);
 		
 		if (this.color != null) {
 			if (ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN) {
-				this.colorsBuf.put(new byte[] {
+				this.dataBuf.put(new byte[] {
 						(byte) this.color.getRed(),
 						(byte) this.color.getGreen(),
 						(byte) this.color.getBlue(),
 						(byte) this.color.getAlpha()});
 			}
 			else {
-				this.colorsBuf.put(new byte[] {
+				this.dataBuf.put(new byte[] {
 						(byte) this.color.getAlpha(),
 						(byte) this.color.getBlue(),
 						(byte) this.color.getGreen(),
@@ -363,6 +342,8 @@ public class Painter {
 		
 		this.configuration.painter = this;
 		this.configuration.setup();
+		
+		this.clearTransforms();
 	}
 	
 	public GLConfiguration getConfiguration() {
@@ -436,17 +417,31 @@ public class Painter {
 	public Texture setTexture(Texture tex) {
 		if (this.texture == null && tex == null) return null;
 		
+		// On dessine si la texture change réellement
 		Texture oldTexture = this.texture;
 		
 		if (oldTexture == null || tex == null || oldTexture.getGLTextureID() != tex.getGLTextureID()) {
 			flush();
 		}
 		
+		// On définit la nouvelle valeur
 		if (tex instanceof AnimatedTexture) {
 			this.texture = ((AnimatedTexture) tex).get();
 		}
 		else {
 			this.texture = tex;
+		}
+		
+		// Activation ou desactivation des textures
+		if ((this.texture != null && this.texture.getGLTextureID() != 0)
+				&& (oldTexture == null || oldTexture.getGLTextureID() == 0)) {
+			
+			this.currentProgram.setUniform1i(StdUniform.USE_TEXTURES, GL11.GL_TRUE);
+		}
+		else if ((oldTexture != null && oldTexture.getGLTextureID() != 0)
+				&& (this.texture == null || this.texture.getGLTextureID() == 0)) {
+			
+			this.currentProgram.setUniform1i(StdUniform.USE_TEXTURES, GL11.GL_FALSE);
 		}
 		
 		return oldTexture;
@@ -591,45 +586,5 @@ public class Painter {
 			this.transforms.removeLast();
 		}
 		return true;
-	}
-	
-	public void startRecordList(DisplayList list) {
-		if (this.recordedList != null) throw new IllegalStateException("Already recording a list");
-		
-		flush();
-		this.recordedList = list;
-		list.startCompilation();
-	}
-	
-	public void endRecordList() {
-		if (this.recordedList == null) throw new IllegalStateException("No list recording");
-		
-		flush();
-		this.recordedList.endOfCompilation();
-		
-		this.recordedList = null;
-	}
-	
-	public void drawList(DisplayList list) {
-		flush();
-		
-		beforeDrawing();
-		list.callList();
-		afterDrawing();
-	}
-	
-	public void drawListAt(DisplayList list, Vec3d position) {
-		drawListAt(list, position, new Vec3d(0, 0, 1), 0);
-	}
-	
-	public void drawListAt(DisplayList list, Vec3d position, Vec3d rotAxis, float rotAngle) {
-		clearTransforms();
-
-		addTransform(Transform.newRotation(rotAngle, rotAxis));
-		addTransform(Transform.newTranslation((float) position.x, (float) position.y, (float) position.z));
-		
-		drawList(list);
-		
-		clearTransforms();
 	}
 }

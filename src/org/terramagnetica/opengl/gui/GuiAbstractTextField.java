@@ -27,7 +27,7 @@ import org.terramagnetica.opengl.engine.Painter;
 
 import net.bynaryscode.util.Util;
 
-public abstract class GuiAbstractTextField extends GuiComponent implements Writer, MouseListener {
+public abstract class GuiAbstractTextField extends GuiComponent implements TextListener, MouseListener {
 	
 	protected String text;
 	protected GuiCursor cursor;
@@ -35,7 +35,7 @@ public abstract class GuiAbstractTextField extends GuiComponent implements Write
 	private boolean focused = false;
 	private long lastInput;
 	
-	protected WriterInput input = new WriterInput(this);
+	protected GLFWTextInput input = new GLFWTextInput(this);
 	
 	protected GuiAbstractTextField() {
 		text = "";

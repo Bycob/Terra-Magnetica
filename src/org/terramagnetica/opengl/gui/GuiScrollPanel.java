@@ -98,7 +98,7 @@ public class GuiScrollPanel extends GuiComponent implements MouseListener {
 	public void drawComponent(Painter p) {
 		
 		double wheel = this.theWindow.getMouseInput().getMouseDWheel();
-		double glWheel = wheel * 0.1; //FIXME Ajuster ce paramètre
+		double glWheel = wheel * 0.15;
 		this.setBarLocation(ScrollBar.VERTICAL, this.yVBar + glWheel);
 		
 		p.set2DConfig();

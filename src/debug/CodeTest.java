@@ -107,10 +107,10 @@ public class CodeTest {
 	
 	public static void toDo() {
 		if (GuiWindow.getInstance().isKeyPressed(GLFW.GLFW_KEY_RIGHT)) {
-			rotation += 1f;
+			rotation += 0.25f;
 		}
 		else if (GuiWindow.getInstance().isKeyPressed(GLFW.GLFW_KEY_LEFT)) {
-			rotation -= 1f;
+			rotation -= 0.25f;
 		}
 		
 		Painter painter = GuiWindow.getInstance().getPainter();
@@ -133,7 +133,7 @@ public class CodeTest {
 		public void drawComponent(Painter painter) {
 			painter.set3DConfig();
 			
-			zoom -= GuiWindow.getInstance().getMouseInput().getMouseDWheel() / 1000f;
+			zoom -= GuiWindow.getInstance().getMouseInput().getMouseDWheel();
 			camera.setEye(new Vec3d(0, -zoom, zoom));
 			
 			painter.getConfiguration().setCamera(camera);

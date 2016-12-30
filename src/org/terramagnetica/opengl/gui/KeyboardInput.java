@@ -33,6 +33,7 @@ public class KeyboardInput {
 	/**
 	 * Envoie à chaque listeners tous les évènements enregistrés.
 	 */
+	@SuppressWarnings("deprecation")
 	public void sendEvents(GuiComponent listener) {
 		synchronized (events) {
 			KeyboardListener[] keyboardListeners = listener.getKeyboardListeners();
@@ -52,21 +53,16 @@ public class KeyboardInput {
 				events = new ArrayList<KeyboardEvent>();
 		}
 	}
-	/*
-	 * Enregistre tous les évènements clavier disponibles.
-	 *
-	public void registerInput() {
-		synchronized (events) {
-			while (Keyboard.isCreated() && Keyboard.next()) {
-				events.add(new KeyboardEvent(Keyboard.getEventCharacter(),
-						Keyboard.getEventKey(), Keyboard.getEventKeyState()));
-			}
-		}
-	}*/
 
 	public void addKeyEvent(int key, int scancode, int action, int mods) {
 		synchronized (this.events) {
-			this.events.add(new KeyboardEvent((char) scancode, key, action == GLFW.GLFW_PRESS));
+			this.events.add(new KeyboardEvent((char) 0, key, action));
+		}
+	}
+	
+	public void addTextEvent(char read) {
+		synchronized (this.events) {
+			this.events.add(new KeyboardEvent(read, GLFW.GLFW_KEY_UNKNOWN, GLFW.GLFW_PRESS));
 		}
 	}
 }

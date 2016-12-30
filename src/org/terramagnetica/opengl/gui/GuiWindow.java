@@ -22,6 +22,7 @@ package org.terramagnetica.opengl.gui;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCharCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -31,6 +32,7 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
+import org.terramagnetica.opengl.engine.GLConfiguration;
 import org.terramagnetica.opengl.engine.GLOrtho;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.miscellaneous.GLFWUtil;
@@ -69,7 +71,7 @@ public class GuiWindow {
 	public KeyboardInput mainKeyboardInput = new KeyboardInput();
 	
 	private GuiWindow() {
-		
+		setTitle(null);
 	}
 	
 	public void setTitle(String title) {
@@ -97,14 +99,22 @@ public class GuiWindow {
 		
 		instanceCount++;
 		
-		// FIXME enlever ça si ça marche correctement :  PixelFormat format = new PixelFormat(8, 8, 8, 4);
+		// Définition des paramètres de la fenêtre
 		GLFW.glfwDefaultWindowHints();
-	    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
-	    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
-		//GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
 		
+	    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
+	    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
+		
+		GLFW.glfwWindowHint(GLFW.GLFW_DEPTH_BITS, 8);
+		GLFW.glfwWindowHint(GLFW.GLFW_STENCIL_BITS, 8);
+		
+		//[Expérimental]
+		if (GLConfiguration.GLProperty.MULTISAMPLE.defaultValue)
+			GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
+		
+		// Création de la fenêtre
 		this.window = GLFW.glfwCreateWindow(800, 600, this.title, MemoryUtil.NULL, MemoryUtil.NULL);
 		if (this.window == MemoryUtil.NULL) {
 			throw new RuntimeException("the creation of Terra Magnetica main window failed.");
@@ -131,9 +141,13 @@ public class GuiWindow {
 		
 		GLFW.glfwSetKeyCallback(this.window, new GLFWKeyCallback() {
 			@Override public void invoke(long window, int key, int scancode, int action, int mods) {
-				//FIXME vérifier la conversion scancode / char
-				System.out.println(scancode + " : " + ((char) scancode));
 				mainKeyboardInput.addKeyEvent(key, scancode, action, mods);
+			}
+		});
+		
+		GLFW.glfwSetCharCallback(this.window, new GLFWCharCallback() {
+			@Override public void invoke(long window, int codepoint) {
+				mainKeyboardInput.addTextEvent((char) codepoint);
 			}
 		});
 		

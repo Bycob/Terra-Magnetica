@@ -46,6 +46,7 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 	
 	/** Indique si l'objet est dessiné au sol ou non. */
 	private boolean onGround = false;
+	private double onGroundOffset = 0.001;
 	
 	/** La taille d'une case en pixels. Utilisée pour convertir les
 	 * tailles d'images de pixels à cases. */
@@ -95,7 +96,7 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 		else {
 			double hWidth = this.width / 2;
 			double hHeight = this.height / 2;
-			double z = 0.001;
+			double z = this.onGroundOffset;
 			
 			addVertex(new Vec3d(- hWidth, hHeight, z));
 			addVertex(new Vec3d(hWidth, hHeight, z));
@@ -146,6 +147,15 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 		calculVertices();
 		
 		return this;
+	}
+	
+	/** Lorsqu'un objet est dessiné au sol, il n'est pas dessiné à la hauteur
+	 * 0 pour ne pas se confondre avec le sol. Cette méthode permet de définir
+	 * précisément l'altitude z à laquelle est rendue l'objet. */
+	public void setOnGroundOffset(double offset) {
+		this.onGroundOffset = offset;
+		
+		if (this.onGround) calculVertices();
 	}
 	
 	public boolean isOnGround() {

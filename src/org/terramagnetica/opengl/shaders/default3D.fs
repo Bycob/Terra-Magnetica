@@ -42,7 +42,4 @@ void main() {
 	if (tempColor.a <= 1.0 / 255.0) discard;
 	
 	finalColor = applyLights(tempColor);
-	if (!useColor) {
-		finalColor = vec4(1);
-	}
 }

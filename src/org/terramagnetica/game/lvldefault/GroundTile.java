@@ -82,6 +82,7 @@ public class GroundTile extends LandscapeTile {
 		Renderable render = renders.getRender(id);
 		if (render == null) {
 			render = new RenderEntityTexture(id).setOnGround(true);
+			((RenderEntityTexture) render).setOnGroundOffset(0);
 			renders.registerRender(id, render);
 		}
 		

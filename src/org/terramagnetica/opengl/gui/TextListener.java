@@ -19,7 +19,7 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.gui;
 
-public interface Writer {
+public interface TextListener {
 	
 	public void write(char character);
 	public void remove(int key);

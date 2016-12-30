@@ -311,6 +311,7 @@ public class Model3D {
 			buffer.putFloat((float) normale.x).putFloat((float) normale.y).putFloat((float) normale.z);
 		}
 		
+		buffer.flip();
 		vbo.setData(buffer);
 		
 		this.myVAO.setAttrib(StdAttrib.VERTEX, vbo, 3, GL11.GL_FLOAT, false, stride, 0);

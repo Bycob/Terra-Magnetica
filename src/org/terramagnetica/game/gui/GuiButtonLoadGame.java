@@ -28,7 +28,6 @@ import org.terramagnetica.opengl.gui.FontSizeManager;
 import org.terramagnetica.opengl.gui.FontSizeRelativeToRectangle;
 import org.terramagnetica.opengl.gui.GuiAbstractButton;
 import org.terramagnetica.ressources.SaveData;
-import org.terramagnetica.ressources.TexturesLoader;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
@@ -70,7 +69,7 @@ public class GuiButtonLoadGame extends GuiAbstractButton {
 		else {
 			p.setColor(new Color4f(0, 0, 0, 31));
 		}
-		p.setTexture(TexturesLoader.get("gui/game/guiGame.png.loadButton"));
+		p.setTexture(null);
 		GLUtil.drawQuad2D(b, p);
 		
 		//Nom du joueur : rectangle

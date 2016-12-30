@@ -51,12 +51,23 @@ public class GuiTextField1 extends GuiAbstractTextField {
 	
 	public void init(RectangleDouble coordGL) {
 		this.setBoundsGL(coordGL);
-		double marge = 0.03 * coordGL.getWidth();
-		this.textBegin = new Vec2d(coordGL.xmin + marge, coordGL.center().y);
 		
 		this.cursor = new Cursor();
 		
 		input.accept(new char[] {13, '\n'}, false);//n'accepte ni le retour à la ligne, ni le retour chariot.
+	}
+	
+	@Override
+	public void setBoundsGL(RectangleDouble bounds) {
+		super.setBoundsGL(bounds);
+		
+		recalculateTextStartPoint();
+	}
+	
+	private void recalculateTextStartPoint() {
+		RectangleDouble bounds = getBoundsGL();
+		double marge = 0.03 * bounds.getWidth();
+		this.textBegin = new Vec2d(bounds.xmin + marge, bounds.center().y);
 	}
 	
 	@Override
@@ -112,7 +123,8 @@ public class GuiTextField1 extends GuiAbstractTextField {
 		
 		//le texte
 		this.theTextPainter.setColor(this.textColor);
-		
+
+		recalculateTextStartPoint();
 		int fontSize = this.fm.calculFontSize(this.getBoundsDisp(), text, preferedFontSize);
 		
 		RectangleDouble viewport = this.getBoundsGL();
@@ -147,12 +159,12 @@ public class GuiTextField1 extends GuiAbstractTextField {
 		return this.textColor.clone();
 	}
 	
-	/** @see WriterInput#accept(char, boolean) */
+	/** @see GLFWTextInput#accept(char, boolean) */
 	public void inputAccept(char character, boolean accepted) {
 		input.accept(character, accepted);
 	}
 	
-	/** @see WriterInput#accept(char[], boolean) */
+	/** @see GLFWTextInput#accept(char[], boolean) */
 	public void inputAccept(char[] characters, boolean accepted) {
 		input.accept(characters, accepted);
 	}

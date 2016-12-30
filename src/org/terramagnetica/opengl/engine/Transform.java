@@ -79,7 +79,7 @@ public abstract class Transform {
 		
 		@Override
 		public void applyTransform(Matrix4f modelMatrix) {
-			modelMatrix.rotate(angle, (float) axis.x, (float) axis.y, (float) axis.z);
+			modelMatrix.rotate((float) Math.toRadians(angle), (float) axis.x, (float) axis.y, (float) axis.z);
 		}
 	}
 	

@@ -23,11 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
+import org.terramagnetica.opengl.gui.KeyboardEvent.KeyState;
 import org.terramagnetica.opengl.miscellaneous.Timer;
 
+@Deprecated
 public class WriterInput implements KeyboardListener {
 	
-	private List<Writer> writers = new ArrayList<Writer>();
+	private List<TextListener> writers = new ArrayList<TextListener>();
 	
 	private boolean running;
 	
@@ -46,8 +48,8 @@ public class WriterInput implements KeyboardListener {
 	
 	private List<Character> refused = new ArrayList<Character>();
 	
-	public WriterInput(Writer... writers) {
-		for (Writer writer : writers) {
+	public WriterInput(TextListener... writers) {
+		for (TextListener writer : writers) {
 			this.writers.add(writer);
 		}
 		
@@ -58,7 +60,7 @@ public class WriterInput implements KeyboardListener {
 	/**
 	 * Détermine les nouvelles entrées clavier à partir de celles qu'à déjà
 	 * reçues le {@link WriterInput}, puis les redistribue à tous les
-	 * {@link Writer} ajoutés.
+	 * {@link TextListener} ajoutés.
 	 */
 	public void sendEvents() {
 		boolean isWaiting = (chrono.getTime() < timeWaiting);
@@ -102,7 +104,7 @@ public class WriterInput implements KeyboardListener {
 	
 	private void callWriters() {
 		if (!refused.contains(keyChar)) {
-			for (Writer writer : this.writers) {
+			for (TextListener writer : this.writers) {
 				writer.write(keyChar);
 			}
 		}
@@ -110,13 +112,13 @@ public class WriterInput implements KeyboardListener {
 		switch (key) {
 		case GLFW.GLFW_KEY_BACKSPACE :
 		case GLFW.GLFW_KEY_DELETE :
-			for (Writer writer : this.writers) {
+			for (TextListener writer : this.writers) {
 				writer.remove(key);
 			}
 			break;
 		case GLFW.GLFW_KEY_LEFT :
 		case GLFW.GLFW_KEY_RIGHT :
-			for (Writer writer : this.writers) {
+			for (TextListener writer : this.writers) {
 				writer.move(key);
 			}
 		}
@@ -153,7 +155,7 @@ public class WriterInput implements KeyboardListener {
 	public void eventKey(KeyboardEvent e) {
 		keyChar = e.getCharacter();
 		key = e.getKey();
-		state = e.getKeyState();
+		state = e.getKeyState() == KeyState.PRESS;
 		sendEvents();
 	}
 }

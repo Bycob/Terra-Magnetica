@@ -48,7 +48,7 @@ public class RenderElementInventory extends RenderGameDefaultElement {
 		double inventoryYmin = dispBounds.bottom + 1;
 		double inventoryXmin = dispBounds.getBounds2D().center().x - 1.5;
 		
-		//TODO mettre l'inventaire et pas juste les traps. En clair faire ça "propre"
+		//TODO dessiner l'inventaire et pas juste les traps. En clair faire ça "propre" (un render pour les traps, un render pour toto, pour titi, etc)
 		
 		ArrayList<Bonus> playerBonus = game.getPlayer().getBonusList();
 		BonusTrap trapBonus = null;

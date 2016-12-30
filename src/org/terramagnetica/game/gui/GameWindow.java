@@ -104,11 +104,11 @@ public class GameWindow {
 			//-----
 			
 			long totalTime = GuiWindow.getTimeNanos() - startTime;
-			System.out.println((float) (totalTime) / 1000000);
+			//System.out.println((float) (totalTime) / 1000000);
 			//TODO profiling
 			
 			sync(startTime);
-			System.out.println(((float) (GuiWindow.getTimeNanos() - startTime) / 1000000) + "\n");
+			//System.out.println(((float) (GuiWindow.getTimeNanos() - startTime) / 1000000) + "\n");
 		}
 		
 		destroyApp();

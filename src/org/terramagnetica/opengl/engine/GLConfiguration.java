@@ -50,7 +50,7 @@ public class GLConfiguration implements Cloneable {
 		DEPTH_TEST(GL11.GL_DEPTH_TEST, true),
 		STENCIL_TEST(GL11.GL_STENCIL_TEST, true),
 		BLEND(GL11.GL_BLEND, true),
-		MULTISAMPLE(GL13.GL_MULTISAMPLE, true),
+		MULTISAMPLE(GL13.GL_MULTISAMPLE, false),
 		LIGHTING(-1, false),
 		COLOR(-1, true);
 		
@@ -163,6 +163,9 @@ public class GLConfiguration implements Cloneable {
 			boolean activated = this.properties.get(prop);
 			glUpdateState(prop, activated);
 		}
+		
+		//Texture 
+		this.painter.getCurrentProgram().setUniform1i(StdUniform.TEXTURE_0, 0);
 		
 		//Fonctions de test
 		if (this.properties.get(GLProperty.BLEND)) {

@@ -33,6 +33,7 @@ import org.terramagnetica.opengl.gui.FontSizeManager;
 import org.terramagnetica.opengl.gui.FontSizeRelativeToRectangle;
 import org.terramagnetica.opengl.gui.GuiComponent;
 import org.terramagnetica.opengl.gui.KeyboardEvent;
+import org.terramagnetica.opengl.gui.KeyboardEvent.KeyState;
 import org.terramagnetica.opengl.gui.KeyboardListener;
 import org.terramagnetica.opengl.gui.MouseEvent;
 import org.terramagnetica.opengl.gui.MouseListener;
@@ -116,7 +117,7 @@ public class GuiControlsComponent extends GuiComponent implements
 
 	@Override
 	public void eventKey(KeyboardEvent e) {
-		if (!e.getKeyState()) return;
+		if (e.getKeyState() == KeyState.RELEASE) return;
 		
 		if (this.index_edit != -1 && this.index_edit < this.slots.size()) {
 			Slot s = this.slots.get(this.index_edit);

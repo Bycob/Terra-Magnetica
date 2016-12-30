@@ -81,7 +81,12 @@ public class Material {
 	 * @param painter
 	 */
 	public void use(Painter painter) {
-		painter.getCurrentProgram().setUniform3f(StdUniform.Material.DIFFUSE, this.diffuse.getRedf(), this.diffuse.getGreenf(), this.diffuse.getBluef());
+		Program program = painter.getCurrentProgram();
+		program.setUniform3f(StdUniform.Material.DIFFUSE, this.diffuse.getRedf(), this.diffuse.getGreenf(), this.diffuse.getBluef());
+		program.setUniform3f(StdUniform.Material.SPECULAR, this.specular.getRedf(), this.specular.getGreenf(), this.specular.getBluef());
+		program.setUniform3f(StdUniform.Material.AMBIENT, this.ambient.getRedf(), this.ambient.getGreenf(), this.ambient.getBluef());
+		program.setUniform1f(StdUniform.Material.SPECULAR_INTENSITY, this.specularIntensity);
+		program.setUniform1f(StdUniform.Material.SHININESS, this.specularShininess);
 		
 		if (this.tex.getGLTextureID() == 0) {
 			painter.setTexture(null);

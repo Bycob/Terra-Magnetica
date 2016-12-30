@@ -19,13 +19,38 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.gui;
 
+import org.lwjgl.glfw.GLFW;
+
 public class KeyboardEvent {
 	
 	private char character;
 	private int key;
-	private boolean keyState;
+	private KeyState keyState;
 	
-	public KeyboardEvent(char character, int key, boolean keyState) {
+	public enum KeyState {
+		PRESS,
+		RELEASE,
+		REPEAT;
+		
+		public static KeyState getForGLFWEnum(int glfwEnum) {
+			switch (glfwEnum) {
+			case GLFW.GLFW_PRESS :
+				return PRESS;
+			case GLFW.GLFW_RELEASE :
+				return RELEASE;
+			case GLFW.GLFW_REPEAT :
+				return REPEAT;
+			}
+			
+			throw new IllegalArgumentException("Invalid GLFW enum");
+		}
+	}
+	
+	public KeyboardEvent(char character, int key, int keyStateGLFWEnum) {
+		this(character, key, KeyState.getForGLFWEnum(keyStateGLFWEnum));
+	}
+	
+	public KeyboardEvent(char character, int key, KeyState keyState) {
 		this.character = character;
 		this.key = key;
 		this.keyState = keyState;
@@ -39,7 +64,9 @@ public class KeyboardEvent {
 		return key;
 	}
 	
-	public boolean getKeyState() {
+	/** @returns L'état de la touche, décrit par les constantes GLFW (GLFW_PRESS,
+	 * GLFW_RELEASED, GLFW_REPEAT) */
+	public KeyState getKeyState() {
 		return keyState;
 	}
 }
