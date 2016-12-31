@@ -465,7 +465,8 @@ public class Painter {
 		flush();
 		
 		if (this.viewport != null) {
-			this.viewport.myVAO.destroyAll();
+			if (this.viewport.myVAO != null) 
+				this.viewport.myVAO.destroyAll();
 		}
 		
 		this.viewport = viewport;
