@@ -19,8 +19,17 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.game.gui;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+
 import org.lwjgl.glfw.GLFW;
 import org.terramagnetica.game.TerraMagnetica;
+import org.terramagnetica.game.TerraMagneticaGL;
+import org.terramagnetica.opengl.engine.Painter;
+import org.terramagnetica.opengl.engine.ProgramRegistry;
+import org.terramagnetica.opengl.engine.Shader;
+import org.terramagnetica.opengl.engine.Shader.ShaderType;
+import org.terramagnetica.opengl.engine.ShaderCompilationException;
 import org.terramagnetica.opengl.gui.GuiDialog;
 import org.terramagnetica.opengl.gui.GuiDialogMessage;
 import org.terramagnetica.opengl.gui.GuiWindow;
@@ -102,11 +111,11 @@ public class GameWindow {
 			//-----
 			
 			long totalTime = GuiWindow.getTimeNanos() - startTime;
-			//System.out.println((float) (totalTime) / 1000000);
+			System.out.println((float) (totalTime) / 1000000);
 			//TODO profiling
 			
 			sync(startTime);
-			//System.out.println(((float) (GuiWindow.getTimeNanos() - startTime) / 1000000) + "\n");
+			System.out.println(((float) (GuiWindow.getTimeNanos() - startTime) / 1000000) + "\n");
 		}
 		
 		destroyApp();
@@ -117,7 +126,7 @@ public class GameWindow {
 		long frameDuration = GuiWindow.getTimeNanos() - frameStartTime;
 		long nanosWanted = 1000000000L / this.FPS;
 		
-		while (nanosWanted - frameDuration > 1000000) { // 1 ms
+		while (nanosWanted - frameDuration > 1500000) { // 1.5 ms
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
@@ -175,8 +184,33 @@ public class GameWindow {
 	protected void loadRessources() {
 		RessourcesManager.loadRessourcesGame();
 		
-		//Chargement du shader terramagnetica
-		
+		// Chargement du shader terramagnetica
+		BufferedInputStream bis = null;
+		try {
+			// Lecture du code
+			StringBuilder shaderCode = new StringBuilder();
+			bis = new BufferedInputStream(TerraMagnetica.class.getResourceAsStream("terramagnetica.fs"));
+			RessourcesManager.readFileString(bis, shaderCode);
+			
+			// Compilation du shader
+			Shader tmShader = new Shader(shaderCode.toString(), ShaderType.FRAGMENT_SHADER);
+			
+			// Link et ajout
+			Painter painter = GuiWindow.getInstance().getPainter();
+			ProgramRegistry registry = painter.getProgramRegistry();
+			registry.addProgram(TerraMagneticaGL.PROGRAM_NAME,
+					registry.getInternalShader("default3D.vs"),
+					tmShader,
+					registry.getInternalShader("lighting3D.fs"),
+					registry.getInternalShader("basics3D.fs"));
+			
+			painter.setCurrentProgram(TerraMagneticaGL.PROGRAM_NAME);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		} catch (ShaderCompilationException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/** détruit l'affichage, libère les ressources de mémoires et quitte l'application. */

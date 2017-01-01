@@ -104,6 +104,7 @@ public class Light {
 		return attenuation.clone();
 	}
 	
+	/** Dans l'ordre : Attenuation constante, linéaire, quadratique */
 	public void setAttenuation(Vec3d attenuation) {
 		notifyBeforeChanges();
 		this.attenuation = attenuation.clone();

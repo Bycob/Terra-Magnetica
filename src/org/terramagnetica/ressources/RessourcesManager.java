@@ -288,7 +288,8 @@ public class RessourcesManager {
 	}
 	
 	/**
-	 * Lit la chaine de caractère contenue dans un fichier.
+	 * Lit la chaine de caractère contenue dans un fichier. Le stream est fermé
+	 * automatiquement, même si une erreur survient.
 	 * @param stream - le flux depuis le fichier
 	 * @param sb - le {@link StringBuilder} dans lequel est écrite
 	 * la chaine lue. Faire {@link StringBuilder#toString()} pour la
