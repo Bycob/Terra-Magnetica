@@ -55,6 +55,11 @@ public class RenderElementDialog extends RenderGameDefaultElement {
 	}
 	
 	@Override
+	public boolean isInGame() {
+		return false;
+	}
+	
+	@Override
 	public void render(GamePlayingDefault game, Painter painter) {
 		long time = GuiWindow.getTimeMillis();
 		

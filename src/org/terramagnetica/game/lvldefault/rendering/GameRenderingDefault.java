@@ -22,18 +22,29 @@ package org.terramagnetica.game.lvldefault.rendering;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+import org.terramagnetica.game.TerraMagneticaGL;
 import org.terramagnetica.game.gui.GameRendering;
 import org.terramagnetica.game.lvldefault.GameBufferDefault;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
+import org.terramagnetica.game.lvldefault.MapUpdater;
 import org.terramagnetica.opengl.engine.Camera3D;
 import org.terramagnetica.opengl.engine.Camera3DFlying;
 import org.terramagnetica.opengl.engine.GLConfiguration;
+import org.terramagnetica.opengl.engine.Light;
+import org.terramagnetica.opengl.engine.Light.LightColor;
+import org.terramagnetica.opengl.engine.Light.LightType;
+import org.terramagnetica.opengl.engine.LightModel;
 import org.terramagnetica.opengl.engine.Painter;
+import org.terramagnetica.opengl.engine.Program;
 import org.terramagnetica.opengl.gui.GuiBorderLayout;
 import org.terramagnetica.opengl.gui.GuiFrameContainer;
 import org.terramagnetica.opengl.miscellaneous.GlobalAnimationManager;
 
-public class GameRenderingDefault extends GameRendering {
+import net.bynaryscode.util.Color4f;
+import net.bynaryscode.util.maths.geometric.Vec3d;
+
+public class GameRenderingDefault extends GameRendering implements TerraMagneticaGL {
 	
 	public static final float DEFAULT_FOV = 90;
 	
@@ -48,6 +59,9 @@ public class GameRenderingDefault extends GameRendering {
 	private PortalNameDisplayer dispPortalElement = new PortalNameDisplayer("");
 	
 	private List<RenderGameDefaultElement> renderingList = new ArrayList<RenderGameDefaultElement>();
+	
+	// Variable d'états
+	private boolean isScrolling = false;
 	
 	public GameRenderingDefault(GamePlayingDefault game) {
 		this.camera = new Camera3DFlying(0, -1.8, 2.5,
@@ -98,6 +112,7 @@ public class GameRenderingDefault extends GameRendering {
 		
 		if (toDraw != null) {
 			painter.flush();
+			Program program = painter.getCurrentProgram();
 			
 			//placement de la caméra
 			if (this.trackPoint == null && toDraw.getPlayer() != null) {
@@ -107,9 +122,40 @@ public class GameRenderingDefault extends GameRendering {
 			this.camera.moveCenterPoint(this.trackPoint.getX(), - this.trackPoint.getY(), this.trackPoint.getZ());
 			this.camera.setFOV(DEFAULT_FOV);
 			
+			// Lumière
+			LightModel lightModel = painter.getLightModel();
+			Light light0 = lightModel.getLight0();
+			
+			if (toDraw.hasLimitedVision()) {
+				//TODO en fonction de la couleur du niveau
+				light0.setLightColor(LightColor.AMBIENT, new Color4f(0.2f, 0.2f, 0.2f));
+				light0.setLightColor(LightColor.DIFFUSE, new Color4f(1f, 1f, 1f));
+				light0.setAttenuation(new Vec3d(1, 0.3, 0.05));
+				
+				light0.setPosition(new Vec3d(this.trackPoint.getX(), -this.trackPoint.getY(), 0.5));
+				light0.setType(LightType.POINT);
+				program.setUniform1f(VISION_SIZE, MapUpdater.MAX_DISTANCE_LIMITED);
+			}
+			else {
+				light0.setLightColor(LightColor.AMBIENT, new Color4f(0.5f, 0.5f, 0.5f));
+				light0.setLightColor(LightColor.DIFFUSE, new Color4f(0.8f, 0.8f, 0.8f));
+				
+				light0.setPosition(new Vec3d(0, 0, 1));
+				light0.setType(LightType.DIRECTIONNAL);
+				program.setUniform1f(VISION_SIZE, -1);
+			}
+			
+			// Définition des uniforms propres à Terra Magnetica
+			program.setUniform3f(PLAYER_POS, (float) this.trackPoint.getX(), (float) (- this.trackPoint.getY()), (float) this.trackPoint.getZ());
+			program.setUniform3f(LEVEL_COLOR, 1, 1, 1);
+			
+			// Rendu de chaque unité
 			for (RenderGameDefaultElement render : this.renderingList) {
+				program.setUniform1i(IN_GAME_FLAG, render.isInGame() ? GL11.GL_TRUE : GL11.GL_FALSE);
 				render.render(toDraw, painter);
 			}
+
+			program.setUniform1i(IN_GAME_FLAG, GL11.GL_FALSE);
 		}
 	}
 	
@@ -136,6 +182,14 @@ public class GameRenderingDefault extends GameRendering {
 	
 	public void updateAnimations() {
 		
+	}
+	
+	public void setScrolling(boolean scrolling) {
+		this.isScrolling = scrolling;
+	}
+
+	public boolean isScrolling() {
+		return this.isScrolling;
 	}
 	
 	@Override

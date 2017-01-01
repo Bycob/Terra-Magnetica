@@ -64,6 +64,11 @@ public class MapRenderer extends RenderGameDefaultElement {
 	}
 	
 	@Override
+	public boolean isInGame() {
+		return false;
+	}
+	
+	@Override
 	public void render(GamePlayingDefault game, Painter painter) {
 		if (this.theMap != null) {
 			painter.set2DConfig();

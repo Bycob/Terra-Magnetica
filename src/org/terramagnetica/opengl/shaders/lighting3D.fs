@@ -45,6 +45,17 @@ in vec2 fragTexCoord;
 in vec3 fragNormal;
 in vec4 fragColor;
 
+float getAttenuation(int lightID, float fragToLightLength) {
+	float attenuation = 1;
+    if (light[lightID].type == POINT) {
+        attenuation *= 1 / (light[lightID].attenuation.x
+        	+ fragToLightLength * light[lightID].attenuation.y
+        	+ fragToLightLength * fragToLightLength * light[lightID].attenuation.z);
+    }
+    
+    return attenuation;
+}
+
 vec4 applyLight(int lightID) {
 	if (light[lightID].activated == 0) {
 		return vec4(0, 0, 0, 1);
@@ -76,12 +87,7 @@ vec4 applyLight(int lightID) {
 
 
     //atténuation en mode POINT_LIGHT
-    float attenuation = 1;
-    if (light[lightID].type == POINT) {
-        attenuation *= 1 / (light[lightID].attenuation.x
-        	+ fragToLightLength * light[lightID].attenuation.y
-        	+ fragToLightLength * fragToLightLength * light[lightID].attenuation.z);
-    }
+    float attenuation = getAttenuation(lightID, fragToLightLength);
 	
 	
     //Calcul de l'effet de la lumière sur le matériau

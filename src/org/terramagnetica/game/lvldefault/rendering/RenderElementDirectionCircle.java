@@ -46,6 +46,11 @@ public class RenderElementDirectionCircle extends RenderGameDefaultElement {
 	private double arrowSizeX = sizeX / 4, arrowSizeY = sizeY / 4;
 	
 	@Override
+	public boolean isInGame() {
+		return false;
+	}
+	
+	@Override
 	public void render(GamePlayingDefault game, Painter painter) {
 		ArrayList<IGoal> list = extractEntities(game);
 		PlayerDefault player = game.getPlayer();

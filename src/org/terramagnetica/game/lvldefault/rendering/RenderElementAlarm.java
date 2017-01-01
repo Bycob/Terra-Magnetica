@@ -44,6 +44,11 @@ public class RenderElementAlarm extends RenderGameDefaultElement {
 	private Timer chrono = new Timer();
 	
 	@Override
+	public boolean isInGame() {
+		return false;
+	}
+	
+	@Override
 	public void render(GamePlayingDefault game, Painter painter) {
 		updateActivation(game);
 		if (!this.activated) return;

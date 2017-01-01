@@ -146,7 +146,6 @@ public class EventScrolling extends GameEvent {
 	public class InterruptionScrolling extends InterruptionPhasesLvlDefault {
 		
 		private GamePlayingDefault game;
-		private boolean limitedVision;
 		
 		public InterruptionScrolling(GamePlayingDefault game) {
 			this.game = game;
@@ -176,13 +175,12 @@ public class EventScrolling extends GameEvent {
 		
 		@Override
 		public void start() {
-			this.limitedVision = game.hasLimitedVision();
-			this.game.setLimitedVision(false);
+			game.render.setScrolling(true);
 		}
 		
 		@Override
 		public void onEnd() {
-			this.game.setLimitedVision(this.limitedVision);
+			game.render.setScrolling(false);
 		}
 	}
 }

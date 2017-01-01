@@ -36,7 +36,12 @@ import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.RectangleDouble;
 
 public class RenderElementInventory extends RenderGameDefaultElement {
-
+	
+	@Override
+	public boolean isInGame() {
+		return false;
+	}
+	
 	@Override
 	public void render(GamePlayingDefault game, Painter painter) {
 

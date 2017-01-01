@@ -31,9 +31,6 @@ import org.terramagnetica.game.lvldefault.MapUpdater;
 import org.terramagnetica.opengl.engine.CameraFrustum;
 import org.terramagnetica.opengl.engine.GLConfiguration;
 import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
-import org.terramagnetica.opengl.engine.Light;
-import org.terramagnetica.opengl.engine.Light.LightType;
-import org.terramagnetica.opengl.engine.LightModel;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.Renderable;
 import org.terramagnetica.opengl.engine.RenderableCompound;
@@ -136,12 +133,6 @@ public class RenderEntities extends RenderGameDefaultElement {
 		painter.setConfiguration(config);
 		this.frustum = painter.createCameraFrustum();
 		
-		//Configuration de la lumière
-		LightModel lights = painter.getLightModel();
-		Light light = lights.getLight0();
-		light.setPosition(0, 0, 1);
-		light.setType(LightType.DIRECTIONNAL);
-		
 		// Définition des variables nécessaires au rendu
 		ArrayList<RenderEntityUnit> renderList = getRenderList(game.getEntities());
 		MapUpdater miniMapManager = game.getAspect(MapUpdater.class);
@@ -153,7 +144,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 			Color4f initColor = r.render.getColor();
 			
 			//Si la vision limitée est activée, on ne dessine pas tout
-			if (game.hasLimitedVision()) {
+			if (game.hasLimitedVision() && !game.render.isScrolling()) {
 				boolean found = false;
 				
 				for (MapLandscape ml : limVisionCaseArray) {

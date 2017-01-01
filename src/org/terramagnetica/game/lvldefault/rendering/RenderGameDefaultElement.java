@@ -38,5 +38,9 @@ public abstract class RenderGameDefaultElement {
 		return this.sharedConfiguration == null ? GLConfiguration.default3DConfiguration() : this.sharedConfiguration;
 	}
 	
+	public boolean isInGame() {
+		return true;
+	}
+	
 	public abstract void render(GamePlayingDefault game, Painter painter);
 }

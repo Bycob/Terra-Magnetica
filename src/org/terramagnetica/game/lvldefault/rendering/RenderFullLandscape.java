@@ -27,12 +27,9 @@ import org.terramagnetica.game.lvldefault.RenderRegistry;
 import org.terramagnetica.opengl.engine.CameraFrustum;
 import org.terramagnetica.opengl.engine.GLConfiguration;
 import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
-import org.terramagnetica.opengl.engine.Light;
-import org.terramagnetica.opengl.engine.Light.LightColor;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.Renderable;
 
-import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.RectangleInt;
 import net.bynaryscode.util.maths.geometric.Vec2d;
 import net.bynaryscode.util.maths.geometric.Vec2i;
@@ -56,10 +53,6 @@ public class RenderFullLandscape extends RenderGameDefaultElement {
 		painter.setConfiguration(config);
 		config.setPropertieEnabled(GLProperty.LIGHTING, true);
 		
-		Light light = painter.getLightModel().getLight0();
-		light.setLightColor(LightColor.AMBIENT, new Color4f(0.5f, 0.5f, 0.5f, 0.5f));
-		light.setPosition(0, 0, 1);
-		
 		this.frustum = painter.createCameraFrustum();
 		
 		//Initialisation des variables
@@ -67,7 +60,6 @@ public class RenderFullLandscape extends RenderGameDefaultElement {
 		Renderable landRender = null;
 		
 		MapUpdater miniMapManager = game.getAspect(MapUpdater.class);
-		MapRenderer miniMapRenderer = miniMapManager.getRenderer();
 		MapLandscape[] limVisionArray = miniMapManager.getMap().getAllLandscapeMapped();
 		
 		
@@ -104,7 +96,7 @@ public class RenderFullLandscape extends RenderGameDefaultElement {
 				if (!isInFrustum(l)) continue;
 				
 				//Si la vision limitée est activée, on ne dessine pas tout
-				if (game.hasLimitedVision()) {
+				if (game.hasLimitedVision() && ! game.render.isScrolling()) {
 					boolean found = false;
 					for (MapLandscape ml : limVisionArray) {
 						if (Math.abs(ml.getCaseX() - x) <= 1 && Math.abs(ml.getCaseY() - y) <= 1) {
@@ -113,11 +105,6 @@ public class RenderFullLandscape extends RenderGameDefaultElement {
 					}
 					
 					if (!found) continue;
-					else {
-						float alpha = miniMapRenderer.getCaseColor(game.getPlayer().getDistancef(l) - 1).getAlphaf()
-								/ MapRenderer.CASE_MAX_ALPHA;
-						light.setLightColor(LightColor.DIFFUSE, new Color4f(alpha, alpha, alpha, 0.5f));
-					}
 				}
 				
 				landRender = l.getRender(game.getDecorType(), this.renderRegistry);
