@@ -312,7 +312,7 @@ public class Model3D {
 		}
 		
 		buffer.flip();
-		vbo.setData(buffer);
+		vbo.setData(painter, buffer);
 		
 		this.myVAO.setAttrib(StdAttrib.VERTEX, vbo, 3, GL11.GL_FLOAT, false, stride, 0);
 		this.myVAO.setAttrib(StdAttrib.TEX_COORD, vbo, 2, GL11.GL_FLOAT, false, stride, 3 * 4);

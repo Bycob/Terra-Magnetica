@@ -69,16 +69,11 @@ public class VAO {
 		}
 	}
 	
-	public boolean isBound() {
+	public boolean isBound(Painter painter) {
 		return GL11.glGetInteger(GL30.GL_VERTEX_ARRAY_BINDING) == this.id;
 	}
 	
-	public void bind() {
-		if (!isBound()) GL30.glBindVertexArray(this.id);
-		if (this.indices != null) this.indices.bind();
-	}
-	
-	public void unbind() {
+	public static void unbind(Painter painter) {
 		GL30.glBindVertexArray(0);
 	}
 	
@@ -118,15 +113,19 @@ public class VAO {
 		return this.indices;
 	}
 	
-	public void bind(Program program) {
-		bind();
+	public void bind(Painter painter) {
+
+		painter.getBindings().bindVertexArray(this.id);
+		if (this.indices != null) this.indices.bind(painter);
+		
+		Program program = painter.getCurrentProgram();
 		
 		if (program == this.currentProgram) return;
 		this.currentProgram = program;
 		
 		for (Entry<String, Attrib> entry : this.attribs.entrySet()) {
 			Attrib attrib = entry.getValue();
-			attrib.buffer.bind();
+			attrib.buffer.bind(painter);
 			
 			int attribID = program.attribID(attrib.name);
 			GL20.glEnableVertexAttribArray(attribID);

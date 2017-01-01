@@ -92,10 +92,10 @@ public class GLConfiguration implements Cloneable {
 			
 			//Propriétés openGL gérées par glEnable
 			if (prop.glConst != -1) {
-				if (activated && !GL11.glIsEnabled(prop.glConst)) {
+				if (activated) {
 					GL11.glEnable(prop.glConst);
 				}
-				else if (!activated && GL11.glIsEnabled(prop.glConst)) {
+				else {
 					GL11.glDisable(prop.glConst);
 				}
 			}
@@ -155,7 +155,7 @@ public class GLConfiguration implements Cloneable {
 		return this.camera instanceof Camera3D;
 	}
 	
-	public void setup() {
+	public void setup(GLConfiguration from) {
 		if (this.painter == null) return;
 		
 		//Activation ou desactivation des différentes propriétés.

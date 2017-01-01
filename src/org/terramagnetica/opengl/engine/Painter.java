@@ -86,9 +86,11 @@ public class Painter {
 	private static final int STRIDE = 3 * 4 + 2 * 4 + 3 * 4 + 4;
 	
 	private GuiWindow myWindow;
+	private GLBindings bindings = new GLBindings(this);
 	
 	private ProgramRegistry programs;
 	private Program currentProgram;
+	
 	private GLConfiguration configuration = GLConfiguration.default2DConfiguration();
 	private final GLConfiguration painter2DConfig = GLConfiguration.default2DConfiguration();
 	private final GLConfiguration painter3DConfig = GLConfiguration.default3DConfiguration();
@@ -154,7 +156,7 @@ public class Painter {
 	}
 	
 	public void initFrame() {
-		this.configuration.setup();
+		this.configuration.setup(null);
 	}
 	
 	public void flushAndSet(GLConfiguration config) {
@@ -175,7 +177,7 @@ public class Painter {
 		beforeDrawing();
 		
 		//Début
-		this.defaultVAO.bind();
+		this.defaultVAO.bind(this);
 		
 		if (this.texture != null) {
 			bindTexture(this.texture.getGLTextureID());
@@ -184,8 +186,8 @@ public class Painter {
 			bindTexture(0);
 		}
 
-		this.defaultVAO.getAttribBuffer(StdAttrib.VERTEX).setData(this.dataBuf); // Le même buffer pour tous
-		this.defaultVAO.getIndicesBuffer().setData(this.indices);
+		this.defaultVAO.getAttribBuffer(StdAttrib.VERTEX).setData(this, this.dataBuf); // Le même buffer pour tous
+		this.defaultVAO.getIndicesBuffer().setData(this, this.indices);
 		
 		//GL11.glDrawArrays(this.primitive.glDrawMode, 0, this.verticesCount);
 		GL11.glDrawElements(this.primitive.glDrawMode, this.indicesCount, GL11.GL_UNSIGNED_INT, 0);
@@ -207,7 +209,7 @@ public class Painter {
 			bindTexture(0);
 		}
 		
-		vao.bind(this.currentProgram);
+		vao.bind(this);
 		GL11.glDrawArrays(this.primitive.glDrawMode, 0, vertCount);
 		
 		afterDrawing();
@@ -331,17 +333,22 @@ public class Painter {
 		return this.myWindow;
 	}
 	
+	public GLBindings getBindings() {
+		return this.bindings;
+	}
+	
 	public void setConfiguration(GLConfiguration config) {
 		if (config == null) throw new NullPointerException("config == null");
 		
 		flush();
-		this.configuration.clearConfig();
-		this.configuration.painter = null;
+		GLConfiguration oldConfig = this.configuration;
+		oldConfig.clearConfig();
+		oldConfig.painter = null;
 		
 		this.configuration = config;
 		
 		this.configuration.painter = this;
-		this.configuration.setup();
+		this.configuration.setup(oldConfig);
 		
 		this.clearTransforms();
 	}
@@ -366,8 +373,8 @@ public class Painter {
 			this.currentProgram = program;
 			this.currentProgram.use();
 			
-			this.configuration.setup();
-			this.defaultVAO.bind(this.currentProgram);
+			this.configuration.setup(null);
+			this.defaultVAO.bind(this);
 		}
 	}
 	
@@ -495,7 +502,7 @@ public class Painter {
 			}
 			
 			vertices.flip();
-			vao.getAttribBuffer(StdAttrib.VERTEX).setData(vertices);
+			vao.getAttribBuffer(StdAttrib.VERTEX).setData(this, vertices);
 			
 			this.viewport.vertCount = vertCount;
 			this.viewport.myVAO = vao;
@@ -506,7 +513,7 @@ public class Painter {
 		GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_REPLACE, GL11.GL_REPLACE);
 		this.currentProgram.setUniform1i(StdUniform.STENCIL, GL11.GL_TRUE);
 		
-		this.viewport.myVAO.bind(this.currentProgram);
+		this.viewport.myVAO.bind(this);
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, this.viewport.vertCount);
 		
 		GL11.glColorMask(true, true, true, true);

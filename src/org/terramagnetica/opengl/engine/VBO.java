@@ -51,12 +51,16 @@ public class VBO {
 		GL15.glDeleteBuffers(this.id);
 	}
 	
-	public void bind() {
-		if (!isBound()) GL15.glBindBuffer(this.target, this.id);
+	public void bind(Painter painter) {
+		painter.getBindings().bindBuffer(this.target, this.id);
 	}
 	
-	public static void unbindArrayBuffer() {
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	public static void unbindArrayBuffer(Painter painter) {
+		painter.getBindings().bindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
+	public static void unbindElementArrayBuffer(Painter painter) {
+		painter.getBindings().bindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 	
 	public boolean isBound() {
@@ -68,23 +72,23 @@ public class VBO {
 		return this.target;
 	}
 	
-	public void setData(ByteBuffer data) {
-		bind();
+	public void setData(Painter painter, ByteBuffer data) {
+		bind(painter);
 		GL15.glBufferData(this.target, data, this.usage);
 	}
 	
-	public void setData(FloatBuffer data) {
-		bind();
+	public void setData(Painter painter, FloatBuffer data) {
+		bind(painter);
 		GL15.glBufferData(this.target, data, this.usage);
 	}
 	
-	public void setData(ShortBuffer data) {
-		bind();
+	public void setData(Painter painter, ShortBuffer data) {
+		bind(painter);
 		GL15.glBufferData(this.target, data, this.usage);
 	}
 	
-	public void setData(IntBuffer data) {
-		bind();
+	public void setData(Painter painter, IntBuffer data) {
+		bind(painter);
 		GL15.glBufferData(this.target, data, this.usage);
 	}
 	
