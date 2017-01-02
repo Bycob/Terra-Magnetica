@@ -40,7 +40,11 @@ public class ProgramRegistry {
 		this.painter = painter;
 		
 		//Chargement des différents programmes
-		addInternalProgram("default3D", "default3D.vs", "default3D.fs", "basics3D.fs", "lighting3D.fs");
+		boolean defaultProgramLoaded = addInternalProgram("default3D", "default3D.vs", "default3D.fs", "basics3D.fs", "lighting3D.fs");
+		
+		if (!defaultProgramLoaded) {
+			throw new RuntimeException("Un ou plusieurs shaders n'ont pas été trouvés lors de la création du programme par défaut");
+		}
 		
 		//Positionnement du programme par défaut
 		this.programs.put(DEFAULT_PROGRAM_ID, getProgram("default3D"));

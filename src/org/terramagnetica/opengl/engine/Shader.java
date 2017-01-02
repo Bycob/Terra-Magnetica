@@ -45,7 +45,7 @@ public class Shader {
 	
 	public static Shader loadInternalShader(String filename, ShaderType type) throws IOException, ShaderCompilationException {
 		StringBuilder output = new StringBuilder(1024);
-		InputStream stream = Shader.class.getResourceAsStream("../shaders/" + filename);
+		InputStream stream = org.terramagnetica.opengl.shaders.Anchor.class.getResourceAsStream(filename);
 		
 		if (stream == null) {
 			throw new FileNotFoundException(filename + " is not an internal shader.");
