@@ -24,11 +24,13 @@ public class LauncherCreator {
 	/** les nom des bibliothèques situées dans BIN */
 	public static final String[] libraries = new String[] {
 		//Le jeu
-		"terramagnetica-0.4.2.jar",
+		"terramagnetica-0.4.3.jar",
 		
 		//lwjgl
 		"lwjgl.jar",
-		"lwjgl_util.jar",
+		
+		//joml
+		"joml-1.9.0.jar",
 		
 		//ogg vorbis
 		"vorbisspi1.0.3.jar",
