@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.terramagnetica.game.GameEngine;
 import org.terramagnetica.game.lvldefault.Entity;
-import org.terramagnetica.game.lvldefault.GameAspect;
+import org.terramagnetica.game.lvldefault.GameEngineModule;
 import org.terramagnetica.game.lvldefault.GamePlayingDefault;
 import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
@@ -42,7 +42,7 @@ import net.bynaryscode.util.maths.geometric.Vec2i;
  * @author Louis JEAN
  *
  */
-public class ControlPaneSystemManager extends GameAspect {
+public class ControlPaneSystemManager extends GameEngineModule {
 	
 	/*
 	 * Les couleurs ci-dessous sont éditables.
@@ -103,10 +103,9 @@ public class ControlPaneSystemManager extends GameAspect {
 		for (Entity e : this.game.getEntities()) {
 			
 			if (e instanceof BarrierStateListener) {
-				
 				BarrierStateListener l = (BarrierStateListener) e;
+				
 				if (handle.getColor().equals(l.getColor())) {
-					
 					handle.addListener(l);
 				}
 			}
@@ -124,6 +123,7 @@ public class ControlPaneSystemManager extends GameAspect {
 	 */
 	public void desactivate(Color4f barrierColor) {
 		BarrierHandle handle = this.handleMap.get(barrierColor);
+		
 		if (handle != null) {
 			this.game.interruptGame(new InterruptionChangeState(handle, false, this.game));
 		}
@@ -144,10 +144,10 @@ public class ControlPaneSystemManager extends GameAspect {
 		if (game instanceof GamePlayingDefault) {
 			this.game = (GamePlayingDefault) game;
 			this.handleInitialized = false;
-			return;
 		}
-		
-		throw new IllegalArgumentException();
+		else {
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	@Override

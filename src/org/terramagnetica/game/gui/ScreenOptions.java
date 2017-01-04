@@ -106,7 +106,7 @@ public class ScreenOptions extends GameScreen {
 		}
 		
 		if (this.optionFactory != null) {
-			GuiActionEvent ev = this.optionFactory.listen();
+			GuiActionEvent ev = this.optionFactory.processLogic();
 			if (ev != GuiActionEvent.NULL_EVENT) return ev;
 		}
 		
@@ -120,12 +120,21 @@ public class ScreenOptions extends GameScreen {
 	protected abstract class OptionPanelFactory {
 		
 		protected GuiContainer panel = new GuiContainer();
+		protected GuiButtonText1 backButton;
+		
+		protected OptionPanelFactory() {
+			this.backButton = new GuiButtonText1(0.1, 0.1, 1, -0.1, "Options générales");
+		}
 		
 		public GuiContainer getOptPanel() {
 			return this.panel;
 		}
 		
-		public GuiActionEvent listen() {
+		public GuiActionEvent processLogic() {
+			if (this.backButton.processLogic() == GuiActionEvent.CLICK_EVENT) {
+				setOptionPanel(new OptionMainPanel());
+			}
+			
 			return GuiActionEvent.NULL_EVENT;
 		}
 	}
@@ -133,17 +142,23 @@ public class ScreenOptions extends GameScreen {
 	protected class OptionMainPanel extends OptionPanelFactory {
 		
 		private GuiButtonText1 controls;
+		private GuiButtonText1 graphics;
 		
 		public OptionMainPanel() {
 			this.controls = new GuiButtonText1(-1.1, 0.6, -0.1, 0.4, "Contrôles");
+			this.graphics = new GuiButtonText1(-1.1, 0.2, -0.1, 0, "Options graphiques");
 			
 			this.panel.add(this.controls);
+			this.panel.add(this.graphics);
 		}
 		
 		@Override
-		public GuiActionEvent listen() {
+		public GuiActionEvent processLogic() {
 			if (this.controls.processLogic() == GuiActionEvent.CLICK_EVENT) {
 				setOptionPanel(new OptionControlsPanel());
+			}
+			if (this.graphics.processLogic() == GuiActionEvent.CLICK_EVENT) {
+				setOptionPanel(new OptionGraphicsPanel());
 			}
 			
 			return GuiActionEvent.NULL_EVENT;
@@ -152,14 +167,12 @@ public class ScreenOptions extends GameScreen {
 	
 	protected class OptionControlsPanel extends OptionPanelFactory {
 		
-		private GuiButtonText1 retour;
 		private GuiControlsComponent controlsSetter;
 		
 		public OptionControlsPanel() {
-			this.retour = new GuiButtonText1(0.1, 0.1, 1, -0.1, "Options générales");
 			this.controlsSetter = new GuiControlsComponent(TerraMagnetica.theGame != null ? TerraMagnetica.theGame.options : new Options());
 			GuiContainer c1 = new GuiContainer();
-			c1.add(this.retour);
+			c1.add(this.backButton);
 			
 			this.panel.setLayout(new GuiBorderLayout());
 			this.panel.add(c1, GuiBorderLayout.BOTTOM);
@@ -167,13 +180,17 @@ public class ScreenOptions extends GameScreen {
 		}
 		
 		@Override
-		public GuiActionEvent listen() {
-			
-			if (this.retour.processLogic() == GuiActionEvent.CLICK_EVENT) {
-				setOptionPanel(new OptionMainPanel());
-			}
+		public GuiActionEvent processLogic() {
+			super.processLogic();
 			
 			return GuiActionEvent.NULL_EVENT;
+		}
+	}
+	
+	protected class OptionGraphicsPanel extends OptionPanelFactory {
+		
+		public OptionGraphicsPanel() {
+			this.panel.add(this.backButton);
 		}
 	}
 }

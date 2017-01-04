@@ -20,5 +20,5 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 package org.terramagnetica.opengl.engine;
 
 public class Scene {
-	//TODO objet Scene pour les ambience de salles (penser à nettoyer RenderableModel3D ensuite)
+	//TODO objet Scene pour les ambience de salles
 }

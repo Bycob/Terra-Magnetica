@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
 import org.terramagnetica.opengl.engine.Painter.Primitive;
 
 import net.bynaryscode.util.FileFormatException;
@@ -120,6 +121,7 @@ public class Model3D {
 	 * @throws FileFormatException si les fichiers passés en paramètres
 	 * ne sont pas codés comme des fichiers {@code .obj} ou {@code .mtl}
 	 */
+	// TODO une gestion des erreurs gérée par un objet tiers... comme ça on peut lire des fichiers dont la description est incomplète !
 	public static Model3D parse(String fileObj, String fileMtl, boolean allowChild)
 		throws FileFormatException {
 		Model3D parsed = new Model3D();
@@ -275,14 +277,15 @@ public class Model3D {
 			generateBuffer(painter);
 		}
 		
+		GLConfiguration config = painter.getConfiguration();
+		config.setPropertieEnabled(GLProperty.COLOR, false);
 		painter.setPrimitive(Primitive.TRIANGLES);
 		this.material.use(painter);
-		painter.getCurrentProgram().setUniform1i(StdUniform.USE_COLOR, 0); // FIXME intégrer ça à la configuration
 		
 		painter.drawVAO(this.myVAO, this.faces.size());
 		
 		this.material.unset(painter);
-		painter.getCurrentProgram().setUniform1i(StdUniform.USE_COLOR, 1);
+		config.setPropertieEnabled(GLProperty.COLOR, true); // TODO configuration par défaut.
 		
 		for (Model3D child : this.children) {
 			child.draw(painter);

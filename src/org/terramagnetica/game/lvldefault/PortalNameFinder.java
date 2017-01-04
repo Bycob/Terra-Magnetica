@@ -24,7 +24,7 @@ import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
 
-public class PortalNameFinder extends GameAspect {
+public class PortalNameFinder extends GameEngineModule {
 	
 	private GamePlayingDefault game;
 	

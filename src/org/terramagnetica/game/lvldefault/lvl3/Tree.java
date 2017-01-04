@@ -51,7 +51,7 @@ public class Tree extends Entity {
 
 	@Override
 	protected void createRender() {
-		this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.get(this.treeModelID)));
+		this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.getNotNull(this.treeModelID)));
 	}
 	
 	@Override

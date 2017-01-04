@@ -27,9 +27,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.terramagnetica.game.TerraMagnetica;
 import org.terramagnetica.opengl.engine.Model3D;
 
 import net.bynaryscode.util.FileFormatException;
+import net.bynaryscode.util.Log;
 
 public final class ModelLoader {
 	
@@ -111,6 +113,10 @@ public final class ModelLoader {
 		try {
 			ret = Model3D.parse(objStr, mtlStr, allowChild);
 		} catch (FileFormatException e) {
+			Log log = TerraMagnetica.theGame.log;
+			if (log != null) {
+				log.addErrorMessage("Fichier " + path + " non lu.", e);
+			}
 			e.printStackTrace();
 			return null;
 		}

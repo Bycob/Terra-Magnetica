@@ -87,7 +87,7 @@ public class Portal extends CaseEntity implements IGoal {
 			String key = modelIDMap.get(this.type);
 			if (key != null && this.skin != null) {
 				if (this.onWall) {
-					this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.get(key)).withRotationOffset(0, 0, this.orientation));
+					this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.getNotNull(key)).withRotationOffset(0, 0, this.orientation));
 					return;
 				}
 			}

@@ -36,7 +36,6 @@ uniform struct {
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
-	float specularIntensity;
 	float shininess;
 } material;
 
@@ -102,15 +101,12 @@ vec4 applyLight(int lightID) {
 
     //intensité speculaire
     vec3 specularIntensity = vec3(pow(max(dot(fragToCam, reflect(fragToLight, normal)), 0), material.shininess));
-    specularIntensity *= diffuseIntensity * light[lightID].specular * material.specular * material.specularIntensity;
+    specularIntensity *= diffuseIntensity * light[lightID].specular * material.specular;
 
 
     //Calcul final
     vec3 gamma = vec3(1);
-    return vec4(pow(ambientIntensity + attenuation * (diffuseIntensity), gamma), 1);
-    
-    
-    //TODO DEBUGGER LUMIERE SPECULAIRE !!!!!!!
+    return vec4(pow(ambientIntensity + attenuation * (diffuseIntensity + specularIntensity), gamma), 1);
 }
 
 vec4 applyLights(vec4 initColor) {

@@ -26,7 +26,7 @@ import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
 
-public class LampState extends GameAspect {
+public class LampState extends GameEngineModule {
 	
 	private GamePlayingDefault game;
 	private boolean lampState;

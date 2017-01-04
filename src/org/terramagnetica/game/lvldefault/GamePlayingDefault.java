@@ -45,7 +45,7 @@ import net.bynaryscode.util.maths.geometric.Vec2i;
  * les composants du jeu, leurs déplacements, interactions, les entrées
  * provenant du joueur...<p>
  * On peut y ajouter des modules qui modifient certains élements du
- * gameplay via la méthode {@link #addAspect(GameAspect)}.
+ * gameplay via la méthode {@link #addAspect(GameEngineModule)}.
  * @author Louis JEAN
  */
 public class GamePlayingDefault extends GameEngine implements Cloneable {
@@ -72,7 +72,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	/** Indique que le moteur de jeu n'a pas encore été mis à jour. */
 	private boolean hasntYetStarted = true;
 	
-	private transient Set<GameAspect> moduleList = new HashSet<GameAspect>();
+	private transient Set<GameEngineModule> moduleList = new HashSet<GameEngineModule>();
 	
 	private ArrayList<GameEvent> eventOnChangingRoom = new ArrayList<GameEvent>();
 	private CheckPoint checkPoint = null;
@@ -139,7 +139,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		this.entities.add(this.player);
 		this.player.updateTrackPoint();
 		
-		for (GameAspect aspect : this.moduleList) {
+		for (GameEngineModule aspect : this.moduleList) {
 			aspect.init();
 		}
 		
@@ -344,8 +344,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		
 		MapUpdater updater;
 		if ((updater = this.getAspect(MapUpdater.class)) != null) {
-			updater.setMaxDistance(
-					b ? MapUpdater.MAX_DISTANCE_LIMITED : MapUpdater.MAX_DISTANCE_NOT_LIMITED);
+			updater.setMaxDistance(b ? MapUpdater.MAX_DISTANCE_LIMITED : MapUpdater.MAX_DISTANCE_NOT_LIMITED);
 		}	
 	}
 	
@@ -378,8 +377,8 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	 * en tant qu'objet.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends GameAspect> T getAspect(Class<T> type) {
-		for (GameAspect aspect : this.moduleList) {
+	public <T extends GameEngineModule> T getAspect(Class<T> type) {
+		for (GameEngineModule aspect : this.moduleList) {
 			if (aspect.getClass().equals(type)) {
 				return (T) aspect;
 			}
@@ -395,9 +394,9 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 	 * @param aspect - un module de jeu avec une mission particulière,
 	 * à ajouter au moteur de jeu.
 	 */
-	public void addAspect(GameAspect aspect) {
+	public void addAspect(GameEngineModule aspect) {
 		if (aspect != null) {
-			for (GameAspect principe : this.moduleList) {
+			for (GameEngineModule principe : this.moduleList) {
 				if (principe.getClass().equals(aspect.getClass())) {
 					this.moduleList.remove(principe);
 					break;
@@ -504,7 +503,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		}
 		
 		//Mise à jour des différents modules
-		for (GameAspect aspect : this.moduleList) {
+		for (GameEngineModule aspect : this.moduleList) {
 			aspect.update(delta);
 		}
 		
@@ -654,9 +653,9 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		result.removePlayer();
 		result.entities.add(result.player);
 		
-		result.moduleList = new HashSet<GameAspect>();
+		result.moduleList = new HashSet<GameEngineModule>();
 		
-		for (GameAspect aspect : this.moduleList) {
+		for (GameEngineModule aspect : this.moduleList) {
 			result.moduleList.add(aspect.clone());
 		}
 		
@@ -677,7 +676,7 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 				Room.landToByteArray(this.landscape, this.landscape.length, this.landscape[0].length), 109);
 		out.writeArrayField(this.entities.toArray(new Entity[this.entities.size()]), 110);
 		
-		out.writeArrayField(this.codablePrincipList().toArray(new GameAspect[0]), 111);
+		out.writeArrayField(this.codablePrincipList().toArray(new GameEngineModule[0]), 111);
 		
 		out.writeArrayField(Room.getInfos(this.landscape).toArray(new LandscapeInfos[0]), 112);
 		
@@ -688,9 +687,9 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		}
 	}
 	
-	private List<GameAspect> codablePrincipList() {
-		List<GameAspect> result = new ArrayList<GameAspect>();
-		for (GameAspect aspect : this.moduleList) {
+	private List<GameEngineModule> codablePrincipList() {
+		List<GameEngineModule> result = new ArrayList<GameEngineModule>();
+		for (GameEngineModule aspect : this.moduleList) {
 			if (aspect.shouldSave()) {
 				result.add(aspect);
 			}
@@ -760,11 +759,11 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		
 		//Modules [111]
 		try {
-			List<GameAspect> aspects = new ArrayList<GameAspect>();
+			List<GameEngineModule> aspects = new ArrayList<GameEngineModule>();
 			in.readListField(aspects, 111);
-			for (GameAspect aspect : aspects) {
+			for (GameEngineModule aspect : aspects) {
 				try {
-					GameAspect here = this.getAspect(aspect.getClass());
+					GameEngineModule here = this.getAspect(aspect.getClass());
 					this.moduleList.remove(here);
 				} catch (NullPointerException e) {}
 				

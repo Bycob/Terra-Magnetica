@@ -31,7 +31,7 @@ import net.bynaryscode.util.maths.MathUtil;
 import net.bynaryscode.util.maths.geometric.Vec2f;
 import net.bynaryscode.util.maths.geometric.Vec2i;
 
-public class MapUpdater extends GameAspect {
+public class MapUpdater extends GameEngineModule {
 	
 	private GamePlayingDefault game;
 	private MiniMap theMap = new MiniMap();

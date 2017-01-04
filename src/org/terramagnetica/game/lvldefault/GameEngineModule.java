@@ -36,7 +36,7 @@ import org.terramagnetica.ressources.io.Codable;
  * @author Louis JEAN
  *
  */
-public abstract class GameAspect implements Codable, Cloneable {
+public abstract class GameEngineModule implements Codable, Cloneable {
 	
 	/** Méthode appelée en début de jeu, pour réinitialiser le module.
 	 * <p>On peut considérer que cette méthode est toujours appellée
@@ -48,9 +48,9 @@ public abstract class GameAspect implements Codable, Cloneable {
 	public abstract void setGame(GameEngine game);
 	
 	@Override
-	public GameAspect clone() {
+	public GameEngineModule clone() {
 		try {
-			return (GameAspect) super.clone();
+			return (GameEngineModule) super.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}

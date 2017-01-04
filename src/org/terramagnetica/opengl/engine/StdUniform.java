@@ -53,7 +53,6 @@ public interface StdUniform {
 		String AMBIENT = "material.ambient";
 		String DIFFUSE = "material.diffuse";
 		String SPECULAR = "material.specular";
-		String SPECULAR_INTENSITY = "material.specularIntensity";
 		String SHININESS = "material.shininess";
 	}
 }

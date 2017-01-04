@@ -32,12 +32,11 @@ public class Material {
 	private Color4f diffuse;
 	private Color4f specular;
 	private Color4f ambient;
-	private float specularIntensity = 0;
-	private float specularShininess = 0;
+	private float specularShininess = 10;
 	
 	public Material() {
 		this.diffuse = new Color4f(1f, 1f, 1f);
-		this.specular = new Color4f(0f, 0f, 0f);
+		this.specular = new Color4f(1f, 1f, 1f);
 		this.ambient = new Color4f(0f, 0f, 0f);
 	}
 	
@@ -63,13 +62,49 @@ public class Material {
 			}
 			
 			String[] fragments = line.split(" ");
-			if (fragments.length == 0) continue;
+			if (fragments.length == 0 || !found) continue;
 			
 			if (fragments[0].equals("map_Kd")) {
 				if (fragments.length < 2) {
 					throw new FileFormatException("fichier .mtl : chemin de la texture attendu");
 				}
 				ret.texPath = line.substring(7);
+			}
+			else if (fragments[0].equals("Kd") || fragments[0].equals("Ka") || fragments[0].equals("Ks")) {
+				if (fragments.length < 4) {
+					throw new FileFormatException("fichier .mtl : couleur attendue");
+				}
+				
+				double colorArray[] = new double[3];
+				for (int i = 0 ; i < 3 ; i++) {
+					try {
+						colorArray[i] = Double.parseDouble(fragments[i + 1]);
+					} catch (NumberFormatException e) {
+						throw new FileFormatException("fichier .mtl : Kd / Ka / Ks -> nombres attendus");
+					}
+				}
+				
+				Color4f color = new Color4f((float) colorArray[0], (float) colorArray[1], (float) colorArray[2]);
+				if (fragments[0].equals("Kd")) {
+					ret.diffuse = color;
+				}
+				else if (fragments[0].equals("Ks")) {
+					ret.specular = color;
+				}
+				else if (fragments[0].equals("Ka")) {
+					ret.ambient = color;
+				}
+			}
+			else if (fragments[0].equals("Ns")) {
+				if (fragments.length < 2) {
+					throw new FileFormatException("fichier .mtl : Ns -> paramètre attendu");
+				}
+				
+				try {
+					ret.specularShininess = (float) Double.parseDouble(fragments[1]);
+				} catch (NumberFormatException e) {
+					throw new FileFormatException("fichier .mtl : Ns -> nombre attendu");
+				}
 			}
 		}
 		
@@ -85,7 +120,6 @@ public class Material {
 		program.setUniform3f(StdUniform.Material.DIFFUSE, this.diffuse.getRedf(), this.diffuse.getGreenf(), this.diffuse.getBluef());
 		program.setUniform3f(StdUniform.Material.SPECULAR, this.specular.getRedf(), this.specular.getGreenf(), this.specular.getBluef());
 		program.setUniform3f(StdUniform.Material.AMBIENT, this.ambient.getRedf(), this.ambient.getGreenf(), this.ambient.getBluef());
-		program.setUniform1f(StdUniform.Material.SPECULAR_INTENSITY, this.specularIntensity);
 		program.setUniform1f(StdUniform.Material.SHININESS, this.specularShininess);
 		
 		if (this.tex.getGLTextureID() == 0) {

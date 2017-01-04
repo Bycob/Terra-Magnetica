@@ -26,7 +26,7 @@ import org.terramagnetica.ressources.io.BufferedObjectInputStream;
 import org.terramagnetica.ressources.io.BufferedObjectOutputStream;
 import org.terramagnetica.ressources.io.GameIOException;
 
-public class GameEventDispatcher extends GameAspect {
+public class GameEventDispatcher extends GameEngineModule {
 	
 	private ArrayList<GameEventInfos> evtList = new ArrayList<GameEventInfos>();
 	private GamePlayingDefault game;
