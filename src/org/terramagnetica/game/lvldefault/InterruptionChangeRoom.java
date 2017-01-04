@@ -126,7 +126,7 @@ public class InterruptionChangeRoom extends GameInterruption {
 			int prop = (int) Math.abs(time - TIME_1_STAGE);
 			//calcul du alpha : au début et à la fin, augmentation ou diminution progressive pendant TIME_TEXT_FONDUE ms
 			double alpha = (
-					MathUtil.valueInRange_d(
+					MathUtil.valueIn(
 							Math.abs(prop - (TIME_BETWEEN_1_2) / 2d),
 							TIME_BETWEEN_1_2 / 2d - TIME_TEXT_FONDUE,
 							TIME_BETWEEN_1_2 / 2d)

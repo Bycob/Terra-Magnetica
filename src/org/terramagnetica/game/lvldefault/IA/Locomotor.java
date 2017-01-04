@@ -59,7 +59,7 @@ public class Locomotor {
 				nearestPoint = point;
 			}
 			else {
-				nearestPoint = MathUtil.getDistance(loc, point) < MathUtil.getDistance(loc, nearestPoint) ?
+				nearestPoint = MathUtil.getLength(loc, point) < MathUtil.getLength(loc, nearestPoint) ?
 						point : nearestPoint;
 			}
 		}

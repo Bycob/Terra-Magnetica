@@ -117,7 +117,7 @@ public class MapRenderer extends RenderGameDefaultElement {
 				
 				int imgSize;
 				
-				float alpha = getCaseColor(MathUtil.getDistance(me.getLocation(), playerc)).getAlphaf() / CASE_MAX_ALPHA;
+				float alpha = getCaseColor(MathUtil.getLength(me.getLocation(), playerc)).getAlphaf() / CASE_MAX_ALPHA;
 				
 				if (tex == TexturesLoader.TEXTURE_NULL) {
 					painter.setColor(new Color4f(1f, 1f, 0f, 0.5f * alpha));

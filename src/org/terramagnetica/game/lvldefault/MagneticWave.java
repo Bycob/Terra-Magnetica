@@ -94,7 +94,7 @@ public class MagneticWave extends EntityMoving {
 		Vec2f co = this.lastHitbox.getPosition();
 		Vec2f ca = this.getPositionf();
 		
-		this.coveredDist += MathUtil.getDistance(co, ca);
+		this.coveredDist += MathUtil.getLength(co, ca);
 		
 		if (this.coveredDist >= this.distance) {
 			this.isAlive = false;

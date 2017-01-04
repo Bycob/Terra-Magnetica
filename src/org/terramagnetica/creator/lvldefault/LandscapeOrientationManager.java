@@ -165,7 +165,7 @@ public class LandscapeOrientationManager {
 			boolean hasConsecutive = false;
 			for (int j = 0 ; j < points.size() ; j++) {
 				if (i == j) continue;
-				if (MathUtil.getDistance(points.get(i), points.get(j)) == 1) {
+				if (MathUtil.getLength(points.get(i), points.get(j)) == 1) {
 					hasConsecutive = true;
 					break;
 				}

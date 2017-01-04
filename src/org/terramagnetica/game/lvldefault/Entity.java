@@ -424,7 +424,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * @param entity - la seconde entité.
 	 * @return La distance voulue */
 	public double getDistance(Entity entity){
-		return MathUtil.getDistance(getPositioni().asDouble(), entity.getPositioni().asDouble());
+		return MathUtil.getLength(getPositioni().asDouble(), entity.getPositioni().asDouble());
 	}
 	
 	/** 
@@ -434,7 +434,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * @param entity - la seconde entité.
 	 * @return La distance voulue */
 	public double getDistancef(Entity entity) {
-		return MathUtil.getDistance(getPositionf().asDouble(), entity.getPositionf().asDouble());
+		return MathUtil.getLength(getPositionf().asDouble(), entity.getPositionf().asDouble());
 	}
 	
 	/** 
@@ -444,7 +444,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	 * @return La distance voulue, en unité de base (1 case = 256).
 	 */
 	public double getDistance(LandscapeTile land) {
-		return MathUtil.getDistance(land.getCoordonnéesCentre().asDouble(), getPositioni().asDouble());
+		return MathUtil.getLength(land.getCoordonnéesCentre().asDouble(), getPositioni().asDouble());
 	}
 	
 	public double getDistancef(LandscapeTile land) {
@@ -452,7 +452,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		landCentre.x += DEMI_CASE_F;
 		landCentre.y += DEMI_CASE_F;
 		
-		return MathUtil.getDistance(landCentre, getPositionf().asDouble());
+		return MathUtil.getLength(landCentre, getPositionf().asDouble());
 	}
 	
 	/**
@@ -486,7 +486,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 		double d = getDistancef(other);
 		double dX = other.hitbox.getPositionX() - this.hitbox.getPositionX();
 		double dY = this.hitbox.getPositionY() - other.hitbox.getPositionY();
-		return (float) MathUtil.angle(dX / d, dY / d);
+		return (float) MathUtil.atan2(dX / d, dY / d);
 	}
 	
 	/** Met à jour la physique de l'entité.  */

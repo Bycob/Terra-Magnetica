@@ -157,7 +157,7 @@ public class RenderEntities extends RenderGameDefaultElement {
 				if (!found) continue;
 				else {
 					if (initColor != null) {
-						double distance = MathUtil.getDistance(game.getPlayer().getPositionf(), new Vec2f(r.x, -r.y)) -1;
+						double distance = MathUtil.getLength(game.getPlayer().getPositionf(), new Vec2f(r.x, -r.y)) -1;
 						float coef = miniMapRenderer.getCaseColor(distance).getAlphaf() / MapRenderer.CASE_MAX_ALPHA;
 						
 						r.render.setColor(initColor.multiply(coef, coef, coef, 1));

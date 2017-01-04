@@ -146,14 +146,14 @@ public class HitboxCircle extends Hitbox {
 	@Override
 	public boolean contains(Vec2 pt) {
 		Vec2d c = pt.asDouble();
-		return MathUtil.getSquaredDistance(x, y, c.x, c.y) <= this.rayon * this.rayon;
+		return MathUtil.getSquaredLength(x, y, c.x, c.y) <= this.rayon * this.rayon;
 	}
 	
 	@Override
 	public boolean intersects(Hitbox other) {
 		if (other instanceof HitboxCircle) {
 			HitboxCircle hbCircle = (HitboxCircle) other;
-			return MathUtil.getSquaredDistance(this.x, this.y, other.x, other.y)
+			return MathUtil.getSquaredLength(this.x, this.y, other.x, other.y)
 					<= (this.rayon + hbCircle.rayon) * (this.rayon + hbCircle.rayon);
 		}
 		else {

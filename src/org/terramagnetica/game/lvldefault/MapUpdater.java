@@ -91,7 +91,7 @@ public class MapUpdater extends GameEngineModule {
 					
 					for (Vec2i near0 : near) {
 						if (!visited.contains(near0) && !toVisit.contains(near0)
-								&& MathUtil.getDistance(near0.asDouble(), ref.asDouble()) <= maxDistance
+								&& MathUtil.getLength(near0.asDouble(), ref.asDouble()) <= maxDistance
 								&& this.game.getLandscapeAt(near0.x, near0.y).isEnabled()) {
 							
 							toVisit.add(near0);

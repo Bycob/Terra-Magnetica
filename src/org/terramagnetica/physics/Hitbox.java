@@ -449,7 +449,7 @@ public abstract class Hitbox implements Serializable, Cloneable {
 		if (this.speedX == other.speedX && this.speedY == other.speedY) {
 			return false;
 		}
-		if (MathUtil.getSquaredDistance(this.x, this.y, other.x, other.y) > 4*4) {
+		if (MathUtil.getSquaredLength(this.x, this.y, other.x, other.y) > 4*4) {
 			//TODO Changer ce critère pourri
 			return false;
 		}

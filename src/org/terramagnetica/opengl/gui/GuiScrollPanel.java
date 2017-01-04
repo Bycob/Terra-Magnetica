@@ -222,10 +222,10 @@ public class GuiScrollPanel extends GuiComponent implements MouseListener {
 		double hsize = size(s) / 2d;
 		
 		if (s == ScrollBar.VERTICAL) {
-			this.yVBar = MathUtil.valueInRange_d(xy, this.viewport.ymax + hsize, this.viewport.ymin - hsize);
+			this.yVBar = MathUtil.valueIn(xy, this.viewport.ymax + hsize, this.viewport.ymin - hsize);
 		}
 		if (s == ScrollBar.HORIZONTAL) {
-			this.xHBar = MathUtil.valueInRange_d(xy, this.viewport.xmin + hsize, this.viewport.xmax - hsize);
+			this.xHBar = MathUtil.valueIn(xy, this.viewport.xmin + hsize, this.viewport.xmax - hsize);
 		}
 		
 		this.updateContentLocation();

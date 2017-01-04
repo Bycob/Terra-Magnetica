@@ -319,7 +319,7 @@ public class HitboxPolygon extends Hitbox {
 				double lineDistance = Math.abs(line.squaredDistance(otherCircle.x, otherCircle.y) - radius2);
 				
 				//distance au point
-				double pointDistance = Math.abs(MathUtil.getSquaredDistance(point1.x, point1.y, otherCircle.x, otherCircle.y) - radius2);
+				double pointDistance = Math.abs(MathUtil.getSquaredLength(point1.x, point1.y, otherCircle.x, otherCircle.y) - radius2);
 				
 				if (edgeCollision) {
 					if (lineDistance < distance || closerEdge == null) {

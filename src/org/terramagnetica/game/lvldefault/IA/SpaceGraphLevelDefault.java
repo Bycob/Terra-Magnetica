@@ -265,7 +265,7 @@ public class SpaceGraphLevelDefault extends SpaceGraph implements Cloneable {
 			float minDistance = Float.MAX_VALUE;
 			
 			for (Case prevCase : prevCases) {
-				if (MathUtil.getDistance(prevCase.getLocation(), firstCase.getLocation()) <= minDistance) {
+				if (MathUtil.getLength(prevCase.getLocation(), firstCase.getLocation()) <= minDistance) {
 					lastCase = prevCase;
 				}
 			}
