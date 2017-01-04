@@ -67,7 +67,7 @@ public class GuiBorderLayout extends GuiLayout {
 	}
 	
 	public void setBorderHeight(double height) {
-		this.borderHeight = MathUtil.valueIn(height, 0, MAX_HEIGHT);
+		this.borderHeight = MathUtil.clampd(height, 0, MAX_HEIGHT);
 		this.updateOffset();
 		if (this.container != null) {
 			this.container.updateBounds();

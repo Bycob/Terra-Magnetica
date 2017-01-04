@@ -132,8 +132,8 @@ public abstract class EntityMoving extends Entity implements Serializable {
 		}
 		
 		return (float) MathUtil.atan2(
-				MathUtil.valueIn(this.getMovementX() / v, -1, 1),
-				MathUtil.valueIn(- this.getMovementY() / v, -1, 1));
+				MathUtil.clampd(this.getMovementX() / v, -1, 1),
+				MathUtil.clampd(- this.getMovementY() / v, -1, 1));
 	}
 	
 	public void setDirection(float direction) {

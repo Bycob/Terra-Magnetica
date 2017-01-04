@@ -122,7 +122,7 @@ public class GuiDefaultTransition implements TransitionManager {
 	}
 	
 	public void setSpeed(double speed) {
-		this.speed = MathUtil.valueIn(speed, 0, Double.MAX_VALUE);
+		this.speed = MathUtil.clampd(speed, 0, Double.MAX_VALUE);
 	}
 	
 	/**
