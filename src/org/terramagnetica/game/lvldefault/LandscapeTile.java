@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.terramagnetica.opengl.engine.Material;
 import org.terramagnetica.opengl.engine.Renderable;
 import org.terramagnetica.opengl.engine.RenderableNull;
 import org.terramagnetica.physics.Hitbox;
@@ -56,6 +57,24 @@ public abstract class LandscapeTile implements Serializable, Cloneable {
 		l.setMetadata(metadata);
 		
 		return l;
+	}
+	
+	public static Material getMaterial(DecorType type) {
+		Material m = new Material();
+
+		m.setShadeless(false);
+		
+		switch (type) {
+		case MONTS :
+			m.setSpecular(0, 0, 0);
+			m.setDiffuse(0.8f, 0.8f, 0.8f); break;
+		case GROTTE :
+			m.setSpecular(0, 0, 0);
+			m.setDiffuse(0.8f, 0.8f, 0.8f); break;
+		default :
+		}
+		
+		return m;
 	}
 	
 	static {

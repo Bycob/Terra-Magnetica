@@ -46,6 +46,7 @@ public class RenderableObject3D extends Renderable {
 	private ArrayList<VertexData> pointsData = new ArrayList<VertexData>();
 	
 	protected Primitive primitive;
+	protected Material material = new Material();
 	protected Texture texture = new TextureQuad();
 	
 	public RenderableObject3D() {
@@ -54,6 +55,8 @@ public class RenderableObject3D extends Renderable {
 	
 	public RenderableObject3D(Primitive primitive) {
 		setPrimitive(primitive);
+		
+		this.material.setShadeless(true);
 	}
 	
 	private void onStructuralChanges() {
@@ -126,6 +129,15 @@ public class RenderableObject3D extends Renderable {
 		return this;
 	}
 	
+	public void setMaterial(Material mat) {
+		if (mat == null) throw new NullPointerException("mat == null");
+		this.material = mat;
+	}
+	
+	public Material getMaterial() {
+		return this.material;
+	}
+	
 	protected AxisAlignedBox3D boundingBox;
 	@Override
 	public AxisAlignedBox3D getRenderBoundingBox(float x, float y, float z) {
@@ -141,6 +153,8 @@ public class RenderableObject3D extends Renderable {
 	@Override
 	public void renderAt(Vec3d position, double rotation, Vec3d up, Vec3d scale, Painter painter) {
 		if (this.points.size() < primitive.getVerticeCount() || this.points.size() == 0) return;
+		
+		this.material.use(painter);
 		
 		painter.setPrimitive(this.primitive);
 		painter.setTexture(this.texture);

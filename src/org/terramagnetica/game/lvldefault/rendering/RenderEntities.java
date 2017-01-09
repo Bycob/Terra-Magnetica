@@ -30,7 +30,6 @@ import org.terramagnetica.game.lvldefault.MapLandscape;
 import org.terramagnetica.game.lvldefault.MapUpdater;
 import org.terramagnetica.opengl.engine.CameraFrustum;
 import org.terramagnetica.opengl.engine.GLConfiguration;
-import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
 import org.terramagnetica.opengl.engine.Painter;
 import org.terramagnetica.opengl.engine.Renderable;
 import org.terramagnetica.opengl.engine.RenderableCompound;
@@ -166,13 +165,6 @@ public class RenderEntities extends RenderGameDefaultElement {
 			}
 			
 			// Dessin du rendu
-			if (r.render instanceof RenderableModel3D) {
-				config.setPropertieEnabled(GLProperty.LIGHTING, true);
-			}
-			else {
-				config.setPropertieEnabled(GLProperty.LIGHTING, false);
-			}
-			
 			r.render(painter);
 			r.render.setColor(initColor);
 		}

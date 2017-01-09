@@ -19,6 +19,8 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.engine;
 
+import org.lwjgl.opengl.GL11;
+
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.FileFormatException;
 
@@ -33,6 +35,7 @@ public class Material {
 	private Color4f specular;
 	private Color4f ambient;
 	private float specularShininess = 10;
+	private boolean shadeless = false;
 	
 	public Material() {
 		this.diffuse = new Color4f(1f, 1f, 1f);
@@ -106,6 +109,15 @@ public class Material {
 					throw new FileFormatException("fichier .mtl : Ns -> nombre attendu");
 				}
 			}
+			else if (fragments[0].equals("illum")) {
+				if (fragments.length < 2) {
+					throw new FileFormatException("fichier .mtl : illum -> paramètre attendu");
+				}
+				
+				if (fragments[1].equals("0")) {
+					ret.shadeless = true;
+				}
+			}
 		}
 		
 		return ret;
@@ -117,10 +129,18 @@ public class Material {
 	 */
 	public void use(Painter painter) {
 		Program program = painter.getCurrentProgram();
-		program.setUniform3f(StdUniform.Material.DIFFUSE, this.diffuse.getRedf(), this.diffuse.getGreenf(), this.diffuse.getBluef());
-		program.setUniform3f(StdUniform.Material.SPECULAR, this.specular.getRedf(), this.specular.getGreenf(), this.specular.getBluef());
-		program.setUniform3f(StdUniform.Material.AMBIENT, this.ambient.getRedf(), this.ambient.getGreenf(), this.ambient.getBluef());
-		program.setUniform1f(StdUniform.Material.SHININESS, this.specularShininess);
+		
+		if (this.shadeless) {
+			program.setUniform1i(StdUniform.USE_LIGHTS, GL11.GL_FALSE);
+		}
+		else {
+			program.setUniform1i(StdUniform.USE_LIGHTS, GL11.GL_TRUE);
+
+			program.setUniform3f(StdUniform.Material.DIFFUSE, this.diffuse.getRedf(), this.diffuse.getGreenf(), this.diffuse.getBluef());
+			program.setUniform3f(StdUniform.Material.SPECULAR, this.specular.getRedf(), this.specular.getGreenf(), this.specular.getBluef());
+			program.setUniform3f(StdUniform.Material.AMBIENT, this.ambient.getRedf(), this.ambient.getGreenf(), this.ambient.getBluef());
+			program.setUniform1f(StdUniform.Material.SHININESS, this.specularShininess);
+		}
 		
 		if (this.tex.getGLTextureID() == 0) {
 			painter.setTexture(null);
@@ -139,6 +159,42 @@ public class Material {
 		
 	}
 	
+	public void setDiffuse(float red, float green, float blue) {
+		this.diffuse = new Color4f(red, green, blue);
+	}
+	
+	public void setDiffuse(Color4f color) {
+		this.diffuse = color.clone();
+	}
+	
+	public Color4f getDiffuse() {
+		return this.diffuse.clone();
+	}
+
+	public void setSpecular(float red, float green, float blue) {
+		this.specular = new Color4f(red, green, blue);
+	}
+	
+	public void setSpecular(Color4f color) {
+		this.specular = color.clone();
+	}
+	
+	public Color4f getSpecular() {
+		return this.specular.clone();
+	}
+	
+	public void setAmbient(float red, float green, float blue) {
+		this.ambient = new Color4f(red, green, blue);
+	}
+	
+	public void setAmbient(Color4f color) {
+		this.ambient = color.clone();
+	}
+	
+	public Color4f getAmbient() {
+		return this.ambient.clone();
+	}
+	
 	public String getTexPath() {
 		return this.texPath;
 	}
@@ -153,5 +209,13 @@ public class Material {
 	
 	public boolean hasTextures() {
 		return !"".equals(this.texPath);
+	}
+	
+	public void setShadeless(boolean shadeless) {
+		this.shadeless = shadeless;
+	}
+	
+	public boolean isShadeless() {
+		return this.shadeless;
 	}
 }
