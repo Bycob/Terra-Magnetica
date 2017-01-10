@@ -86,9 +86,13 @@ public class GameWindow {
 			window.update();
 			
 			//fermeture du dialogue
-			if (this.dialog != null && this.dialog.shouldPerformClose()) {
-				window.getContentPane().remove(this.dialog);
-				this.dialog = null;
+			if (this.dialog != null) {
+				this.dialog.processLogic();
+				
+				if (this.dialog.shouldPerformClose()) {
+					window.getContentPane().remove(this.dialog);
+					this.dialog = null;
+				}
 			}
 			
 			//fermeture de la fenêtre
