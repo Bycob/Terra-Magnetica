@@ -19,12 +19,12 @@ along with Terra Magnetica. If not, see <http://www.gnu.org/licenses/>.
 
 package org.terramagnetica.opengl.engine;
 
-import org.lwjgl.opengl.GL11;
+import org.terramagnetica.opengl.engine.GLConfiguration.GLProperty;
 
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.FileFormatException;
 
-public class Material {
+public class Material implements Cloneable {
 	
 	private TextureImpl tex = new TextureImpl();
 	private String texPath = "";
@@ -129,12 +129,13 @@ public class Material {
 	 */
 	public void use(Painter painter) {
 		Program program = painter.getCurrentProgram();
+		GLConfiguration config = painter.getConfiguration();
 		
 		if (this.shadeless) {
-			program.setUniform1i(StdUniform.USE_LIGHTS, GL11.GL_FALSE);
+			config.setPropertieEnabled(GLProperty.LIGHTING, false);
 		}
 		else {
-			program.setUniform1i(StdUniform.USE_LIGHTS, GL11.GL_TRUE);
+			config.setPropertieEnabled(GLProperty.LIGHTING, true);
 
 			program.setUniform3f(StdUniform.Material.DIFFUSE, this.diffuse.getRedf(), this.diffuse.getGreenf(), this.diffuse.getBluef());
 			program.setUniform3f(StdUniform.Material.SPECULAR, this.specular.getRedf(), this.specular.getGreenf(), this.specular.getBluef());
@@ -217,5 +218,23 @@ public class Material {
 	
 	public boolean isShadeless() {
 		return this.shadeless;
+	}
+	
+	@Override
+	public Material clone() {
+		Material clone = null;
+		
+		try {
+			clone = (Material) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
+		clone.tex = this.tex.clone();
+		clone.diffuse = this.diffuse.clone();
+		clone.specular = this.specular.clone();
+		clone.ambient = this.ambient.clone();
+		
+		return clone;
 	}
 }

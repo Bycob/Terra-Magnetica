@@ -40,7 +40,7 @@ import net.bynaryscode.util.maths.geometric.Vec3d;
  * @author Louis JEAN
  *
  */
-public class Model3D {
+public class Model3D implements Cloneable {
 	
 	public static class FaceVertex implements Cloneable {
 		public FaceVertex() {this(0, 0, 0);}
@@ -67,10 +67,20 @@ public class Model3D {
 		}
 	}
 	
-	private List<Vec3d> vertices = new ArrayList<Vec3d>();
-	private List<Vec2d> texCoords = new ArrayList<Vec2d>();
-	private List<Vec3d> normales = new ArrayList<Vec3d>();
-	private List<FaceVertex> faces = new ArrayList<FaceVertex>();
+	private static class DrawData {
+		public ArrayList<Model3D> models = new ArrayList<Model3D>();
+		
+		public VAO vao = new VAO();
+		
+		public DrawData(Model3D model) {
+			this.models.add(model);
+		}
+	}
+	
+	private ArrayList<Vec3d> vertices = new ArrayList<Vec3d>();
+	private ArrayList<Vec2d> texCoords = new ArrayList<Vec2d>();
+	private ArrayList<Vec3d> normales = new ArrayList<Vec3d>();
+	private ArrayList<FaceVertex> faces = new ArrayList<FaceVertex>();
 	
 	private final int vertPerFace = 3;
 	private int facesCount = 0;
@@ -79,7 +89,7 @@ public class Model3D {
 	
 	private List<Model3D> children = new ArrayList<Model3D>();
 	
-	private VAO myVAO;
+	private DrawData drawData = null;
 	
 	/**
 	 * Determine le fichier contenant les informations sur les matériaux
@@ -273,18 +283,16 @@ public class Model3D {
 	public void draw(Painter painter) {
 		if (this.facesCount == 0 && this.children.size() == 0) return;
 		
-		if (this.myVAO == null) {
+		if (this.drawData == null) {
 			generateBuffer(painter);
 		}
 		
 		GLConfiguration config = painter.getConfiguration();
 		config.setPropertieEnabled(GLProperty.COLOR, false);
 		painter.setPrimitive(Primitive.TRIANGLES);
-		this.material.use(painter);
 		
-		painter.drawVAO(this.myVAO, this.faces.size());
+		painter.drawVAO(this.drawData.vao, this.faces.size());
 		
-		this.material.unset(painter);
 		config.setPropertieEnabled(GLProperty.COLOR, true); // TODO configuration par défaut.
 		
 		for (Model3D child : this.children) {
@@ -293,7 +301,7 @@ public class Model3D {
 	}
 	
 	private void generateBuffer(Painter painter) {
-		this.myVAO = new VAO();
+		this.drawData = new DrawData(this);
 		
 		VBO vbo = new VBO();
 		// [x(f)][y(f)][z(f)] [s(f)][t(f)] [nx(f)][ny(f)][nz(f)]
@@ -317,9 +325,9 @@ public class Model3D {
 		buffer.flip();
 		vbo.setData(painter, buffer);
 		
-		this.myVAO.setAttrib(StdAttrib.VERTEX, vbo, 3, GL11.GL_FLOAT, false, stride, 0);
-		this.myVAO.setAttrib(StdAttrib.TEX_COORD, vbo, 2, GL11.GL_FLOAT, false, stride, 3 * 4);
-		this.myVAO.setAttrib(StdAttrib.NORMAL, vbo, 3, GL11.GL_FLOAT, false, stride, 3 * 4 + 2 * 4);
+		this.drawData.vao.setAttrib(StdAttrib.VERTEX, vbo, 3, GL11.GL_FLOAT, false, stride, 0);
+		this.drawData.vao.setAttrib(StdAttrib.TEX_COORD, vbo, 2, GL11.GL_FLOAT, false, stride, 3 * 4);
+		this.drawData.vao.setAttrib(StdAttrib.NORMAL, vbo, 3, GL11.GL_FLOAT, false, stride, 3 * 4 + 2 * 4);
 	}
 	
 	/**
@@ -393,10 +401,20 @@ public class Model3D {
 		return this.material.getTexPath();
 	}
 	
+	public void setMaterial(Material material) {
+		if (material == null) {
+			throw new NullPointerException();
+		}
+		
+		this.material = material;
+	}
+	
+	public Material getMaterial() {
+		return this.material;
+	}
+	
 	public void setTextureID(int id) {
 		this.material.setTextureID(id);
-		
-		this.onModelEdit();
 	}
 	
 	public int getTextureID() {
@@ -439,8 +457,42 @@ public class Model3D {
 	
 	/** Détruit les objets openGL utilisés par ce modèle. */
 	public void freeMemory() {
-		if (this.myVAO != null) this.myVAO.destroyAll();
-		this.myVAO = null;
+		if (this.drawData != null && this.drawData.models.size() == 1) {
+			this.drawData.vao.destroyAll();
+			this.drawData.models.remove(this);
+		}
+		this.drawData = null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Model3D clone() {
+		Model3D clone = null;
+		try {
+			clone = (Model3D) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
+		clone.vertices = (ArrayList<Vec3d>) this.vertices.clone();
+		clone.texCoords = (ArrayList<Vec2d>) this.texCoords.clone();
+		clone.normales = (ArrayList<Vec3d>) this.normales.clone();
+		
+		clone.faces = new ArrayList<FaceVertex>();
+		for (FaceVertex fv : this.faces) {
+			clone.faces.add(fv.clone());
+		}
+		
+		clone.children = new ArrayList<Model3D>();
+		for (Model3D child : children) {
+			clone.addChild(child.clone());
+		}
+		
+		clone.material = this.material.clone();
+		
+		clone.drawData.models.add(clone);
+		
+		return clone;
 	}
 	
 	@Override

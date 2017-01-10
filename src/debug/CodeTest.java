@@ -84,7 +84,7 @@ public class CodeTest {
 	
 	//----------- Pour les tests openGL ----------------------------------
 	
-	private static String modelName = "decor/terrain3/mur.obj";
+	private static String modelName = "composants/models/lamp.obj";
 	
 	public static void appliGL() {
 		GuiWindow window = GuiWindow.getInstance();
