@@ -80,7 +80,7 @@ public class ScreenNewGame extends GameScreen {
 	
 	@Override
 	protected void drawComponent(Painter painter) {
-		TextureQuad tex = TexturesLoader.getQuad(Util.formatDecimal(GameRessources.SPEC_PATH_TERRAIN, 1) + GameRessources.TEX_SOL);
+		TextureQuad tex = TexturesLoader.getQuad(Util.formatDecimal(GameRessources.SPEC_IMG_TERRAIN, 1) + GameRessources.TEX_SOL);
 		painter.setColor(new Color4f(0.5f, 0.5f, 0.5f));
 		tex.fillScreen2D(0.5, 0.5, true, painter);
 	}

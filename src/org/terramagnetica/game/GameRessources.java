@@ -40,13 +40,14 @@ public class GameRessources {
 	/* **************************************************
 	 * SOMMAIRE :
 	 * 
-	 * I - sets de textures de base
-	 * II - sets de textures - interface graphique
+	 * I - set de textures de base
+	 * II - set de textures - interface graphique
 	 * III - sets de textures - décors
 	 * IV - sets de textures - niveaux
-	 * V - sets de modèles - décors
-	 * VI - sets de modèles - niveaux
-	 * VII - set de son général
+	 * V - set de modèles de base
+	 * VI - sets de modèles - décors
+	 * VII - sets de modèles - niveaux
+	 * VIII - set de son général
 	 * 
 	 * Les identifiants sont rangés par ordre alphabétiques.
 	 ****************************************************/
@@ -58,13 +59,14 @@ public class GameRessources {
 	
 	
 	public static final String 
-	SPEC_PATH_TERRAIN = "decor/terrain%d.png",
-	PATH_COMPOSANTS = "composants/composants.png",
-	PATH_DIALOG_BACKGROUND = "composants/dialogBackground.png",
-	PATH_DIRECTION_ARROW = "composants/directionArrow.png",//Flèche qui indique au joueur où est la sortie.
-	PATH_DIRECTIONS_CIRCLE = "composants/directionsCircle.png",
-	PATH_MAP = "composants/carte.png",
-	PATH_PLAYER = "composants/player1.png",
+	SPEC_IMG_TERRAIN = "decor/terrain%d.png",
+	IMG_COMPOSANTS = "composants/composants.png",
+	IMG_DIALOG_BACKGROUND = "composants/dialogBackground.png",
+	IMG_DIRECTION_ARROW = "composants/directionArrow.png",//Flèche qui indique au joueur où est la sortie.
+	IMG_DIRECTIONS_CIRCLE = "composants/directionsCircle.png",
+	IMG_MAP = "composants/carte.png",
+	IMG_MODEL_LAMP_OUT = "composants/models/tex_lamp_on.png",
+	IMG_PLAYER = "composants/player1.png",
 	SPEC_TEX_MUR = ".mur%d",
 	TEX_CRYSTAL = ".aimant",
 	TEX_DIALOG_BACKGROUND_LEFT = ".left",
@@ -98,35 +100,35 @@ public class GameRessources {
 	TEX_MAP_PLAYER = ".map.player";
 	
 	public static final String
-	PATH_ANIM000_DANGEROUS_CRYSTAL = "composants/anim000_dangerous_crystal.png",
-	PATH_ANIM003_PERMANENT_MODE_LAMP = "composants/anim003_permanent_mode_lamp.png";
+	ANIM000_DANGEROUS_CRYSTAL = "composants/anim000_dangerous_crystal.png",
+	ANIM003_PERMANENT_MODE_LAMP = "composants/anim003_permanent_mode_lamp.png";
 	
 	public static final String
-	ID_AIMANT = PATH_COMPOSANTS + TEX_CRYSTAL,
-	ID_EXIT0 = PATH_COMPOSANTS + TEX_EXIT0,
-	ID_GENERATOR = PATH_COMPOSANTS + TEX_GENERATOR,
-	ID_LAMP_IN = PATH_COMPOSANTS + TEX_LAMP_IN,
-	ID_LAMP_OUT = PATH_COMPOSANTS + TEX_LAMP_OUT,
-	ID_LAMP_PERTURBATRICE_OFF = PATH_COMPOSANTS + TEX_LAMP_PERTURBATRICE_OFF,
-	ID_LAMP_PERTURBATRICE_ON = PATH_COMPOSANTS + TEX_LAMP_PERTURBATRICE_ON,
-	ID_LASERS = PATH_COMPOSANTS + TEX_LASERS,
-	ID_MAGNETIC_FIELD_INDICATOR = PATH_COMPOSANTS + TEX_MAGNETIC_FIELD_INDICATOR,
-	ID_MINI_ELECTROCRYSTAL = PATH_COMPOSANTS + TEX_MINI_ELECTROCRYSTAL,
-	ID_PERTURBATEUR = PATH_COMPOSANTS + TEX_PERTURBATEUR,
-	ID_PLAYER_STANDING = PATH_PLAYER + TEX_PLAYER_STANDING,
-	ID_PORTAL = PATH_COMPOSANTS + TEX_PORTAL,
-	ID_WAVES = PATH_COMPOSANTS + TEX_WAVES,
-	ID_WAVE_GENERATOR_EAST = PATH_COMPOSANTS + TEX_WAVE_GENERATOR_EAST,
-	ID_WAVE_GENERATOR_NORD = PATH_COMPOSANTS + TEX_WAVE_GENERATOR_NORD,
-	ID_WAVE_GENERATOR_SOUTH = PATH_COMPOSANTS + TEX_WAVE_GENERATOR_SOUTH,
-	ID_WAVE_GENERATOR_WEST = PATH_COMPOSANTS + TEX_WAVE_GENERATOR_WEST,
+	ID_AIMANT = IMG_COMPOSANTS + TEX_CRYSTAL,
+	ID_EXIT0 = IMG_COMPOSANTS + TEX_EXIT0,
+	ID_GENERATOR = IMG_COMPOSANTS + TEX_GENERATOR,
+	ID_LAMP_IN = IMG_COMPOSANTS + TEX_LAMP_IN,
+	ID_LAMP_OUT = IMG_COMPOSANTS + TEX_LAMP_OUT,
+	ID_LAMP_PERTURBATRICE_OFF = IMG_COMPOSANTS + TEX_LAMP_PERTURBATRICE_OFF,
+	ID_LAMP_PERTURBATRICE_ON = IMG_COMPOSANTS + TEX_LAMP_PERTURBATRICE_ON,
+	ID_LASERS = IMG_COMPOSANTS + TEX_LASERS,
+	ID_MAGNETIC_FIELD_INDICATOR = IMG_COMPOSANTS + TEX_MAGNETIC_FIELD_INDICATOR,
+	ID_MINI_ELECTROCRYSTAL = IMG_COMPOSANTS + TEX_MINI_ELECTROCRYSTAL,
+	ID_PERTURBATEUR = IMG_COMPOSANTS + TEX_PERTURBATEUR,
+	ID_PLAYER_STANDING = IMG_PLAYER + TEX_PLAYER_STANDING,
+	ID_PORTAL = IMG_COMPOSANTS + TEX_PORTAL,
+	ID_WAVES = IMG_COMPOSANTS + TEX_WAVES,
+	ID_WAVE_GENERATOR_EAST = IMG_COMPOSANTS + TEX_WAVE_GENERATOR_EAST,
+	ID_WAVE_GENERATOR_NORD = IMG_COMPOSANTS + TEX_WAVE_GENERATOR_NORD,
+	ID_WAVE_GENERATOR_SOUTH = IMG_COMPOSANTS + TEX_WAVE_GENERATOR_SOUTH,
+	ID_WAVE_GENERATOR_WEST = IMG_COMPOSANTS + TEX_WAVE_GENERATOR_WEST,
 			
-	ID_MAP_CRYSTAL = PATH_MAP + TEX_CRYSTAL,
-	ID_MAP_BACKGROUND = PATH_MAP + TEX_MAP_BACKGROUND,
-	ID_MAP_GENERATOR = PATH_MAP + TEX_MAP_GENERATOR,
-	ID_MAP_LAMP = PATH_MAP + TEX_MAP_LAMP,
-	ID_MAP_LAMP_RANDOM = PATH_MAP + TEX_MAP_LAMP_RANDOM,
-	ID_MAP_PLAYER = PATH_MAP + TEX_MAP_PLAYER;
+	ID_MAP_CRYSTAL = IMG_MAP + TEX_CRYSTAL,
+	ID_MAP_BACKGROUND = IMG_MAP + TEX_MAP_BACKGROUND,
+	ID_MAP_GENERATOR = IMG_MAP + TEX_MAP_GENERATOR,
+	ID_MAP_LAMP = IMG_MAP + TEX_MAP_LAMP,
+	ID_MAP_LAMP_RANDOM = IMG_MAP + TEX_MAP_LAMP_RANDOM,
+	ID_MAP_PLAYER = IMG_MAP + TEX_MAP_PLAYER;
 	
 	public static final TextureSet gameTextureSet = new TextureSet();
 	
@@ -140,10 +142,10 @@ public class GameRessources {
 	public static final TextureSet guiTextureSet = new TextureSet();
 	
 	public static final String 
-	PATH_GUI = "gui/game/gameGui.png",
-	PATH_TERRAIN_GUI = Util.formatDecimal(GameRessources.SPEC_PATH_TERRAIN, 1),
-	PATH_TITLE_SCREEN = "gui/game/titleScreen.png",
-	PATH_BONUS_LEVEL_BUTTONS = "niveaux/bonus/boutons0.png",
+	IMG_GUI = "gui/game/gameGui.png",
+	IMG_TERRAIN_GUI = Util.formatDecimal(GameRessources.SPEC_IMG_TERRAIN, 1),
+	IMG_TITLE_SCREEN = "gui/game/titleScreen.png",
+	IMG_BONUS_LEVEL_BUTTONS = "niveaux/bonus/boutons0.png",
 	
 
 	TEX_BACKGROUND = GameRessources.TEX_SOL,
@@ -154,11 +156,11 @@ public class GameRessources {
 	TEX_TEXTFIELD1 = ".textField1";
 	
 	public static final String
-	ID_BUTTON = PATH_GUI + TEX_BUTTON,
-	ID_BUTTON_OVER = PATH_GUI + TEX_BUTTON_OVER,
-	ID_BUTTON_PRESSED = PATH_GUI + TEX_BUTTON_PRESSED,
-	ID_TEXTFIELD1 = PATH_GUI + TEX_TEXTFIELD1,
-	ID_BACKGROUND = PATH_TERRAIN_GUI + TEX_BACKGROUND;
+	ID_BUTTON = IMG_GUI + TEX_BUTTON,
+	ID_BUTTON_OVER = IMG_GUI + TEX_BUTTON_OVER,
+	ID_BUTTON_PRESSED = IMG_GUI + TEX_BUTTON_PRESSED,
+	ID_TEXTFIELD1 = IMG_GUI + TEX_TEXTFIELD1,
+	ID_BACKGROUND = IMG_TERRAIN_GUI + TEX_BACKGROUND;
 	
 	/** set de textures - menu du jeu libre */
 	public static final TextureSet freeGameTextureSet = new TextureSet();
@@ -190,7 +192,7 @@ public class GameRessources {
 	public static final TextureSet level1TextureSet = new TextureSet();
 	
 	public static final String
-	PATH_LVL1_TEXTURES = "niveaux/niveau1/decoration0.png",
+	IMG_LVL1_TEXTURES = "niveaux/niveau1/decoration0.png",
 	
 	TEX_ARBRE = ".arbre",
 	TEX_ENTREE_GROTTE = ".grotte",
@@ -203,11 +205,11 @@ public class GameRessources {
 	public static final TextureSet level2TextureSet = new TextureSet();
 	
 	public static final String
-	PATH_ANIM001_PLASMATIC_WALL = "niveaux/niveau2/anim001_plasmatic_wall.png",
-	PATH_ANIM002_OPENING_PORTAL = "niveaux/niveau2/anim002_opening_portal.png",
-	PATH_ANIM004_TRAP_OFF = "niveaux/niveau2/anim004_trap_off.png",
-	PATH_CREATURE = "niveaux/niveau2/creature.png",
-	PATH_LVL2_TEXTURES = "niveaux/niveau2/decoration1.png",
+	ANIM001_PLASMATIC_WALL = "niveaux/niveau2/anim001_plasmatic_wall.png",
+	ANIM002_OPENING_PORTAL = "niveaux/niveau2/anim002_opening_portal.png",
+	ANIM004_TRAP_OFF = "niveaux/niveau2/anim004_trap_off.png",
+	IMG_CREATURE = "niveaux/niveau2/creature.png",
+	IMG_LVL2_TEXTURES = "niveaux/niveau2/decoration1.png",
 	
 	TEX_PENTAGRAM = ".pentagram",
 	TEX_PLASMATIC_WALL = ".plasmaticWall",
@@ -223,12 +225,23 @@ public class GameRessources {
 	
 	
 	public static final String
+	MODEL_LAMP = "composants/models/lamp.obj";
+	
+	public static final ArrayList<String> defaultModelSet = new ArrayList<String>();
+	
+	
+	
+	//---------------------- VI ------------------------
+	
+	
+	
+	public static final String
 	SPEC_DIR_MODEL_TERRAIN = "decor/terrain%d/";
 	
 	public static final String
-	SPEC_PATH_MODEL_MUR_DROIT = SPEC_DIR_MODEL_TERRAIN + "mur.obj",
-	SPEC_PATH_MODEL_MUR_COIN = SPEC_DIR_MODEL_TERRAIN + "mur2.obj",
-	SPEC_PATH_MODEL_MUR_ANGLE = SPEC_DIR_MODEL_TERRAIN + "mur3.obj";
+	SPEC_MODEL_MUR_DROIT = SPEC_DIR_MODEL_TERRAIN + "mur.obj",
+	SPEC_MODEL_MUR_COIN = SPEC_DIR_MODEL_TERRAIN + "mur2.obj",
+	SPEC_MODEL_MUR_ANGLE = SPEC_DIR_MODEL_TERRAIN + "mur3.obj";
 	
 	/** set de modèles - décor 1 de montagne */
 	public static final List<String> decorMONTSModelSet = new ArrayList<String>();
@@ -236,14 +249,14 @@ public class GameRessources {
 	public static final List<String> decorGROTTEModelSet = new ArrayList<String>();
 
 	public static final String 
-	PATH_MODEL_LVL2_ROCKS = "niveaux/niveau2/rocks.obj";
+	MODEL_LVL2_ROCKS = "niveaux/niveau2/rocks.obj";
 	
 	/** set de modèles - décor bonus des enfers */
 	public static final List<String> decorENFERSModelSet = new ArrayList<String>();
 	
 	
 	
-	//------------------------ VI ----------------------
+	//------------------------ VII ----------------------
 	
 	
 	
@@ -252,11 +265,11 @@ public class GameRessources {
 	public static final ArrayList<String> level2ModelSet = new ArrayList<String>();
 	
 	public static final String
-	PATH_MODEL_LVL2_CONTROLPANE = "niveaux/niveau2/controlPane.obj";
+	MODEL_LVL2_CONTROLPANE = "niveaux/niveau2/controlPane.obj";
 	
 	
 	
-	//----------------------- VII ----------------------
+	//----------------------- VIII ----------------------
 	
 	
 	
@@ -303,7 +316,7 @@ public class GameRessources {
 		
 		for (DecorType type : DecorType.values()) {
 			
-			String terrainPath = Util.formatDecimal(SPEC_PATH_TERRAIN, type.getIndex() + 1);
+			String terrainPath = Util.formatDecimal(SPEC_IMG_TERRAIN, type.getIndex() + 1);
 			gameTextureSet.createImage(terrainPath);
 			
 			String pathsMurs[] = new String[WallTile.NB_IMAGE];
@@ -332,7 +345,7 @@ public class GameRessources {
 		//Texture des différents composants du jeu.
 		
 		
-		gameTextureSet.createImage(PATH_COMPOSANTS); width = 2048; height = 2048;
+		gameTextureSet.createImage(IMG_COMPOSANTS); width = 2048; height = 2048;
 		gameTextureSet.addTextureModel(ID_AIMANT, new TextureQuad(0, 1664, 128, 1856, width, height, 0));
 		gameTextureSet.addTextureModel(ID_EXIT0, new TextureQuad(256, 1408, 512, 1664, width, height, 0));
 		gameTextureSet.addTextureModel(ID_GENERATOR, new TextureQuad(0, 0, 512, 512, width, height, 0));
@@ -351,7 +364,7 @@ public class GameRessources {
 		gameTextureSet.addTextureModel(ID_WAVE_GENERATOR_WEST, new TextureQuad(512, 256, 768, 512, width, height, 0));
 		gameTextureSet.addTextureModel(ID_WAVES, new TextureQuad(1024, 1408, 1280, 1664, width, height, 0));
 		
-		gameTextureSet.createImage(PATH_MAP); width = 512; height = 512;
+		gameTextureSet.createImage(IMG_MAP); width = 512; height = 512;
 		gameTextureSet.addTextureModel(ID_MAP_CRYSTAL, new TextureQuad(320, 0, 352, 32, width, height, 0));
 		gameTextureSet.addTextureModel(ID_MAP_BACKGROUND, new TextureQuad(0, 0, 256, 256, width, height, 0));
 		gameTextureSet.addTextureModel(ID_MAP_GENERATOR, new TextureQuad(0, 256, 160, 416, width, height, 0));
@@ -359,46 +372,48 @@ public class GameRessources {
 		gameTextureSet.addTextureModel(ID_MAP_LAMP_RANDOM, new TextureQuad(352, 0, 384, 32, width, height, 0));
 		gameTextureSet.addTextureModel(ID_MAP_PLAYER, new TextureQuad(256, 0, 288, 32, width, height, 0));
 		
-		gameTextureSet.createImage(PATH_PLAYER); width = 512; height = 512;
+		gameTextureSet.createImage(IMG_MODEL_LAMP_OUT);
+		
+		gameTextureSet.createImage(IMG_PLAYER); width = 512; height = 512;
 		gameTextureSet.addTextureModel(ID_PLAYER_STANDING, TexturesLoader.createAnimatedTexture(SPRITE_WIDTH, SPRITE_HEIGHT, NB_FRAMES, 0, width, height));
 		
-		gameTextureSet.createImage(PATH_ANIM000_DANGEROUS_CRYSTAL);
-		gameTextureSet.addTextureModel(PATH_ANIM000_DANGEROUS_CRYSTAL, TexturesLoader.createAnimatedTexture(128, 192, 12, 0, 1536, 192));
+		gameTextureSet.createImage(ANIM000_DANGEROUS_CRYSTAL);
+		gameTextureSet.addTextureModel(ANIM000_DANGEROUS_CRYSTAL, TexturesLoader.createAnimatedTexture(128, 192, 12, 0, 1536, 192));
 		
-		gameTextureSet.createImage(PATH_ANIM003_PERMANENT_MODE_LAMP);
-		gameTextureSet.addTextureModel(PATH_ANIM003_PERMANENT_MODE_LAMP, TexturesLoader.createAnimatedTexture(256, 256, 4, 0, 1024, 256).withFPS(12));
+		gameTextureSet.createImage(ANIM003_PERMANENT_MODE_LAMP);
+		gameTextureSet.addTextureModel(ANIM003_PERMANENT_MODE_LAMP, TexturesLoader.createAnimatedTexture(256, 256, 4, 0, 1024, 256).withFPS(12));
 		
 		//Gui in game
-		gameTextureSet.createImage(PATH_DIALOG_BACKGROUND); width = 256; height = 256;
+		gameTextureSet.createImage(IMG_DIALOG_BACKGROUND); width = 256; height = 256;
 		gameTextureSet.addTextureModel(TEX_DIALOG_BACKGROUND_LEFT, new TextureQuad(0, 0, 32, height, width, height, 0));
 		gameTextureSet.addTextureModel(TEX_DIALOG_BACKGROUND_CENTER, new TextureQuad(32, 0, width - 32, height, width, height, 0));
 		gameTextureSet.addTextureModel(TEX_DIALOG_BACKGROUND_RIGHT, new TextureQuad(width - 32, 0, width, height, width, height, 0));
 		
-		gameTextureSet.createImage(PATH_DIRECTIONS_CIRCLE); width = 128; height = 128;
-		gameTextureSet.addTextureModel(PATH_DIRECTIONS_CIRCLE, new TextureQuad(0, 0, width, height, width, height, 0));
+		gameTextureSet.createImage(IMG_DIRECTIONS_CIRCLE); width = 128; height = 128;
+		gameTextureSet.addTextureModel(IMG_DIRECTIONS_CIRCLE, new TextureQuad(0, 0, width, height, width, height, 0));
 		
-		gameTextureSet.createImage(PATH_DIRECTION_ARROW); width = 64; height = 64;
-		gameTextureSet.addTextureModel(PATH_DIRECTION_ARROW, new TextureQuad(0, 0, width, height, width, height, 0));
+		gameTextureSet.createImage(IMG_DIRECTION_ARROW); width = 64; height = 64;
+		gameTextureSet.addTextureModel(IMG_DIRECTION_ARROW, new TextureQuad(0, 0, width, height, width, height, 0));
 		
 		//Textures de l'interface graphique
-		guiTextureSet.createImage(PATH_BONUS_LEVEL_BUTTONS); width = 512; height = 512;
+		guiTextureSet.createImage(IMG_BONUS_LEVEL_BUTTONS); width = 512; height = 512;
 		guiTextureSet.addTextureModel(TEX_BONUS_BUTTON_0_ENFERS, new TextureQuad(0, 0, 256, 256, width, height, 0));
 		
-		guiTextureSet.createImage(PATH_GUI); width = 1024; height = 1024;
+		guiTextureSet.createImage(IMG_GUI); width = 1024; height = 1024;
 		guiTextureSet.addTextureModel(ID_BUTTON, new TextureQuad(0, 0, 255, 63, width, height, 0));
 		guiTextureSet.addTextureModel(ID_BUTTON_OVER, new TextureQuad(0, 64, 255, 127, width, height, 0));
 		guiTextureSet.addTextureModel(ID_BUTTON_PRESSED, new TextureQuad(0, 128, 255, 191, width, height, 0));
 		guiTextureSet.addTextureModel(ID_TEXTFIELD1, new TextureQuad(0, 192, 255, 255, width, height, 0));
 		
-		guiTextureSet.createImage(PATH_TERRAIN_GUI);
+		guiTextureSet.createImage(IMG_TERRAIN_GUI);
 		guiTextureSet.addTextureModel(ID_BACKGROUND, gameTextureSet.findTextureModel(ID_BACKGROUND));
 		
-		guiTextureSet.createImage(PATH_TITLE_SCREEN); width = 896; height = 640;
-		guiTextureSet.addTextureModel(PATH_TITLE_SCREEN, new TextureQuad(0, 0, width, height, width, height, 0));
+		guiTextureSet.createImage(IMG_TITLE_SCREEN); width = 896; height = 640;
+		guiTextureSet.addTextureModel(IMG_TITLE_SCREEN, new TextureQuad(0, 0, width, height, width, height, 0));
 		
 		//Textures du menu "Jeu libre"
 		for (DecorType decor : DecorType.values()) {
-			String terrainPath = Util.formatDecimal(GameRessources.SPEC_PATH_TERRAIN, decor.getIndex() + 1);
+			String terrainPath = Util.formatDecimal(GameRessources.SPEC_IMG_TERRAIN, decor.getIndex() + 1);
 			freeGameTextureSet.createImage(terrainPath);
 			String id = terrainPath + GameRessources.TEX_INACCESSIBLE;
 			freeGameTextureSet.addTextureModel(id, gameTextureSet.findTextureModel(id));
@@ -410,15 +425,15 @@ public class GameRessources {
 		//pour l'instant rien de plus.
 		
 		//Textures du décor GROTTE
-		decorGROTTETextureSet.createImage(PATH_MAP); width = 512; height = 512;
+		decorGROTTETextureSet.createImage(IMG_MAP); width = 512; height = 512;
 		decorGROTTETextureSet.addTextureModel(TEX_MAP_ROCK, new TextureQuad(384, 0, 416, 32, width, height, 0));
 		
 		
 		
 		//Textures du niveau 1
-		level1TextureSet.addImage(gameTextureSet.getImage(GameRessources.PATH_COMPOSANTS));
+		level1TextureSet.addImage(gameTextureSet.getImage(GameRessources.IMG_COMPOSANTS));
 		
-		level1TextureSet.createImage(PATH_LVL1_TEXTURES); width = 2048; height = 2048;
+		level1TextureSet.createImage(IMG_LVL1_TEXTURES); width = 2048; height = 2048;
 		
 		level1TextureSet.addTextureModel(TEX_ARBRE, new TextureQuad(0, 0, 512, 512, width, height, 0));
 		level1TextureSet.addTextureModel(TEX_ENTREE_GROTTE, new TextureQuad(768, 1408, 1536, 1664, width, height, 0));
@@ -428,46 +443,46 @@ public class GameRessources {
 		level1TextureSet.addTextureModel(TEX_SOL_VEGETAL2, new TextureQuad(512, 1408, 768, 1664, width, height, 0));
 		
 		//Textures du niveau 2
-		level2TextureSet.createImage(PATH_ANIM001_PLASMATIC_WALL);
-		level2TextureSet.addTextureModel(PATH_ANIM001_PLASMATIC_WALL, TexturesLoader.createAnimatedTexture(256, 192, 24, 0, 6144, 192).withFPS(12));
+		level2TextureSet.createImage(ANIM001_PLASMATIC_WALL);
+		level2TextureSet.addTextureModel(ANIM001_PLASMATIC_WALL, TexturesLoader.createAnimatedTexture(256, 192, 24, 0, 6144, 192).withFPS(12));
 		
-		level2TextureSet.createImage(PATH_ANIM002_OPENING_PORTAL);
-		level2TextureSet.addTextureModel(PATH_ANIM002_OPENING_PORTAL, TexturesLoader.createAnimatedTexture(256, 256, 12, 0, 3072, 256).withFPS(24));
+		level2TextureSet.createImage(ANIM002_OPENING_PORTAL);
+		level2TextureSet.addTextureModel(ANIM002_OPENING_PORTAL, TexturesLoader.createAnimatedTexture(256, 256, 12, 0, 3072, 256).withFPS(24));
 		
-		level2TextureSet.createImage(PATH_ANIM004_TRAP_OFF); width = 768; height = 256;
-		level2TextureSet.addTextureModel(PATH_ANIM004_TRAP_OFF, TexturesLoader.createAnimatedTexture(256, 256, 2, 0, width, height).withFPS(4));
+		level2TextureSet.createImage(ANIM004_TRAP_OFF); width = 768; height = 256;
+		level2TextureSet.addTextureModel(ANIM004_TRAP_OFF, TexturesLoader.createAnimatedTexture(256, 256, 2, 0, width, height).withFPS(4));
 		level2TextureSet.addTextureModel(TEX_TRAP_OFF_IMAGE, new TextureQuad(0, 0, 256, 256, width, height, 0));
 		level2TextureSet.addTextureModel(TEX_TRAP_ACTIVE, new TextureQuad(512, 0, 768, 256, width, height, 0));
 		
-		level2TextureSet.createImage(PATH_LVL2_TEXTURES); width = 1024; height = 1024;
+		level2TextureSet.createImage(IMG_LVL2_TEXTURES); width = 1024; height = 1024;
 		level2TextureSet.addTextureModel(TEX_PENTAGRAM, new TextureQuad(0, 0, 512, 512, width, height, 0));
 		level2TextureSet.addTextureModel(TEX_PLASMATIC_WALL, new TextureQuad(0, 640, 256, 832, width, height, 0));
 		level2TextureSet.addTextureModel(TEX_PORTAL_OFF, new TextureQuad(768, 0, 1024, 256, width, height, 0));
 		level2TextureSet.addTextureModel(TEX_PORTAL_ON, new TextureQuad(512, 0, 768, 256, width, height, 0));
 		
-		level2TextureSet.createImage(PATH_CREATURE); width = 678; height = 240;
-		level2TextureSet.addTextureModel(PATH_CREATURE, new TextureQuad(0, 0, 678, 240, width, height, 0));
+		level2TextureSet.createImage(IMG_CREATURE); width = 678; height = 240;
+		level2TextureSet.addTextureModel(IMG_CREATURE, new TextureQuad(0, 0, 678, 240, width, height, 0));
 		
 		
 		
 		//Modèles de tous les décors
 		for (DecorType type : DecorType.values()) {
 			int index = type.getIndex() + 1;
-			getModelSetByLandscape(type).add(Util.formatDecimal(SPEC_PATH_MODEL_MUR_DROIT, index));
-			getModelSetByLandscape(type).add(Util.formatDecimal(SPEC_PATH_MODEL_MUR_COIN, index));
-			getModelSetByLandscape(type).add(Util.formatDecimal(SPEC_PATH_MODEL_MUR_ANGLE, index));
+			getModelSetByLandscape(type).add(Util.formatDecimal(SPEC_MODEL_MUR_DROIT, index));
+			getModelSetByLandscape(type).add(Util.formatDecimal(SPEC_MODEL_MUR_COIN, index));
+			getModelSetByLandscape(type).add(Util.formatDecimal(SPEC_MODEL_MUR_ANGLE, index));
 		}
 		
 		
 		
 		
 		//Modèles du décor grotte
-		decorGROTTEModelSet.add(PATH_MODEL_LVL2_ROCKS);
+		decorGROTTEModelSet.add(MODEL_LVL2_ROCKS);
 		
 		
 		
 		//Modèles du niveau 2
-		level2ModelSet.add(PATH_MODEL_LVL2_CONTROLPANE);
+		level2ModelSet.add(MODEL_LVL2_CONTROLPANE);
 		
 		
 		

@@ -66,7 +66,7 @@ public class DialogRoomGrows extends JDialog {
 		pan1.add(new JPanel());
 		pan1.add(this.left);
 		pan1.add(new JLabel(new ImageIcon(ImagesLoader.get(
-				Util.formatDecimal(GameRessources.SPEC_PATH_TERRAIN, 1) + GameRessources.TEX_SOL))));
+				Util.formatDecimal(GameRessources.SPEC_IMG_TERRAIN, 1) + GameRessources.TEX_SOL))));
 		pan1.add(this.right);
 		pan1.add(new JPanel());
 		pan1.add(this.bottom);

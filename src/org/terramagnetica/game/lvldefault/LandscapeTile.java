@@ -81,7 +81,7 @@ public abstract class LandscapeTile implements Serializable, Cloneable {
 		pathTerrainArray = new String[DecorType.values().length];
 		
 		for (DecorType decorType : DecorType.values()) {
-			pathTerrainArray[decorType.ordinal()] = Util.formatDecimal(SPEC_PATH_TERRAIN, decorType.getIndex() + 1);
+			pathTerrainArray[decorType.ordinal()] = Util.formatDecimal(SPEC_IMG_TERRAIN, decorType.getIndex() + 1);
 		}
 		
 		

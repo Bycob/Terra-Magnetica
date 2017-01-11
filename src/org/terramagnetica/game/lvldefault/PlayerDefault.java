@@ -101,7 +101,7 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	
 	@Override
 	public Image getImage(){
-		return ImagesLoader.get(GameRessources.PATH_PLAYER);
+		return ImagesLoader.get(GameRessources.IMG_PLAYER);
 	}
 	
 	@Override

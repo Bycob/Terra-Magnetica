@@ -67,11 +67,11 @@ public class RenderElementDirectionCircle extends RenderGameDefaultElement {
 		circleBounds.xmax = circleBounds.xmin + this.sizeX;
 		circleBounds.ymin = circleBounds.ymax + this.sizeY;
 		
-		TextureQuad circleTex = TexturesLoader.getQuad(GameRessources.PATH_DIRECTIONS_CIRCLE);
+		TextureQuad circleTex = TexturesLoader.getQuad(GameRessources.IMG_DIRECTIONS_CIRCLE);
 		painter.setTexture(circleTex);
 		GLUtil.drawQuad2D(circleBounds, painter);
 		
-		painter.setTexture(TexturesLoader.get(GameRessources.PATH_DIRECTION_ARROW));
+		painter.setTexture(TexturesLoader.get(GameRessources.IMG_DIRECTION_ARROW));
 		
 		for (IGoal obj : list) {
 			//assert obj instanceof Entity;

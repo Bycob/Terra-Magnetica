@@ -71,7 +71,7 @@ public class InterruptionChangeState extends InterruptionPhasesLvlDefault {
 					param.getRenderManager().render(Portal.PORTAL_OPENING);
 					
 					//Si on enlève pas une image l'animation boucle...
-					AnimatedTexture portalTex = TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM002_OPENING_PORTAL);
+					AnimatedTexture portalTex = TexturesLoader.getAnimatedTexture(GameRessources.ANIM002_OPENING_PORTAL);
 					this.duration = portalTex.getDuration();
 				}
 				

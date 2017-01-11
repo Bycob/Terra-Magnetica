@@ -47,7 +47,7 @@ public class BonusLevelManager {
 	private void buildPanel() {
 		this.panel = new GuiMovingPanel(8, 5);
 		
-		this.panel.addElement(new GuiButtonBonusLevel(PATH_BONUS_LEVEL_BUTTONS + TEX_BONUS_BUTTON_0_ENFERS, "0_gorge_des_enfers.mlv", "Gorge des enfers"), 2, 3.5);
+		this.panel.addElement(new GuiButtonBonusLevel(IMG_BONUS_LEVEL_BUTTONS + TEX_BONUS_BUTTON_0_ENFERS, "0_gorge_des_enfers.mlv", "Gorge des enfers"), 2, 3.5);
 	}
 	
 	public ArrayList<GuiButtonBonusLevel> getAllButtons() {

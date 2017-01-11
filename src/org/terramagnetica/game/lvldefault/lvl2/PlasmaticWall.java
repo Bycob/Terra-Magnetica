@@ -96,7 +96,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 	
 	@Override
 	public Image getImage() {
-		return ImagesLoader.get(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PLASMATIC_WALL);
+		return ImagesLoader.get(GameRessources.IMG_LVL2_TEXTURES + GameRessources.TEX_PLASMATIC_WALL);
 	}
 	
 	@Override
@@ -106,7 +106,7 @@ public class PlasmaticWall extends CaseEntity implements BarrierStateListener {
 	
 	@Override
 	public void createRender() {
-		AnimatedTexture texture = TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM001_PLASMATIC_WALL);
+		AnimatedTexture texture = TexturesLoader.getAnimatedTexture(GameRessources.ANIM001_PLASMATIC_WALL);
 		
 		Renderable mainRender = new RenderEntityTexture(texture).withScaleOffset(1.003, 1, 1).withColor(this.color);
 		//rendu des extrémités

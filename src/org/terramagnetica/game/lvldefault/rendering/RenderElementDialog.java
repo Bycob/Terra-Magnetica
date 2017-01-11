@@ -159,9 +159,9 @@ public class RenderElementDialog extends RenderGameDefaultElement {
 			RectangleDouble bounds = getDialogBounds();
 			
 			GLUtil.drawHorizontalTexturedRectangle(bounds,
-					TexturesLoader.getQuad(PATH_DIALOG_BACKGROUND + TEX_DIALOG_BACKGROUND_LEFT),
-					TexturesLoader.getQuad(PATH_DIALOG_BACKGROUND + TEX_DIALOG_BACKGROUND_CENTER),
-					TexturesLoader.getQuad(PATH_DIALOG_BACKGROUND + TEX_DIALOG_BACKGROUND_RIGHT),
+					TexturesLoader.getQuad(IMG_DIALOG_BACKGROUND + TEX_DIALOG_BACKGROUND_LEFT),
+					TexturesLoader.getQuad(IMG_DIALOG_BACKGROUND + TEX_DIALOG_BACKGROUND_CENTER),
+					TexturesLoader.getQuad(IMG_DIALOG_BACKGROUND + TEX_DIALOG_BACKGROUND_RIGHT),
 					painter);
 		}
 		

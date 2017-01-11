@@ -46,7 +46,7 @@ public class Rock extends CaseEntity {
 	
 	@Override
 	public Image getImage() {
-		return ImagesLoader.get(GameRessources.PATH_MAP + GameRessources.TEX_MAP_ROCK);
+		return ImagesLoader.get(GameRessources.IMG_MAP + GameRessources.TEX_MAP_ROCK);
 	}
 
 	@Override
@@ -56,12 +56,12 @@ public class Rock extends CaseEntity {
 	
 	@Override
 	public TextureQuad getMinimapIcon() {
-		return TexturesLoader.getQuad(GameRessources.PATH_MAP + GameRessources.TEX_MAP_ROCK);
+		return TexturesLoader.getQuad(GameRessources.IMG_MAP + GameRessources.TEX_MAP_ROCK);
 	}
 	
 	@Override
 	protected void createRender() {
-		this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.getNotNull(GameRessources.PATH_MODEL_LVL2_ROCKS))
+		this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.getNotNull(GameRessources.MODEL_LVL2_ROCKS))
 				.setCircleShadow(1.6)
 				.withRotationOffset(0, 0, 270)
 				.withPositionOffset(0, 0, this.elevation));

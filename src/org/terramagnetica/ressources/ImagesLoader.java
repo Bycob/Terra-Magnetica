@@ -91,10 +91,10 @@ public class ImagesLoader {
 		}
 		
 		try {
-			Image player = ImageIO.read(RessourcesManager.getURL(GameRessources.PATH_PLAYER));
+			Image player = ImageIO.read(RessourcesManager.getURL(GameRessources.IMG_PLAYER));
 			
 			if (player != null) {
-				ImagesLoader.imgMap.put(GameRessources.PATH_PLAYER, ImgUtil.getSubImage(player, 0, 0, 128, 256));
+				ImagesLoader.imgMap.put(GameRessources.IMG_PLAYER, ImgUtil.getSubImage(player, 0, 0, 128, 256));
 			}
 		} catch (IllegalArgumentException e){
 			e.printStackTrace();

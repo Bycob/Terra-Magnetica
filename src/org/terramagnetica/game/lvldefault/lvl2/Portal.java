@@ -50,7 +50,7 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	public static final String PORTAL_OPENING = "opening";
 	public static final String PORTAL_ON = "on";
 	
-	private Texture texture = TexturesLoader.getQuad(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF);
+	private Texture texture = TexturesLoader.getQuad(GameRessources.IMG_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF);
 	
 	public Portal() {
 		this(new Color4f());
@@ -87,14 +87,14 @@ public class Portal extends CaseEntity implements BarrierStateListener {
 	
 	@Override
 	public Image getImage() {
-		return ImagesLoader.get(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_ON);
+		return ImagesLoader.get(GameRessources.IMG_LVL2_TEXTURES + GameRessources.TEX_PORTAL_ON);
 	}
 	
 	@Override
 	protected void createRender() {
-		this.renderManager.putRender(PORTAL_OFF, new RenderEntityTexture(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF).setOnGround(true));
-		this.renderManager.putRender(PORTAL_ON, new RenderEntityTexture(GameRessources.PATH_LVL2_TEXTURES + GameRessources.TEX_PORTAL_ON).setOnGround(true));
-		this.renderManager.putRender(PORTAL_OPENING, new RenderEntityTexture(GameRessources.PATH_ANIM002_OPENING_PORTAL).setOnGround(true));
+		this.renderManager.putRender(PORTAL_OFF, new RenderEntityTexture(GameRessources.IMG_LVL2_TEXTURES + GameRessources.TEX_PORTAL_OFF).setOnGround(true));
+		this.renderManager.putRender(PORTAL_ON, new RenderEntityTexture(GameRessources.IMG_LVL2_TEXTURES + GameRessources.TEX_PORTAL_ON).setOnGround(true));
+		this.renderManager.putRender(PORTAL_OPENING, new RenderEntityTexture(GameRessources.ANIM002_OPENING_PORTAL).setOnGround(true));
 		
 		this.renderManager.render(this.state ? PORTAL_ON : PORTAL_OFF);
 	}

@@ -123,26 +123,26 @@ public class WallTile extends OrientableLandscapeTile {
 		case WallTile.HAUT :
 		case WallTile.GAUCHE :
 		case WallTile.BAS :
-			modelID = GameRessources.SPEC_PATH_MODEL_MUR_DROIT;
+			modelID = GameRessources.SPEC_MODEL_MUR_DROIT;
 			break;
 		case WallTile.COIN_GAUCHE_HAUT :
 		case WallTile.COIN_DROIT_HAUT :
 		case WallTile.COIN_DROIT_BAS :
 		case WallTile.COIN_GAUCHE_BAS :
-			modelID = GameRessources.SPEC_PATH_MODEL_MUR_COIN;
+			modelID = GameRessources.SPEC_MODEL_MUR_COIN;
 			break;
 		case WallTile.ANGLE_DROIT_BAS :
 		case WallTile.ANGLE_DROIT_HAUT :
 		case WallTile.ANGLE_GAUCHE_BAS :
 		case WallTile.ANGLE_GAUCHE_HAUT :
-			modelID = GameRessources.SPEC_PATH_MODEL_MUR_ANGLE;
+			modelID = GameRessources.SPEC_MODEL_MUR_ANGLE;
 			break;
 		}
 		
 		int decorTypeID = type.getIndex() + 1;
 		Model3D modelMur;
 		if ((modelMur = ModelLoader.getNotNull(Util.formatDecimal(modelID, decorTypeID))) == null) {
-			modelMur = ModelLoader.getNotNull(Util.formatDecimal(GameRessources.SPEC_PATH_MODEL_MUR_DROIT, decorTypeID));
+			modelMur = ModelLoader.getNotNull(Util.formatDecimal(GameRessources.SPEC_MODEL_MUR_DROIT, decorTypeID));
 		}
 		
 		return new RenderableModel3D(modelMur).withRotationOffset(0, 0, orientationChanges ? rotation : 0f);

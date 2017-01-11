@@ -79,7 +79,7 @@ public class RenderElementInventory extends RenderGameDefaultElement {
 			GLUtil.drawQuad2D(caseBounds, painter);
 			
 			painter.setColor(white);
-			painter.setTexture(TexturesLoader.getQuad(GameRessources.PATH_ANIM004_TRAP_OFF + GameRessources.TEX_TRAP_OFF_IMAGE));
+			painter.setTexture(TexturesLoader.getQuad(GameRessources.ANIM004_TRAP_OFF + GameRessources.TEX_TRAP_OFF_IMAGE));
 			GLUtil.drawQuad2D(caseBounds, painter);
 		}
 	}

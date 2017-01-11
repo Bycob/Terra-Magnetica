@@ -145,7 +145,7 @@ public class ModuleLevelDefault extends CreatorModule {
 	private PaintButton<Tool> movePaintButton = new PaintButton<Tool>(
 					new Tool(ImagesLoader.get(ImagesLoader.deplacer), "Déplacer"));
 	private PaintButton<Tool> persoPaintButton = new PaintButton<Tool>(
-					new Tool(ImagesLoader.get(GameRessources.PATH_PLAYER), "Placer le personnage"));
+					new Tool(ImagesLoader.get(GameRessources.IMG_PLAYER), "Placer le personnage"));
 	
 	private ToolButton[] onDrawToolbar;
 	

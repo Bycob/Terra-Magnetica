@@ -82,7 +82,7 @@ public class GuiButtonFreeLevel extends GuiAbstractButton {
 		if (lvl instanceof LevelDefault) {
 			LevelDefault lvlDef = (LevelDefault) lvl;
 			DecorType type = lvlDef.getMainRoom().getDecorType();
-			this.levelImgID = Util.formatDecimal(GameRessources.SPEC_PATH_TERRAIN, type.getIndex() + 1) + GameRessources.TEX_INACCESSIBLE;
+			this.levelImgID = Util.formatDecimal(GameRessources.SPEC_IMG_TERRAIN, type.getIndex() + 1) + GameRessources.TEX_INACCESSIBLE;
 			this.levelImg = TexturesLoader.getQuad(this.levelImgID);
 		}
 	}

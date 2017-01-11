@@ -66,7 +66,7 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	
 	@Override
 	public Image getImage(){
-		return ImagesLoader.get(PATH_COMPOSANTS + TEX_LAMP_IN);
+		return ImagesLoader.get(IMG_COMPOSANTS + TEX_LAMP_IN);
 	}
 	
 	@Override
@@ -77,12 +77,12 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	@Override
 	public void createRender() {
 		//RENDU DE LA LAMPE
-		this.renderManager.putRender("on", new RenderEntityTexture(PATH_COMPOSANTS + TEX_LAMP_OUT));
-		this.renderManager.putRender("off", new RenderEntityTexture(PATH_COMPOSANTS + TEX_LAMP_IN));
+		this.renderManager.putRender("on", new RenderEntityTexture(IMG_COMPOSANTS + TEX_LAMP_OUT));
+		this.renderManager.putRender("off", new RenderEntityTexture(IMG_COMPOSANTS + TEX_LAMP_IN));
 		
 		//Rendu des ondes si la lampe est activée en mode permanent.
 		this.renderManager.putRender("permanentMode", 
-				new RenderEntityTexture(TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM003_PERMANENT_MODE_LAMP))
+				new RenderEntityTexture(TexturesLoader.getAnimatedTexture(GameRessources.ANIM003_PERMANENT_MODE_LAMP))
 					.setOnGround(true).withScaleOffset(1.25, 1.25, 0));
 		
 		this.renderManager.render(this.state ? "on" : "off");

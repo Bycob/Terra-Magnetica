@@ -87,7 +87,7 @@ public final class ScreenMainMenu extends GameScreen {
 	}
 	
 	private void drawTitleImage(Painter p, Color4f color) {
-		TextureQuad titleScreen = TexturesLoader.getQuad(GameRessources.PATH_TITLE_SCREEN);
+		TextureQuad titleScreen = TexturesLoader.getQuad(GameRessources.IMG_TITLE_SCREEN);
 		
 		double scale = this.theTextPainter.getRealScale() * 1d / 3d;
 		
@@ -106,7 +106,7 @@ public final class ScreenMainMenu extends GameScreen {
 		switch (appearSelector) {
 		case FIRST_APPEARING :
 			
-			TextureQuad tex1 = TexturesLoader.getQuad(String.format(GameRessources.SPEC_PATH_TERRAIN, 1) + GameRessources.TEX_SOL);
+			TextureQuad tex1 = TexturesLoader.getQuad(String.format(GameRessources.SPEC_IMG_TERRAIN, 1) + GameRessources.TEX_SOL);
 			float colorUnit = (float)((double)getAppearCount() / timeToAppear() * 0.5);
 			Color4f color = new Color4f(colorUnit, colorUnit, colorUnit);
 			Color4f buttonColor = new Color4f(colorUnit * 2, colorUnit * 2, colorUnit * 2);

@@ -63,7 +63,7 @@ public class Trap extends CaseEntity {
 	
 	@Override
 	public Image getImage() {
-		return ImagesLoader.get(GameRessources.PATH_ANIM004_TRAP_OFF + GameRessources.TEX_TRAP_OFF_IMAGE);
+		return ImagesLoader.get(GameRessources.ANIM004_TRAP_OFF + GameRessources.TEX_TRAP_OFF_IMAGE);
 	}
 	
 	@Override
@@ -74,10 +74,10 @@ public class Trap extends CaseEntity {
 	@Override
 	protected void createRender() {
 		this.renderManager.putRender("off", 
-				new RenderEntityTexture(TexturesLoader.getAnimatedTexture(GameRessources.PATH_ANIM004_TRAP_OFF)).setOnGround(true));
+				new RenderEntityTexture(TexturesLoader.getAnimatedTexture(GameRessources.ANIM004_TRAP_OFF)).setOnGround(true));
 		
 		this.renderManager.putRender("active",
-				new RenderEntityTexture(GameRessources.PATH_ANIM004_TRAP_OFF + GameRessources.TEX_TRAP_ACTIVE).setOnGround(true));
+				new RenderEntityTexture(GameRessources.ANIM004_TRAP_OFF + GameRessources.TEX_TRAP_ACTIVE).setOnGround(true));
 	}
 	
 	@Override

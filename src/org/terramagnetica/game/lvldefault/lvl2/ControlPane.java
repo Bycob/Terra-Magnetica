@@ -104,7 +104,7 @@ public class ControlPane extends CaseEntity implements BarrierStateListener, IGo
 	
 	@Override
 	public void createRender() {
-		this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.getNotNull(GameRessources.PATH_MODEL_LVL2_CONTROLPANE))
+		this.renderManager.putRender("default", new RenderableModel3D(ModelLoader.getNotNull(GameRessources.MODEL_LVL2_CONTROLPANE))
 				.withRotationOffset(0, 0, 360 - this.orientation));
 	}
 	

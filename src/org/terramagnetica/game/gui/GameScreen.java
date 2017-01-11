@@ -42,7 +42,7 @@ public abstract class GameScreen extends GuiComponent implements Cloneable, GuiC
 	 * de montagnes */
 	protected void drawDefaultBackground(Painter painter) {
 		painter.set2DConfig();
-		TextureQuad tex = TexturesLoader.getQuad(Util.formatDecimal(GameRessources.SPEC_PATH_TERRAIN, 1) + GameRessources.TEX_SOL);
+		TextureQuad tex = TexturesLoader.getQuad(Util.formatDecimal(GameRessources.SPEC_IMG_TERRAIN, 1) + GameRessources.TEX_SOL);
 		painter.setColor(new Color4f(0.5f, 0.5f, 0.5f));
 		tex.fillScreen2D(0.5, 0.5, true, painter);
 	}
