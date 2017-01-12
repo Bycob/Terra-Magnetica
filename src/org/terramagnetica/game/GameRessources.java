@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.terramagnetica.game.lvldefault.DecorType;
 import org.terramagnetica.game.lvldefault.WallTile;
+import org.terramagnetica.opengl.engine.TextureImpl;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.ressources.SoundSet;
 import org.terramagnetica.ressources.TextureSet;
@@ -225,7 +226,8 @@ public class GameRessources {
 	
 	
 	public static final String
-	MODEL_LAMP = "composants/models/lamp.obj";
+	MODEL_LAMP_OFF = "composants/models/lamp.obj",
+	MODEL_LAMP_ON = "composants/models/lamp.obj.on";
 	
 	public static final ArrayList<String> defaultModelSet = new ArrayList<String>();
 	
@@ -373,6 +375,7 @@ public class GameRessources {
 		gameTextureSet.addTextureModel(ID_MAP_PLAYER, new TextureQuad(256, 0, 288, 32, width, height, 0));
 		
 		gameTextureSet.createImage(IMG_MODEL_LAMP_OUT);
+		gameTextureSet.addTextureModel(IMG_MODEL_LAMP_OUT, new TextureImpl());
 		
 		gameTextureSet.createImage(IMG_PLAYER); width = 512; height = 512;
 		gameTextureSet.addTextureModel(ID_PLAYER_STANDING, TexturesLoader.createAnimatedTexture(SPRITE_WIDTH, SPRITE_HEIGHT, NB_FRAMES, 0, width, height));
@@ -463,6 +466,9 @@ public class GameRessources {
 		level2TextureSet.createImage(IMG_CREATURE); width = 678; height = 240;
 		level2TextureSet.addTextureModel(IMG_CREATURE, new TextureQuad(0, 0, 678, 240, width, height, 0));
 		
+		
+		//Modèles de base
+		defaultModelSet.add(MODEL_LAMP_OFF);
 		
 		
 		//Modèles de tous les décors

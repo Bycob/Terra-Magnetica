@@ -25,11 +25,15 @@ import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
+import org.terramagnetica.opengl.engine.Model3D;
+import org.terramagnetica.opengl.engine.RenderableModel3D;
+import org.terramagnetica.opengl.engine.Texture;
 import org.terramagnetica.opengl.engine.TextureQuad;
 import org.terramagnetica.physics.Force;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
+import org.terramagnetica.ressources.ModelLoader;
 import org.terramagnetica.ressources.TexturesLoader;
 
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
@@ -76,9 +80,14 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	
 	@Override
 	public void createRender() {
-		//RENDU DE LA LAMPE
-		this.renderManager.putRender("on", new RenderEntityTexture(IMG_COMPOSANTS + TEX_LAMP_OUT));
-		this.renderManager.putRender("off", new RenderEntityTexture(IMG_COMPOSANTS + TEX_LAMP_IN));
+		//RENDU DE LA LAMP
+		Model3D lampOff = ModelLoader.getNotNull(MODEL_LAMP_OFF);
+		Model3D lampOn = ModelLoader.getNotNull(MODEL_LAMP_OFF).clone();
+		Texture tex = TexturesLoader.get(IMG_MODEL_LAMP_OUT);
+		lampOn.setTextureID(tex.getGLTextureID(), true);
+		
+		this.renderManager.putRender("off", new RenderableModel3D(lampOff).setCircleShadow(1.5));
+		this.renderManager.putRender("on", new RenderableModel3D(lampOn).setCircleShadow(1.5));
 		
 		//Rendu des ondes si la lampe est activée en mode permanent.
 		this.renderManager.putRender("permanentMode", 

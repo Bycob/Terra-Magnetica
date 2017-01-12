@@ -290,9 +290,11 @@ public class Model3D implements Cloneable {
 		GLConfiguration config = painter.getConfiguration();
 		config.setPropertieEnabled(GLProperty.COLOR, false);
 		painter.setPrimitive(Primitive.TRIANGLES);
+		this.material.use(painter);
 		
 		painter.drawVAO(this.drawData.vao, this.faces.size());
 		
+		this.material.unset(painter);
 		config.setPropertieEnabled(GLProperty.COLOR, true); // TODO configuration par défaut.
 		
 		for (Model3D child : this.children) {
@@ -413,8 +415,14 @@ public class Model3D implements Cloneable {
 		return this.material;
 	}
 	
-	public void setTextureID(int id) {
+	public void setTextureID(int id, boolean includeChildren) {
 		this.material.setTextureID(id);
+		
+		if (includeChildren) {
+			for (Model3D child : this.children) {
+				child.setTextureID(id, includeChildren);
+			}
+		}
 	}
 	
 	public int getTextureID() {
@@ -490,7 +498,8 @@ public class Model3D implements Cloneable {
 		
 		clone.material = this.material.clone();
 		
-		clone.drawData.models.add(clone);
+		if (clone.drawData != null)
+			clone.drawData.models.add(clone);
 		
 		return clone;
 	}

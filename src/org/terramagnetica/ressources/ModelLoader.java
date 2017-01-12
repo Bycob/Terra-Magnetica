@@ -131,7 +131,7 @@ public final class ModelLoader {
 		for (Model3D model : models) {
 			if (model.hasTextures()) {
 				String texPath = dirPath + model.getTexturePath();
-				model.setTextureID(TexturesLoader.loadTexture(texPath));
+				model.setTextureID(TexturesLoader.loadTexture(texPath), false);
 			}
 		}
 		

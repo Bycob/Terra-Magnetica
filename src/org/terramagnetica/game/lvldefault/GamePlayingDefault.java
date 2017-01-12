@@ -566,10 +566,11 @@ public class GamePlayingDefault extends GameEngine implements Cloneable {
 		
 		return result;
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getModels() {
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<String> result = (ArrayList<String>) GameRessources.defaultModelSet.clone();
 		
 		for (Room r : this.level.getRoomList()) {
 			result.addAll(GameRessources.getModelSetByLandscape(r.getDecorType()));
