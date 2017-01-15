@@ -103,7 +103,7 @@ public class Portal extends CaseEntity implements IGoal {
 			//Détermination du rendu.
 			if (this.onWall) {
 				this.renderManager.putRender("default", new RenderEntityTexture(skin)
-					.withRotationOffset(45, 0, this.orientation)
+					.withRotationOffset(- Math.toDegrees(RenderEntityTexture.DEFAULT_ANGLE) , 0, this.orientation)
 					.withPositionOffset(this.translationX, this.translationY, 0)
 					.withScaleOffset(this.scaleX, 1, this.scaleY));
 			}
@@ -282,7 +282,7 @@ public class Portal extends CaseEntity implements IGoal {
 			Vec2f pc = player.getPositionf();
 			Vec2f centre = this.getPositionf();
 			
-			boolean changeAxis = (this.orientation %= 180) == 90;
+			boolean changeAxis = (this.orientation % 180) == 90;
 			double hDepth = changeAxis ? Math.abs(pc.x - centre.x) : Math.abs(pc.y - centre.y);
 			double hWidth = !changeAxis ? Math.abs(pc.x - centre.x) : Math.abs(pc.y - centre.y);
 			

@@ -129,9 +129,12 @@ public class HitboxCircle extends Hitbox {
 				other.speedY = (float) (v2tVect.y * other.bounceT + v2nNew * en.y * other.bounceN) * other.bounce;
 			}
 			else {
+				//System.out.println("before : " + this.speedX + " " + this.speedY);
 				//Rebondissement de base.
 				this.speedX = (float) (v1tVect.x * this.bounceT - v1n * en.x * this.bounceN) * this.bounce;
 				this.speedY = (float) (v1tVect.y * this.bounceT - v1n * en.y * this.bounceN) * this.bounce;
+
+				//System.out.println("after : " + this.speedX + " " + this.speedY);
 			}
 			
 			for (HitboxCircle hb : both) {

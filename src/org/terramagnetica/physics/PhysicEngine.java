@@ -29,10 +29,6 @@ public abstract class PhysicEngine {
 	}
 	
 	public void step(List<Hitbox> hitboxes, float time) {
-		//Application des forces
-		for (Hitbox hb : hitboxes) {
-			hb.applyForces(time);
-		}
 		
 		//Détection des collisions.
 		for (int i = 0 ; i < hitboxes.size() ; i++) {
@@ -111,6 +107,11 @@ public abstract class PhysicEngine {
 		//Finalisation du mouvement
 		for (Hitbox hb : hitboxes) {
 			hb.completeMove(time);
+		}
+		
+		//Calcul des nouvelles vitesses
+		for (Hitbox hb : hitboxes) {
+			hb.applyForces(time);
 		}
 	}
 	

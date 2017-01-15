@@ -92,7 +92,7 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 		//Rendu des ondes si la lampe est activée en mode permanent.
 		this.renderManager.putRender("permanentMode", 
 				new RenderEntityTexture(TexturesLoader.getAnimatedTexture(GameRessources.ANIM003_PERMANENT_MODE_LAMP))
-					.setOnGround(true).withScaleOffset(1.25, 1.25, 0));
+					.setOnGround(true).withScaleOffset(1.25, 1.25, 1));
 		
 		this.renderManager.render(this.state ? "on" : "off");
 	}
@@ -122,6 +122,7 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 	@Override
 	public void controls(GamePlayingDefault game, long dT, EntityMoving ent) {
 		updateLogic(dT, game);
+		
 		Vec2f centre = this.getPositionf();
 		Vec2f otherCentre = ent.getPositionf();
 		double df = getDistancef(ent);
@@ -158,6 +159,11 @@ public class Lampe extends AbstractLamp implements InfluenceMagnetiqueMajeure {
 		if (this.didStateChanged || old_permanentMode_On != this.permanentMode_On) {
 			this.renderManager.render(this.state ? "on" : "off");
 			this.renderManager.setEffect("permanentMode", this.permanentMode_On);
+			
+			if (this.didStateChanged) {
+				if (!this.state) this.hitbox.setBounce(0.2f);
+				else this.hitbox.setBounce(1);
+			}
 		}
 	}
 	

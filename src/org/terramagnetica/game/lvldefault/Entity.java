@@ -81,9 +81,7 @@ public abstract class Entity implements Serializable, Cloneable, Codable {
 	//AUTRE
 
 	/** Ce champ vaut {@code true} si l'entité à déjà été mise à jour à
-	 * ce tour de boucle, {@code false} sinon.<p> Attention, la variable
-	 * se remet à {@code false} toute seule, mais il appartient au sous-classes 
-	 * d'implémenter sa mise à {@code true}.*/
+	 * ce tour de boucle, {@code false} sinon.*/
 	protected boolean updated = false;
 	/** La priorité est un nombre allant de 1 à infini. Plus la priorité est petite,
 	 *  plus le composant sera dessiné tôt. */

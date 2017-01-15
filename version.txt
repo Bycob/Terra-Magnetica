@@ -104,7 +104,7 @@ Général :
 Terra Magnetica
 	- Correction de plusieurs bugs d'affichage
 	- Mise à jour du moteur graphique : quelques améliorations graphiques (ambience de niveau, vision limitée... )
-	- TODO Ajout de modèles pour les lampes
+	- Ajout de modèles pour les lampes
 	- TODO Ajout du décor jungle, utilisé pour le niveau 3
 	- TODO Modification du comportement des lampes pour les rendre plus fiables et plus cool
-	- TODO Ajout des rochers flottants et des arbres
+	- TODO Ajout des rochers flottants et des arbres 
