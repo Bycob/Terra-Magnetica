@@ -51,8 +51,8 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static final float DEFAULT_PERIOD = 1000;
-	private static final float DEFAULT_RADIAL_SPEED = 5f;
+	private static final float DEFAULT_PERIOD = 200;
+	private static final float DEFAULT_RADIAL_SPEED = 6f;
 	
 	//Variables d'influence
 	// Mouvement radial
@@ -64,6 +64,7 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	private float period = DEFAULT_PERIOD;
 	private float normalMoveOrigin = 0;
 	private float normalMoveOffset = 0;
+	private float amplitude = 1f;
 	
 	private Stabilizer stabilizer;
 	
@@ -81,8 +82,12 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	}
 	
 	private void init() {
+		this.setupStabilizer();
+	}
+	
+	private void setupStabilizer() {
 		this.stabilizer = new Stabilizer(this);
-		this.stabilizer.setMaxForce(80);
+		this.stabilizer.setMaxForce(300);
 	}
 	
 	@Override
@@ -155,9 +160,12 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 		
 		// Perturbation normale du radius
 		float radius = this.radius;
+		float normSpeed = 0;
 		
 		if (this.state) {
-			
+			double param = (2 * Math.PI / this.period) * (game.getTime() - this.normalMoveOrigin);
+			radius = this.radius + (float) Math.sin(param) * this.amplitude;
+			normSpeed = (float) Math.cos(param) * this.amplitude;
 		}
 
 		// Position
@@ -166,8 +174,8 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 		
 		// Vitesse 
 		Vec2f speed = new Vec2f(
-				sin2 * this.radialSpeed,
-				cos2 * this.radialSpeed);
+				sin2 * this.radialSpeed + cos2 * normSpeed,
+				cos2 * this.radialSpeed - sin2 * normSpeed);
 		
 		return new StabilizerData(pos, speed);
 	}
@@ -185,7 +193,6 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	@Override
 	public void updateLogic(long dT, GamePlayingDefault game) {
 		if (this.updated) return;
-		this.updated = true;
 		
 		super.updateLogic(dT, game);
 		
@@ -194,9 +201,6 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 			if (this.state) {
 				this.normalMoveOrigin = game.getTime() / 1000f - this.normalMoveOffset;
 			}
-			else {
-				this.normalMoveOffset = (game.getTime() / 1000f - this.normalMoveOrigin) % this.period;
-			}
 		}
 		
 		//mise à jour du rendu
@@ -204,5 +208,14 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 			this.renderManager.render(this.state ? "on" : "off");
 		}
 		updateIndicator();
+	}
+	
+	@Override
+	public LampePerturbatrice clone() {
+		LampePerturbatrice clone = (LampePerturbatrice) super.clone();
+		
+		clone.setupStabilizer();
+		
+		return clone;
 	}
 }
