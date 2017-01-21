@@ -61,7 +61,7 @@ public class Aimant extends EntityMoving {
 	
 	@Override
 	public void createRender() {
-		this.renderManager.putRender("default", new RenderEntityTexture(IMG_COMPOSANTS + TEX_CRYSTAL, (float) Math.PI * (45f / 180f)).withPositionOffset(0, 0.001f, 0));
+		this.renderManager.putRender("default", new RenderEntityTexture(IMG_COMPOSANTS + TEX_CRYSTAL).withPositionOffset(0, 0.001f, 0));
 		this.renderManager.putRender("dangerous", new RenderEntityTexture(TexturesLoader.getAnimatedTexture(GameRessources.ANIM000_DANGEROUS_CRYSTAL)));
 		updateRenderingDanger();
 	}

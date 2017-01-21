@@ -103,7 +103,7 @@ public class Portal extends CaseEntity implements IGoal {
 			//Détermination du rendu.
 			if (this.onWall) {
 				this.renderManager.putRender("default", new RenderEntityTexture(skin)
-					.withRotationOffset(- Math.toDegrees(RenderEntityTexture.DEFAULT_ANGLE) , 0, this.orientation)
+					.withRotationOffset(- 45 , 0, this.orientation)
 					.withPositionOffset(this.translationX, this.translationY, 0)
 					.withScaleOffset(this.scaleX, 1, this.scaleY));
 			}

@@ -51,7 +51,7 @@ public class RenderEntityTexture extends RenderableObject3D implements Cloneable
 	/** La taille d'une case en pixels. Utilisée pour convertir les
 	 * tailles d'images de pixels à cases. */
 	public static final float SIZEREF = Entity.CASE;
-	public static final float DEFAULT_ANGLE = (float) Math.PI * 1f / 4f;
+	public static final float DEFAULT_ANGLE = (float) Math.PI * 1f / 5f;
 	
 	public RenderEntityTexture() {
 		this(new TextureQuad(), DEFAULT_ANGLE);

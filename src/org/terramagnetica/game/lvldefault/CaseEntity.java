@@ -25,11 +25,11 @@ public abstract class CaseEntity extends Entity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	protected CaseEntity(){
+	protected CaseEntity() {
 		super();
 	}
 	
-	protected CaseEntity(int x , int y){
+	protected CaseEntity(int x , int y) {
 		this.setCasePosition(x, y);
 	}
 	

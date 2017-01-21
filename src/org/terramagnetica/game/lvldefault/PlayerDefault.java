@@ -111,7 +111,9 @@ public class PlayerDefault extends EntityMoving implements Serializable, PlayerS
 	
 	@Override
 	public void createRender() {
-		this.renderManager.putRender("default", new RenderEntityTexture(GameRessources.ID_PLAYER_STANDING).withScaleOffset(SCALE, 1, SCALE));
+		this.renderManager.putRender("default", new RenderEntityTexture(GameRessources.ID_PLAYER_STANDING)
+				.withRadius((float) Math.PI / 7f)
+				.withScaleOffset(SCALE, 1, SCALE));
 	}
 	
 	@Override
