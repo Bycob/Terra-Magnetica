@@ -22,10 +22,11 @@ package org.terramagnetica.game.lvldefault;
 import java.awt.Image;
 
 import org.terramagnetica.game.GameRessources;
+import org.terramagnetica.game.lvldefault.Stabilizer.StabilizerData;
+import org.terramagnetica.game.lvldefault.Stabilizer.StabilizerFunc;
 import org.terramagnetica.game.lvldefault.rendering.RenderEntityTexture;
 import org.terramagnetica.opengl.engine.Renderable;
 import org.terramagnetica.opengl.engine.TextureQuad;
-import org.terramagnetica.physics.Force;
 import org.terramagnetica.physics.Hitbox;
 import org.terramagnetica.physics.HitboxCircle;
 import org.terramagnetica.ressources.ImagesLoader;
@@ -34,7 +35,6 @@ import org.terramagnetica.ressources.TexturesLoader;
 import net.bynaryscode.util.Color4f;
 import net.bynaryscode.util.maths.geometric.DimensionsInt;
 import net.bynaryscode.util.maths.geometric.Vec2f;
-import net.bynaryscode.util.maths.geometric.Vec3d;
 
 /**
  * Une lampe perturbatrice est un type particulier de lampe.
@@ -47,28 +47,42 @@ import net.bynaryscode.util.maths.geometric.Vec3d;
  * @author Louis JEAN
  *
  */
-public class LampePerturbatrice extends AbstractLamp implements InfluenceMagnetiqueMajeure {
+public class LampePerturbatrice extends AbstractLamp implements InfluenceMagnetiqueMajeure, StabilizerFunc {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static final float TANGENT_FORCE = 40;
 	private static final float DEFAULT_PERIOD = 1000;
+	private static final float DEFAULT_RADIAL_SPEED = 3f;
 	
 	//Variables d'influence
+	// Mouvement radial
+	private float radialSpeed = DEFAULT_RADIAL_SPEED;
+	private float radius = 1f;
+	
+	// Mouvement normal
 	/** La période en ms */
 	private float period = DEFAULT_PERIOD;
 	private float normalMoveOrigin = 0;
 	private float normalMoveOffset = 0;
+	
+	private Stabilizer stabilizer;
 	
 	//RENDUS
 	private float indicatorDirection = 0;
 
 	public LampePerturbatrice() {
 		super();
+		init();
 	}
 	
 	public LampePerturbatrice(int x, int y) {
 		super(x, y);
+		init();
+	}
+	
+	private void init() {
+		this.stabilizer = new Stabilizer(this);
+		this.stabilizer.setMaxForce(80);
 	}
 	
 	@Override
@@ -127,36 +141,35 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	public void controls(GamePlayingDefault game, long delta, EntityMoving ent) {
 		updateLogic(delta, game);
 		
-		double t = game.getTime();
+		this.stabilizer.stabilize(ent, game, delta);
+	}
+	
+	@Override
+	public StabilizerData getNextNextPosition(Entity ent, GamePlayingDefault game, float dt) {
+		// Calcul de l'angle n + 2
+		float angle = this.getDirection(ent);
+		float angle2 = angle + 2 * (dt / 1000) * this.radialSpeed;
 		
-		float forceX = 0, forceY = 0;
+		float cos2 = (float) Math.cos(angle2);
+		float sin2 = (float) Math.sin(angle2);
 		
-		Vec2f entLoc = ent.getPositionf();
-		double d = getDistancef(ent);
-		Vec3d en = Vec3d.unitVector(entLoc.x - this.hitbox.getPositionX(), entLoc.y - this.hitbox.getPositionY());
-		Vec3d et = new Vec3d(en.y, - en.x);
-		Vec3d vi = new Vec3d(ent.getMovementX(), ent.getMovementY());
-		double vn = vi.dotProduct(en);
-		Vec3d vnVect = en.multiply(vn);
-		Vec3d vtVect = vi.substract(vnVect);
-		double vt = vtVect.length();
-		
-		//Force tangentielle sinusoïdale
-		double tangentForce = TANGENT_FORCE * Math.sin(t / this.period * (0.5f / Math.PI));
-		double normalCorrection = -0;
-		
-		forceX += tangentForce * et.x + normalCorrection * en.x;
-		forceY += tangentForce * et.y + normalCorrection * en.y;
+		// Perturbation normale du radius
+		float radius = this.radius;
 		
 		if (this.state) {
-			float normalForce = 0;
+			
 		}
-		else {
-			//TEMPORAIRE
-			forceX = forceY = 0;
-		}
+
+		// Position
+		Vec2f pos = this.getPositionf();
+		pos.translate(radius * cos2, - radius * sin2);
 		
-		ent.getHitbox().addForce(new Force(forceX, forceY));
+		// Vitesse 
+		Vec2f speed = new Vec2f(
+				sin2 * this.radialSpeed,
+				cos2 * this.radialSpeed);
+		
+		return new StabilizerData(pos, speed);
 	}
 	
 	@Override
