@@ -52,7 +52,7 @@ public class LampePerturbatrice extends AbstractLamp implements InfluenceMagneti
 	private static final long serialVersionUID = 1L;
 	
 	private static final float DEFAULT_PERIOD = 1000;
-	private static final float DEFAULT_RADIAL_SPEED = 3f;
+	private static final float DEFAULT_RADIAL_SPEED = 5f;
 	
 	//Variables d'influence
 	// Mouvement radial
