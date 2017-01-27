@@ -227,7 +227,8 @@ public class GameRessources {
 	
 	public static final String
 	MODEL_LAMP_OFF = "composants/models/lamp.obj",
-	MODEL_LAMP_ON = "composants/models/lamp.obj.on";
+	MODEL_LAMP_ON = "composants/models/lamp.obj.on", 
+	MODEL_WAVE_GENERATOR = "composants/models/wave_generator.obj";
 	
 	public static final ArrayList<String> defaultModelSet = new ArrayList<String>();
 	
@@ -469,6 +470,7 @@ public class GameRessources {
 		
 		//Modèles de base
 		defaultModelSet.add(MODEL_LAMP_OFF);
+		defaultModelSet.add(MODEL_WAVE_GENERATOR);
 		
 		
 		//Modèles de tous les décors

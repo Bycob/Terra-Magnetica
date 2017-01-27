@@ -35,16 +35,18 @@ public class PropertyDirectionnalEntity {
 	}
 	
 	/**
-	 * @param direction - l'angle de direction en radian
+	 * @param direction - l'angle de direction en radians
 	 */
 	public PropertyDirectionnalEntity(float direction) {
 		this.setDirection(direction);
 	}
 	
+	/** Définit la direction en radians. */
 	public void setDirection(float direction) {
 		this.direction = (float) MathUtil.angleMainValue(direction);
 	}
 	
+	/** Retourne la direction représentée par cet objet, en radians. */
 	public float getDirection() {
 		return this.direction;
 	}
